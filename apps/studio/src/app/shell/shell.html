@@ -3,7 +3,7 @@
     <div class="sider-inner">
       <div class="brand">BuuDevStudio</div>
 
-      <ul nz-menu nzMode="inline">
+      <ul nz-menu nzMode="inline" class="nav-main">
         <li
           nz-menu-item
           *ngFor="let item of navMain"
@@ -34,6 +34,29 @@
   </nz-sider>
 
   <nz-layout>
+    <nz-header class="shell__topbar">
+      <div class="topbar-left">
+        <div class="brand brand--inline">Device toolbar</div>
+      </div>
+      <div class="topbar-actions" *ngIf="vm$ | async as vm">
+        <button nz-button nzType="default" [nzLoading]="vm.busy" (click)="vm.connected ? device.disconnect() : device.connect()">
+          {{ vm.connected ? 'Disconnect' : 'Connect' }}
+        </button>
+        <button nz-button nzType="default" [disabled]="!vm.connected || vm.busy" (click)="device.uploadToRam()">
+          Upload to RAM
+        </button>
+        <button nz-button nzType="primary" [disabled]="!vm.connected || vm.busy" (click)="device.run()">
+          Run
+        </button>
+        <button nz-button nzDanger [disabled]="!vm.connected" (click)="device.stopAll()">
+          Stop All
+        </button>
+        <button nz-button nzType="default" [disabled]="!vm.connected || !vm.ramLoaded || vm.busy || vm.running" (click)="device.commitToFlash()">
+          Commit to Flash
+        </button>
+      </div>
+    </nz-header>
+
     <nz-content class="shell__content">
       <router-outlet></router-outlet>
     </nz-content>

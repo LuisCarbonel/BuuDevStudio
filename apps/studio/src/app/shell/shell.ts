@@ -5,6 +5,9 @@ import { filter, Subscription } from 'rxjs';
 
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+
+import { DeviceService } from '../services/device.service';
 
 interface ShellNavItem {
   key: string;
@@ -17,7 +20,7 @@ interface ShellNavItem {
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterModule, NzLayoutModule, NzMenuModule],
+  imports: [CommonModule, RouterModule, NzLayoutModule, NzMenuModule, NzButtonModule],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
@@ -34,7 +37,11 @@ export class ShellComponent implements OnInit, OnDestroy {
   activeKey = 'editor';
   private sub?: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, public device: DeviceService) {}
+
+  get vm$() {
+    return this.device.vm$;
+  }
 
   ngOnInit(): void {
     this.syncActiveKey(this.router.url);

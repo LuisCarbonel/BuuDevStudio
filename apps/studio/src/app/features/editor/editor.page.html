@@ -1,4 +1,133 @@
-<div class="feature">
-  <h1>Editor</h1>
-  <p>Macro/script editor area goes here (steps, inspector, device state).</p>
+<div class="workbench">
+  <div class="wb-header">
+    <div class="crumbs">
+      <div class="crumb">
+        <div class="label">Profile</div>
+        <div class="value">
+          {{ activeProfile?.name }}
+          <span class="badge" *ngIf="activeProfile?.active">Active</span>
+        </div>
+      </div>
+      <div class="crumb">
+        <div class="label">Script</div>
+        <div class="value">{{ activeScript?.name }}</div>
+      </div>
+      <div class="crumb">
+        <div class="label">Mode</div>
+        <div class="value">Device view</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn ghost" type="button" (click)="toggleLibrary()">
+        {{ libraryOpen ? 'Hide' : 'Show' }} Library
+      </button>
+    </div>
+  </div>
+
+  <div class="wb-body">
+    <aside class="pane pane--library" *ngIf="libraryOpen">
+      <div class="pane-title">Library</div>
+
+      <div class="section">
+        <div class="section-title">Profiles</div>
+        <ul class="list">
+          <li *ngFor="let p of profiles" [class.active]="p.active">
+            <div class="item-name">{{ p.name }}</div>
+            <span class="pill" *ngIf="p.active">Active</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Scripts</div>
+        <ul class="list">
+          <li *ngFor="let s of scripts" [class.selected]="s === activeScript">
+            <div class="item-name">{{ s.name }}</div>
+            <div class="item-meta">Profile: {{ s.profile }}</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Actions / Blocks</div>
+        <div class="tags">
+          <span class="tag" *ngFor="let a of actions">{{ a }}</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Presets</div>
+        <div class="tags">
+          <span class="tag" *ngFor="let p of presets">{{ p }}</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="pane pane--canvas">
+      <div class="pane-title">Canvas</div>
+
+      <div class="canvas-tabs">
+        <button class="tab active" type="button">Device View</button>
+        <button class="tab" type="button">Timeline View</button>
+      </div>
+
+      <div class="pane-body pane-body--canvas">
+        <div class="canvas-placeholder">
+          <div class="canvas-title">Canvas placeholder</div>
+          <div class="canvas-subtitle">Selected script: {{ activeScript?.name }}</div>
+
+          <div class="steps">
+            <div
+              class="step"
+              *ngFor="let s of steps"
+              [class.selected]="s.id === selectedStepId"
+              (click)="selectStep(s.id)"
+            >
+              <div class="step-id">#{{ s.id }}</div>
+              <div class="step-name">{{ s.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <aside class="pane pane--inspector">
+      <div class="pane-title">Inspector</div>
+
+      <div class="inspector-section">
+        <div class="inspector-label">Script</div>
+        <div class="inspector-value">{{ activeScript?.name }}</div>
+      </div>
+
+      <div class="inspector-section">
+        <div class="inspector-label">Selection</div>
+
+        <div class="inspector-empty" *ngIf="!selectedStep">Select a step to edit.</div>
+
+        <div class="inspector-card" *ngIf="selectedStep as step">
+          <div class="row">
+            <div class="k">Step</div>
+            <div class="v">#{{ step.id }}</div>
+          </div>
+          <div class="row">
+            <div class="k">Name</div>
+            <div class="v">{{ step.name }}</div>
+          </div>
+          <div class="row">
+            <div class="k">Op</div>
+            <div class="v">{{ step.op }}</div>
+          </div>
+          <div class="row" *ngIf="step.arg">
+            <div class="k">Arg</div>
+            <div class="v">{{ step.arg }}</div>
+          </div>
+          <div class="row" *ngIf="step.class">
+            <div class="k">Delay Class</div>
+            <div class="v">C{{ step.class }}</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
 </div>

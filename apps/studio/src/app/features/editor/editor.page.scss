@@ -1,10 +1,282 @@
-.feature {
+.workbench {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.wb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   background: #fff;
   border-radius: 12px;
-  padding: 20px;
+  padding: 12px 16px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 }
 
-h1 {
-  margin: 0 0 10px;
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.crumb .label {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.crumb .value {
+  font-weight: 700;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.badge {
+  background: #e6f4ff;
+  color: #1677ff;
+  border-radius: 10px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn.ghost {
+  background: #f7f9fc;
+}
+
+.wb-body {
+  display: grid;
+  grid-template-columns: 260px 1fr 280px;
+  gap: 14px;
+  min-height: 540px;
+}
+
+.pane {
+  background: #fff;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pane-title {
+  font-weight: 700;
+}
+
+.pane-body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pane-body--canvas {
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 10px;
+}
+
+.muted {
+  opacity: 0.75;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.list li {
+  padding: 8px 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.list li.active {
+  border-color: #bae0ff;
+  background: #f0f8ff;
+}
+
+.list li.selected {
+  border-color: #bae0ff;
+  background: #e6f4ff;
+}
+
+.item-name {
+  font-weight: 600;
+}
+
+.item-meta {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.pill {
+  border-radius: 999px;
+  background: #f5f5f5;
+  padding: 2px 10px;
+  font-size: 12px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  border: 1px dashed #d9d9d9;
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #fafafa;
+}
+
+.canvas-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tab {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tab.active {
+  border-color: #1677ff;
+  color: #1677ff;
+  background: #e6f4ff;
+}
+
+.canvas-placeholder {
+  background: #f9fbff;
+  border: 1px dashed #c2d9ff;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.canvas-title {
+  font-weight: 700;
+}
+
+.canvas-subtitle {
+  opacity: 0.7;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.step {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #eef1f7;
+  cursor: pointer;
+}
+
+.step-id {
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+.step-name {
+  font-weight: 600;
+}
+
+.step.selected {
+  border-color: #1677ff;
+  background: #e6f4ff;
+}
+
+.inspector-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inspector-label {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.inspector-value {
+  font-weight: 700;
+}
+
+.inspector-empty {
+  opacity: 0.7;
+  padding: 8px 0;
+}
+
+.inspector-card {
+  border: 1px solid #eef1f7;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f9fbff;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.k {
+  opacity: 0.7;
+}
+
+.v {
+  font-weight: 700;
 }
