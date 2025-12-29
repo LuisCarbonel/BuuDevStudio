@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 
+import { StudioStateService } from './studio-state.service';
+
 interface DeviceVm {
   connected: boolean;
   busy: boolean;
@@ -15,6 +17,8 @@ export class DeviceService {
   private running = new BehaviorSubject<boolean>(false);
   private ramLoaded = new BehaviorSubject<boolean>(false);
   private revision = 0;
+  private lastUploadedChecksum: number | null = null;
+  private lastUploadedProfileId: string | null = null;
 
   readonly connected$ = this.connected.asObservable();
   readonly busy$ = this.busy.asObservable();
@@ -34,6 +38,8 @@ export class DeviceService {
       ramLoaded,
     }))
   );
+
+  constructor(private studio: StudioStateService) {}
 
   async connect() {
     if (this.busy.value) return;
@@ -56,11 +62,20 @@ export class DeviceService {
   async uploadToRam() {
     if (!this.connected.value || this.busy.value) return;
     this.busy.next(true);
-    // Simulate serialize + send + ack
+    const compiled = this.studio.compileUploadPayload();
     await new Promise(resolve => setTimeout(resolve, 120));
     this.ramLoaded.next(true);
     this.busy.next(false);
-    console.log('Uploaded to RAM (mock) payload summary: scripts=1, steps=3, profile=active');
+    if (compiled.payload && compiled.stats) {
+      const s = compiled.stats;
+      this.lastUploadedChecksum = s.checksum;
+      this.lastUploadedProfileId = compiled.payload.profileId;
+      console.log(
+        `Upload to RAM (mock) profile=${compiled.payload.profileId} targets=${s.targetsBound} scripts=${s.scriptsIncluded} steps=${s.steps} bytes=${s.byteSize} checksum=${s.checksum}`
+      );
+    } else {
+      console.log('Upload to RAM (mock) no payload (no active profile)');
+    }
   }
 
   run() {
@@ -84,5 +99,32 @@ export class DeviceService {
     this.revision += 1;
     this.busy.next(false);
     console.log(`Commit to flash (mock) revision #${this.revision} saved`);
+  }
+
+  isDirty(): boolean {
+    const compiled = this.studio.compileUploadPayload();
+    if (!compiled.payload || !compiled.stats) return false;
+    if (this.lastUploadedChecksum === null) return true;
+    return !(
+      compiled.payload.profileId === this.lastUploadedProfileId &&
+      compiled.stats.checksum === this.lastUploadedChecksum
+    );
+  }
+
+  getSyncStats() {
+    const compiled = this.studio.compileUploadPayload();
+    if (!compiled.payload || !compiled.stats) {
+      return { dirty: false, current: null, last: null };
+    }
+    const dirty =
+      this.lastUploadedChecksum === null ||
+      compiled.payload.profileId !== this.lastUploadedProfileId ||
+      compiled.stats.checksum !== this.lastUploadedChecksum;
+    return {
+      dirty,
+      current: compiled.stats,
+      last: this.lastUploadedChecksum,
+      profileId: compiled.payload.profileId,
+    };
   }
 }

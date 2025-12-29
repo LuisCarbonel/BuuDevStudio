@@ -92,6 +92,7 @@
 
 .pane-title {
   font-weight: 700;
+  text-align: center;
 }
 
 .pane-body {
@@ -281,6 +282,38 @@
   background: #f9fbff;
 }
 
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field select {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fff;
+}
+
+.field input,
+.field textarea {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fff;
+  font-family: inherit;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.binding-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .row {
   display: flex;
   justify-content: space-between;
@@ -293,4 +326,95 @@
 
 .v {
   font-weight: 700;
+}
+
+.targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.target-btn {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  background: #fff;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-size: 12px;
+  position: relative;
+}
+
+.target-btn.selected {
+  border-color: #1677ff;
+  color: #1677ff;
+  background: #e6f4ff;
+}
+
+.target-btn.assigned {
+  border-color: #52c41a;
+}
+
+.target-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #52c41a;
+  margin-left: 6px;
+}
+
+.selected-target {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.target-label {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.target-value {
+  font-size: 18px;
+}
+
+.empty-target {
+  text-align: center;
+}
+
+.inspector-card .v {
+  max-width: 100%;
+  word-break: break-word;
+}
+.device-view {
+  position: relative;
+  width: 600px;
+  height: 400px;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  background: url('/megalodon-knob3-updated.svg') center center / contain no-repeat;
+}
+
+.device-view svg {
+  display: none; /* hide inline SVG; background image + overlay handle visuals and interaction */
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.drop-hit {
+  position: absolute;
+  pointer-events: auto;
+}
+
+.drop-hit:focus-visible {
+  outline: 2px solid #3b82f6;
 }

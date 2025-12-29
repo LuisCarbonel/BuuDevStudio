@@ -6,6 +6,7 @@ import { filter, Subscription } from 'rxjs';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzTagModule } from 'ng-zorro-antd/tag';
 
 import { DeviceService } from '../services/device.service';
 
@@ -20,7 +21,7 @@ interface ShellNavItem {
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterModule, NzLayoutModule, NzMenuModule, NzButtonModule],
+  imports: [CommonModule, RouterModule, NzLayoutModule, NzMenuModule, NzButtonModule, NzTagModule],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })

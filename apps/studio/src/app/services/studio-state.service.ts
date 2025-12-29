@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-export interface Binding {
-  targetId: string;
-  action: string;
-  meta?: Record<string, string>;
-}
+export type Binding =
+  | { type: 'none' }
+  | { type: 'scriptRef'; scriptId: string; meta?: Record<string, string> }
+  | { type: 'simpleAction'; action: string; arg?: string; meta?: Record<string, string> }
+  | { type: 'inlineSequence'; steps: Step[]; meta?: Record<string, string> }
+  | { type: 'program'; path: string; meta?: Record<string, string> };
 
 export interface Layer {
   id: number;
@@ -51,6 +52,7 @@ export interface StudioState {
   selectedStepId: number | null;
   profiles: Profile[];
   scripts: Script[];
+  targets: string[];
 }
 
 const initialState: StudioState = {
@@ -66,6 +68,32 @@ const initialState: StudioState = {
   selectedTargetId: 'key-03',
   selectedScriptId: 's-bhop',
   selectedStepId: null,
+  targets: [
+    'key-01',
+    'key-02',
+    'key-03',
+    'key-04',
+    'key-05',
+    'key-06',
+    'key-07',
+    'key-08',
+    'key-09',
+    'key-10',
+    'key-11',
+    'key-12',
+    'key-13',
+    'key-14',
+    'key-15',
+    'knob-1-ccw',
+    'knob-1-cw',
+    'knob-1-press',
+    'knob-2-ccw',
+    'knob-2-cw',
+    'knob-2-press',
+    'knob-main-ccw',
+    'knob-main-cw',
+    'knob-main-press',
+  ],
   profiles: [
     {
       id: 'p-default',
@@ -74,8 +102,8 @@ const initialState: StudioState = {
         {
           id: 1,
           bindingsByTargetId: {
-            'key-03': { targetId: 'key-03', action: 'Script: Bunnyhop' },
-            'key-04': { targetId: 'key-04', action: 'Script: Sprint + Strafe' },
+            'key-03': { type: 'scriptRef', scriptId: 's-bhop' },
+            'key-04': { type: 'scriptRef', scriptId: 's-sprint' },
           },
         },
         { id: 2, bindingsByTargetId: {} },
@@ -152,6 +180,10 @@ export class StudioStateService {
     return this.snapshot.selectedTargetId;
   }
 
+  get targets(): string[] {
+    return this.snapshot.targets;
+  }
+
   get activeLayer(): number {
     return this.snapshot.activeLayer;
   }
@@ -184,6 +216,12 @@ export class StudioStateService {
     return this.activeBindings[this.selectedTargetId] ?? null;
   }
 
+  get assignedTargetIds(): string[] {
+    return Object.entries(this.activeBindings)
+      .filter(([, binding]) => binding.type !== 'none')
+      .map(([targetId]) => targetId);
+  }
+
   selectProfile(profileId: string) {
     const scriptsForProfile = this.scripts.filter(s => s.profileId === profileId);
     const nextScriptId = scriptsForProfile[0]?.id ?? null;
@@ -191,6 +229,8 @@ export class StudioStateService {
       activeProfileId: profileId,
       selectedScriptId: nextScriptId,
       selectedStepId: null,
+      selectedTargetId: null,
+      activeLayer: 1,
     });
   }
 
@@ -208,6 +248,123 @@ export class StudioStateService {
 
   setTarget(targetId: string | null) {
     this.patch({ selectedTargetId: targetId });
+  }
+
+  assignScriptToTarget(scriptId: string) {
+    if (!this.selectedTargetId || !this.selectedProfile) return;
+    this.updateBinding(this.selectedTargetId, { type: 'scriptRef', scriptId });
+  }
+
+  assignSimpleAction(action: string, arg?: string) {
+    if (!this.selectedTargetId || !this.selectedProfile) return;
+    this.updateBinding(this.selectedTargetId, { type: 'simpleAction', action, arg });
+  }
+
+  assignInlineSequence(steps: Step[]) {
+    if (!this.selectedTargetId || !this.selectedProfile) return;
+    this.updateBinding(this.selectedTargetId, { type: 'inlineSequence', steps });
+  }
+
+  assignProgram(path: string) {
+    if (!this.selectedTargetId || !this.selectedProfile) return;
+    this.updateBinding(this.selectedTargetId, { type: 'program', path });
+  }
+
+  clearBinding(targetId: string | null = this.selectedTargetId) {
+    if (!targetId || !this.selectedProfile) return;
+    this.updateBinding(targetId, { type: 'none' });
+  }
+
+  updateBindingMeta(targetId: string, meta: Record<string, string>) {
+    if (!this.selectedProfile) return;
+    const current = this.activeBindings[targetId];
+    if (!current || current.type !== 'scriptRef') return;
+    this.updateBinding(targetId, { ...current, meta });
+  }
+
+  private updateBinding(targetId: string, binding: Binding) {
+    const state = this.snapshot;
+    const profiles = state.profiles.map(p => {
+      if (p.id !== state.activeProfileId) return p;
+      return {
+        ...p,
+        layers: p.layers.map(l => {
+          if (l.id !== state.activeLayer) return l;
+          return {
+            ...l,
+            bindingsByTargetId: {
+              ...l.bindingsByTargetId,
+              [targetId]: binding,
+            },
+          };
+        }),
+      };
+    });
+    this.patch({ profiles, selectedTargetId: targetId });
+  }
+
+  compileUploadPayload(includeAllLayers = false) {
+    const state = this.snapshot;
+    const profile = this.selectedProfile;
+    if (!profile) {
+      return { payload: null, stats: null };
+    }
+
+    const layerIds = includeAllLayers ? profile.layers.map(l => l.id) : [state.activeLayer];
+    const layers = layerIds.map(layerId => {
+      const layer = profile.layers.find(l => l.id === layerId);
+      const bindings = layer
+        ? Object.entries(layer.bindingsByTargetId)
+            .filter(([, b]) => b.type !== 'none')
+            .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+            .map(([targetId, binding]) => ({ targetId, binding }))
+        : [];
+      return { id: layerId, bindings };
+    });
+
+    const scriptIds = new Set<string>();
+    layers.forEach(layer => {
+      layer.bindings.forEach(({ binding }) => {
+        if (binding.type === 'scriptRef') scriptIds.add(binding.scriptId);
+      });
+    });
+
+    const scripts = Array.from(scriptIds)
+      .map(id => this.scripts.find(s => s.id === id))
+      .filter((s): s is Script => !!s)
+      .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+
+    const stepsCount = scripts.reduce((acc, s) => acc + s.steps.length, 0);
+    const targetsBound = layers.reduce((acc, l) => acc + l.bindings.length, 0);
+
+    const payload = {
+      profileId: profile.id,
+      layerIds,
+      layers,
+      scripts,
+      timing: {
+        gapMs: null,
+        jitterMs: null,
+      },
+    };
+
+    const json = JSON.stringify(payload);
+    const byteSize = typeof TextEncoder !== 'undefined' ? new TextEncoder().encode(json).length : json.length;
+    let checksum = 0;
+    for (let i = 0; i < json.length; i++) {
+      checksum = (checksum * 31 + json.charCodeAt(i)) >>> 0;
+    }
+
+    return {
+      payload,
+      stats: {
+        targetsBound,
+        scriptsIncluded: scripts.length,
+        steps: stepsCount,
+        byteSize,
+        checksum,
+      },
+    };
   }
 
   private patch(partial: Partial<StudioState>) {

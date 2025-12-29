@@ -80,7 +80,19 @@
   padding: 0;
 }
 
+.sync {
+  margin-left: 12px;
+  display: inline-flex;
+  align-items: center;
+}
+
 .topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.topbar-left {
   display: flex;
   align-items: center;
   gap: 10px;
