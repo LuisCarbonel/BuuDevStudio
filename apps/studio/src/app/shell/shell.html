@@ -1,0 +1,41 @@
+<nz-layout class="shell">
+  <nz-sider nzTheme="light" nzWidth="240" class="shell__sider">
+    <div class="sider-inner">
+      <div class="brand">BuuDevStudio</div>
+
+      <ul nz-menu nzMode="inline">
+        <li
+          nz-menu-item
+          *ngFor="let item of navMain"
+          [nzDisabled]="item.disabled"
+          [nzSelected]="activeKey === item.key"
+          [routerLink]="item.path"
+        >
+          <div class="nav-label">{{ item.label }}</div>
+          <div class="nav-desc">{{ item.description }}</div>
+        </li>
+      </ul>
+
+      <div class="sider-footer">
+        <ul nz-menu nzMode="inline">
+          <li
+            nz-menu-item
+            *ngFor="let item of navSettings"
+            [nzDisabled]="item.disabled"
+            [nzSelected]="activeKey === item.key"
+            [routerLink]="item.path"
+          >
+            <div class="nav-label">{{ item.label }}</div>
+            <div class="nav-desc">{{ item.description }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-content class="shell__content">
+      <router-outlet></router-outlet>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
