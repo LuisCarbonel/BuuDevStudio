@@ -1,0 +1,88 @@
+.device-view-shell {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.device-view-svg {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.key .key-cap {
+  fill: #d0d0d0;
+  stroke: #999;
+  stroke-width: 0.04;
+}
+
+.key .key-label {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.32px;
+  fill: #333;
+  pointer-events: none;
+}
+
+.key.hovered .key-cap {
+  stroke: #3b82f6;
+  stroke-width: 0.08;
+}
+
+.key.selected .key-cap {
+  fill: #e6f0ff;
+  stroke: #3b82f6;
+  stroke-width: 0.08;
+}
+
+.key.dragging .key-cap {
+  opacity: 0.8;
+}
+
+.control .control-body {
+  fill: #222;
+  stroke: #111;
+  stroke-width: 0.04;
+}
+
+.control .control-label {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.28px;
+  fill: #f5f5f5;
+  pointer-events: none;
+}
+
+.control.hovered .control-body {
+  stroke: #3b82f6;
+  stroke-width: 0.08;
+}
+
+.control.selected .control-body {
+  fill: #1f2937;
+  stroke: #3b82f6;
+  stroke-width: 0.08;
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.drop-hit {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  border-radius: 8px;
+  transition: border-color 120ms ease, background 120ms ease;
+}
+
+.drop-hit:active {
+  cursor: grabbing;
+}
+
+.drop-hit.cdk-drop-list-dragging {
+  border-color: #1677ff;
+  background: rgba(22, 119, 255, 0.12);
+}

@@ -1,0 +1,130 @@
+<div
+  class="device-view-shell"
+  [ngStyle]="boundsStyle(layout?.bounds)"
+  (pointerdown)="onBackgroundClick($event)"
+  (pointerup)="$event.stopPropagation()"
+>
+  <svg
+    class="device-view-svg"
+    #svgRoot
+    [attr.viewBox]="viewBox"
+    role="img"
+    aria-label="Device layout"
+    (mouseleave)="onHover(null)"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    <rect
+      class="svg-bg-hit"
+      x="-10000"
+      y="-10000"
+      width="20000"
+      height="20000"
+      fill="transparent"
+      pointer-events="all"
+      (pointerdown)="onBackgroundClick($event)"
+    ></rect>
+
+    <g class="keys">
+      <ng-container *ngIf="layout">
+        <g
+          *ngFor="let key of layout.keys"
+          class="key"
+          [ngClass]="keyClasses(key)"
+          (pointerdown)="onSelect(key.elementId); $event.stopPropagation()"
+          (mouseenter)="onHover(key.elementId)"
+          appSvgDrag
+          [appSvgDragEnabled]="mode === 'edit'"
+          [appSvgDragId]="key.elementId"
+          [appSvgDragUnitPx]="unitPx"
+          (appSvgDragMove)="onDragMove($event)"
+        >
+          <rect
+            class="key-cap"
+            [attr.x]="key.x"
+            [attr.y]="key.y"
+            [attr.width]="key.w"
+            [attr.height]="key.h"
+            [attr.rx]="0.08"
+          ></rect>
+          <text
+            class="key-label"
+            [attr.x]="key.x + key.w / 2"
+            [attr.y]="key.y + key.h / 2"
+            dominant-baseline="middle"
+            text-anchor="middle"
+          >
+            {{ key.rawLabel || key.matrixId || key.elementId }}
+          </text>
+        </g>
+      </ng-container>
+    </g>
+
+    <!-- Controls -->
+    <g class="controls">
+      <ng-container *ngIf="layout">
+        <g
+          *ngFor="let ctrl of layout.controls"
+          class="control"
+          [ngClass]="controlClasses(ctrl)"
+          [attr.data-id]="ctrl.elementId"
+          (pointerdown)="onSelect(ctrl.elementId); $event.stopPropagation()"
+          (mouseenter)="onHover(ctrl.elementId)"
+          appSvgDrag
+          [appSvgDragEnabled]="mode === 'edit'"
+          [appSvgDragId]="ctrl.elementId"
+          [appSvgDragUnitPx]="unitPx"
+          (appSvgDragMove)="onDragMove($event)"
+        >
+          <rect
+            [attr.x]="ctrl.x"
+            [attr.y]="ctrl.y"
+            [attr.width]="ctrl.w"
+            [attr.height]="ctrl.h"
+            class="control-body"
+            rx="0.08"
+          ></rect>
+          <text
+            class="control-label"
+            [attr.x]="ctrl.x + ctrl.w / 2"
+            [attr.y]="ctrl.y + ctrl.h / 2"
+            dominant-baseline="middle"
+            text-anchor="middle"
+          >
+            {{ controlLabel(ctrl) }}
+          </text>
+        </g>
+      </ng-container>
+    </g>
+  </svg>
+
+  <div
+    class="drop-overlay"
+    *ngIf="layout && dropEnabled && dropConnectedTo.length"
+    aria-hidden="true"
+  >
+    <div
+      *ngFor="let key of layout.keys"
+      class="drop-hit"
+      [ngStyle]="dropStyle(key)"
+      appDropTarget
+      [appDropTarget]="key.elementId"
+      [appDropTargetConnectedTo]="dropConnectedTo"
+      [appDropTargetSortingDisabled]="true"
+      (click)="onSelect(key.elementId)"
+      (mouseenter)="onHover(key.elementId)"
+      (appDropTargetAssign)="onAssign(key.elementId, $event)"
+    ></div>
+    <div
+      *ngFor="let ctrl of layout.controls"
+      class="drop-hit"
+      [ngStyle]="dropStyle(ctrl)"
+      appDropTarget
+      [appDropTarget]="ctrl.elementId"
+      [appDropTargetConnectedTo]="dropConnectedTo"
+      [appDropTargetSortingDisabled]="true"
+      (click)="onSelect(ctrl.elementId)"
+      (mouseenter)="onHover(ctrl.elementId)"
+      (appDropTargetAssign)="onAssign(ctrl.elementId, $event)"
+    ></div>
+  </div>
+</div>
