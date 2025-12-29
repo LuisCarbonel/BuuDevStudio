@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { StudioStateService } from '../../services/studio-state.service';
+
 @Component({
   selector: 'app-editor-page',
   standalone: true,
@@ -13,51 +15,11 @@ export class EditorPage {
   libraryOpen = true;
   private prevLibraryOpen = true;
 
-  profiles = [
-    { id: 'p-default', name: 'Default', active: true },
-    { id: 'p-apex', name: 'Apex', active: false },
-    { id: 'p-tacops', name: 'TacOps', active: false },
-  ];
-
-  scripts = [
-    {
-      id: 's-sprint',
-      profileId: 'p-apex',
-      name: 'Sprint + Strafe',
-      steps: [
-        { id: 1, name: 'Wait 120ms', op: 'WAIT', arg: '120', class: 1 },
-        { id: 2, name: 'Key Down: W', op: 'KD', arg: 'W' },
-        { id: 3, name: 'Tap: E', op: 'TAP', arg: 'E' },
-      ],
-    },
-    {
-      id: 's-loot',
-      profileId: 'p-apex',
-      name: 'Loot Routine',
-      steps: [
-        { id: 1, name: 'Wait 80ms', op: 'WAIT', arg: '80', class: 1 },
-        { id: 2, name: 'Tap: F', op: 'TAP', arg: 'F' },
-      ],
-    },
-    {
-      id: 's-bhop',
-      profileId: 'p-default',
-      name: 'Bunnyhop',
-      steps: [
-        { id: 1, name: 'Tap: SPACE', op: 'TAP', arg: 'SPACE' },
-        { id: 2, name: 'Wait 30ms', op: 'WAIT', arg: '30', class: 1 },
-        { id: 3, name: 'Tap: SPACE', op: 'TAP', arg: 'SPACE' },
-      ],
-    },
-  ];
-
   actions = ['Wait', 'Key Down', 'Key Up', 'Tap', 'Mouse', 'If / Else', 'Set Variable', 'Loop'];
 
   presets = ['Micro-gap', 'Jitter pattern', 'Burst tap', 'Fast strafes'];
 
-  selectedProfileId = (this.profiles.find(p => p.active) ?? this.profiles[0]).id;
-  selectedScriptId = this.scripts.find(s => s.profileId === this.selectedProfileId)?.id ?? this.scripts[0].id;
-  selectedStepId: number | null = null;
+  constructor(private studio: StudioStateService) {}
 
   toggleLibrary() {
     this.libraryOpen = !this.libraryOpen;
@@ -75,38 +37,58 @@ export class EditorPage {
   }
 
   selectStep(id: number) {
-    this.selectedStepId = id;
+    this.studio.selectStep(id);
   }
 
   get selectedStep() {
-    return this.currentSteps.find(s => s.id === this.selectedStepId) ?? null;
+    return this.studio.currentSteps.find(s => s.id === this.selectedStepId) ?? null;
   }
 
   selectProfile(profileId: string) {
-    this.selectedProfileId = profileId;
-    const firstScript = this.scriptsForProfile[0];
-    this.selectedScriptId = firstScript?.id ?? null;
-    this.selectedStepId = null;
+    this.studio.selectProfile(profileId);
   }
 
   selectScript(scriptId: string) {
-    this.selectedScriptId = scriptId;
-    this.selectedStepId = null;
+    this.studio.selectScript(scriptId);
   }
 
   get selectedProfile() {
-    return this.profiles.find(p => p.id === this.selectedProfileId) ?? null;
+    return this.studio.selectedProfile;
   }
 
   get scriptsForProfile() {
-    return this.scripts.filter(s => s.profileId === this.selectedProfileId);
+    return this.studio.scriptsForProfile;
   }
 
   get selectedScript() {
-    return this.scripts.find(s => s.id === this.selectedScriptId) ?? null;
+    return this.studio.selectedScript;
   }
 
   get currentSteps() {
-    return this.selectedScript?.steps ?? [];
+    return this.studio.currentSteps;
+  }
+
+  get profiles() {
+    return this.studio.profiles;
+  }
+
+  get selectedProfileId() {
+    return this.studio.selectedProfileId;
+  }
+
+  get selectedScriptId() {
+    return this.studio.selectedScriptId;
+  }
+
+  get selectedStepId() {
+    return this.studio.selectedStepId;
+  }
+
+  get activeLayer() {
+    return this.studio.activeLayer;
+  }
+
+  get selectedBinding() {
+    return this.studio.selectedBinding;
   }
 }
