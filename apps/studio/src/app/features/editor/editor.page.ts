@@ -6,7 +6,7 @@ import { StudioStateService } from '../../services/studio-state.service';
 import { DragSourceDirective } from '../../directives/drag-source.directive';
 import { DropTargetDirective } from '../../directives/drop-target.directive';
 import { DeviceViewComponent } from '../../shared/device-view/device-view';
-import { ControlElement, DiagnosticEntry, KeyElement, NormalizedLayout } from '../../shared/layout/models';
+import { ControlElement, DiagnosticEntry, KeyElement } from '../../shared/layout/models';
 import { normalizeAnyLayout } from '../../shared/layout/layout-registry';
 
 type TargetId =
@@ -254,7 +254,6 @@ export class EditorPage implements OnInit {
   bindingActionArg = '';
   bindingInlineText = '';
   bindingProgramPath = '';
-  normalizedLayout: NormalizedLayout | null = null;
   layoutDiagnostics: DiagnosticEntry[] = [];
   layoutMode: 'view' | 'edit' = 'view';
   layoutUnitPx = 50;
@@ -275,9 +274,7 @@ export class EditorPage implements OnInit {
 
   presets = ['Micro-gap', 'Jitter pattern', 'Burst tap', 'Fast strafes'];
 
-  constructor(private studio: StudioStateService) {
-    this.normalizedLayout = this.studio.normalizedLayout;
-  }
+  constructor(private studio: StudioStateService) {}
 
   ngOnInit(): void {
     // Auto-load the first fixture as a mock fallback to render the canvas.
@@ -361,6 +358,10 @@ export class EditorPage implements OnInit {
 
   get targets() {
     return this.studio.targets;
+  }
+
+  get normalizedLayout() {
+    return this.studio.normalizedLayout;
   }
 
   get selectedTargetId() {
@@ -505,8 +506,7 @@ export class EditorPage implements OnInit {
   loadLayout(raw: unknown) {
     const result = normalizeAnyLayout(raw);
     this.layoutDiagnostics = result.diagnostics;
-    this.normalizedLayout = result.layout ?? null;
-    this.studio.setNormalizedLayout(this.normalizedLayout);
+    this.studio.setNormalizedLayout(result.layout ?? null);
   }
 
   toggleLayoutMode() {
@@ -529,17 +529,7 @@ export class EditorPage implements OnInit {
   }
 
   onDeviceMove(ev: { id: string; dx: number; dy: number }) {
-    if (!this.normalizedLayout) return;
-    this.normalizedLayout = {
-      ...this.normalizedLayout,
-      keys: this.normalizedLayout.keys.map(k =>
-        k.elementId === ev.id ? { ...k, x: k.x + ev.dx, y: k.y + ev.dy } : k
-      ),
-      controls: this.normalizedLayout.controls.map(c =>
-        c.elementId === ev.id ? { ...c, x: c.x + ev.dx, y: c.y + ev.dy } : c
-      ),
-    };
-    this.studio.setNormalizedLayout(this.normalizedLayout);
+    this.studio.offsetLayoutElement(ev.id, ev.dx, ev.dy);
   }
 
   onCanvasDeselect() {
@@ -605,10 +595,11 @@ export class EditorPage implements OnInit {
   }
 
   get selectedLayoutElement(): KeyElement | ControlElement | null {
-    if (!this.normalizedLayout || !this.layoutSelectionId) return null;
+    const layout = this.normalizedLayout;
+    if (!layout || !this.layoutSelectionId) return null;
     return (
-      this.normalizedLayout.keys.find(k => k.elementId === this.layoutSelectionId) ??
-      this.normalizedLayout.controls.find(c => c.elementId === this.layoutSelectionId) ??
+      layout.keys.find(k => k.elementId === this.layoutSelectionId) ??
+      layout.controls.find(c => c.elementId === this.layoutSelectionId) ??
       null
     );
   }

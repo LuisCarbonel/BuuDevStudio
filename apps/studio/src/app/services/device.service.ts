@@ -41,14 +41,21 @@ export class DeviceService {
 
   constructor(private studio: StudioStateService) {}
 
-  async connect() {
+  async connect(deviceId = 'mock-device') {
     if (this.busy.value) return;
     this.busy.next(true);
-    // Simulate handshake + status fetch
+    // Simulate handshake + status fetch + bundle hydrate
     await new Promise(resolve => setTimeout(resolve, 150));
+    await this.openSession(deviceId);
     this.connected.next(true);
     this.busy.next(false);
-    console.log('Connected (mock handshake complete)');
+    console.log(`Connected (mock handshake complete) device=${deviceId}`);
+  }
+
+  async openSession(deviceId: string) {
+    const bundle = this.studio.buildProfileBundle(deviceId);
+    this.studio.hydrateFromBundle(bundle);
+    return bundle;
   }
 
   disconnect() {
@@ -56,6 +63,7 @@ export class DeviceService {
     this.running.next(false);
     this.ramLoaded.next(false);
     this.connected.next(false);
+    this.studio.markDisconnected();
     console.log('Disconnected (mock)');
   }
 

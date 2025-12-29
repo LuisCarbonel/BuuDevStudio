@@ -36,12 +36,39 @@ export interface Script {
   meta?: Record<string, string>;
 }
 
+export interface DeviceCapabilities {
+  volatileApply: boolean;
+  commit: boolean;
+  layouts: boolean;
+  keymap: boolean;
+  scripts: boolean;
+}
+
+export interface CommittedState {
+  profileId: string | null;
+  checksum: number | null;
+  revision: number | null;
+}
+
+export interface DeviceInfo {
+  id: string;
+  name: string;
+  transport: 'mock' | 'hid';
+  firmwareVersion: string;
+  vendorId?: string;
+  productId?: string;
+}
+
 export interface DeviceState {
+  id: string | null;
+  name: string | null;
   connected: boolean;
   transport: 'mock' | 'hid';
   runningScriptId: string | null;
   lastError: string | null;
   firmwareVersion: string;
+  capabilities: DeviceCapabilities;
+  committedState: CommittedState | null;
 }
 
 export interface StudioState {
@@ -56,57 +83,39 @@ export interface StudioState {
   targets: string[];
 }
 
+export interface ProfileBundle {
+  deviceInfo: DeviceInfo;
+  capabilities: DeviceCapabilities;
+  profile: Profile;
+  layout: NormalizedLayout | null;
+  scripts: Script[];
+  committedState: CommittedState;
+}
+
 const initialState: StudioState = {
   device: {
+    id: null,
+    name: null,
     connected: false,
     transport: 'mock',
     runningScriptId: null,
     lastError: null,
     firmwareVersion: '0.0.1-mock',
+    capabilities: { volatileApply: true, commit: true, layouts: true, keymap: true, scripts: true },
+    committedState: null,
   },
   activeProfileId: 'p-default',
   activeLayer: 1,
-  selectedTargetId: 'key-03',
+  selectedTargetId: null,
   selectedScriptId: 's-bhop',
   selectedStepId: null,
-  targets: [
-    'key-01',
-    'key-02',
-    'key-03',
-    'key-04',
-    'key-05',
-    'key-06',
-    'key-07',
-    'key-08',
-    'key-09',
-    'key-10',
-    'key-11',
-    'key-12',
-    'key-13',
-    'key-14',
-    'key-15',
-    'knob-1-ccw',
-    'knob-1-cw',
-    'knob-1-press',
-    'knob-2-ccw',
-    'knob-2-cw',
-    'knob-2-press',
-    'knob-main-ccw',
-    'knob-main-cw',
-    'knob-main-press',
-  ],
+  targets: [],
   profiles: [
     {
       id: 'p-default',
       name: 'Default',
       layers: [
-        {
-          id: 1,
-          bindingsByTargetId: {
-            'key-03': { type: 'scriptRef', scriptId: 's-bhop' },
-            'key-04': { type: 'scriptRef', scriptId: 's-sprint' },
-          },
-        },
+        { id: 1, bindingsByTargetId: {} },
         { id: 2, bindingsByTargetId: {} },
         { id: 3, bindingsByTargetId: {} },
         { id: 4, bindingsByTargetId: {} },
@@ -230,6 +239,84 @@ export class StudioStateService {
 
   setNormalizedLayout(layout: NormalizedLayout | null) {
     this.layout = layout;
+    const targets = this.computeTargets(layout);
+    const selectedTargetId = targets.includes(this.snapshot.selectedTargetId ?? '') ? this.snapshot.selectedTargetId : null;
+    this.patch({ targets, selectedTargetId });
+  }
+
+  offsetLayoutElement(elementId: string, dx: number, dy: number) {
+    if (!this.layout) return;
+    this.layout = {
+      ...this.layout,
+      keys: this.layout.keys.map(k => (k.elementId === elementId ? { ...k, x: k.x + dx, y: k.y + dy } : k)),
+      controls: this.layout.controls.map(c => (c.elementId === elementId ? { ...c, x: c.x + dx, y: c.y + dy } : c)),
+    };
+    this.patch({ targets: this.computeTargets(this.layout) });
+  }
+
+  hydrateFromBundle(bundle: ProfileBundle) {
+    this.layout = bundle.layout;
+    const targets = this.computeTargets(bundle.layout);
+    const activeProfileId = bundle.profile.id;
+    const scriptsForProfile = bundle.scripts.filter(s => s.profileId === activeProfileId);
+    const selectedScriptId = scriptsForProfile[0]?.id ?? null;
+    this.state.next({
+      ...this.snapshot,
+      device: {
+        ...this.snapshot.device,
+        id: bundle.deviceInfo.id,
+        name: bundle.deviceInfo.name,
+        connected: true,
+        transport: bundle.deviceInfo.transport,
+        firmwareVersion: bundle.deviceInfo.firmwareVersion,
+        lastError: null,
+        runningScriptId: null,
+        capabilities: bundle.capabilities,
+        committedState: bundle.committedState,
+      },
+      profiles: [bundle.profile],
+      scripts: bundle.scripts,
+      activeProfileId,
+      selectedScriptId,
+      selectedStepId: null,
+      selectedTargetId: null,
+      activeLayer: bundle.profile.layers[0]?.id ?? 1,
+      targets,
+    });
+  }
+
+  buildProfileBundle(deviceId: string): ProfileBundle {
+    const profile = this.selectedProfile ?? this.profiles[0] ?? { id: 'p-default', name: 'Default', layers: [{ id: 1, bindingsByTargetId: {} }] };
+    const scripts = this.scripts.filter(s => s.profileId === profile.id);
+    const committedState =
+      this.snapshot.device.committedState ?? {
+        profileId: profile.id,
+        checksum: null,
+        revision: null,
+      };
+
+    return {
+      deviceInfo: {
+        id: deviceId,
+        name: profile.name,
+        transport: this.snapshot.device.transport,
+        firmwareVersion: this.snapshot.device.firmwareVersion,
+      },
+      capabilities: this.snapshot.device.capabilities,
+      profile,
+      layout: this.layout,
+      scripts,
+      committedState,
+    };
+  }
+
+  markDisconnected() {
+    this.state.next({
+      ...this.snapshot,
+      device: { ...this.snapshot.device, connected: false, runningScriptId: null },
+      selectedTargetId: null,
+      selectedStepId: null,
+    });
   }
 
   selectProfile(profileId: string) {
@@ -257,6 +344,9 @@ export class StudioStateService {
   }
 
   setTarget(targetId: string | null) {
+    if (targetId && !this.snapshot.targets.includes(targetId)) {
+      return;
+    }
     this.patch({ selectedTargetId: targetId });
   }
 
@@ -375,6 +465,14 @@ export class StudioStateService {
         checksum,
       },
     };
+  }
+
+  private computeTargets(layout: NormalizedLayout | null): string[] {
+    if (!layout) return [];
+    return [
+      ...layout.keys.map(k => k.elementId),
+      ...layout.controls.map(c => c.elementId),
+    ];
   }
 
   private patch(partial: Partial<StudioState>) {
