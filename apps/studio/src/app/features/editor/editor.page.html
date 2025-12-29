@@ -61,8 +61,10 @@
             [appDragSource]="s.id"
             [appDragSourceDisabled]="focusMode"
           >
-            <div class="item-name">{{ s.name }}</div>
-            <div class="item-meta">Profile: {{ selectedProfile?.name }}</div>
+            <div class="drag-item" cdkDragHandle>
+              <div class="item-name">{{ s.name }}</div>
+              <div class="item-meta">Profile: {{ selectedProfile?.name }}</div>
+            </div>
           </li>
         </ul>
       </div>
@@ -90,34 +92,73 @@
         <button class="tab" type="button">Timeline View</button>
       </div>
 
-      <div class="pane-body pane-body--canvas">
+      <div class="layout-fixture-bar">
+        <label for="fixture-select">Fixture</label>
+        <select
+          id="fixture-select"
+          [value]="selectedFixture"
+          (change)="selectedFixture = $any($event.target).value"
+          [disabled]="loadingFixture"
+        >
+          <option *ngFor="let f of fixtures" [value]="f.path">{{ f.label }}</option>
+        </select>
+        <button class="btn ghost" type="button" (click)="loadFixtureByPath(selectedFixture)" [disabled]="loadingFixture">
+          Load
+        </button>
+        <button class="btn ghost" type="button" (click)="toggleLayoutMode()">
+          {{ layoutMode === 'view' ? 'Edit layout' : 'View mode' }}
+        </button>
+        <span class="muted" *ngIf="loadingFixture">Loading…</span>
+        <span class="error" *ngIf="fixtureError">{{ fixtureError }}</span>
+      </div>
+
+      <div class="pane-body pane-body--canvas" (pointerdown)="onCanvasDeselect()">
         <div class="device-view">
-          <div class="drop-overlay" *ngIf="scriptsDropList" aria-hidden="true">
-            <div
-              *ngFor="let key of deviceLayout.keys"
-              class="drop-hit"
-              [ngStyle]="keyHitboxStyle(key)"
-              appDropTarget
-              [appDropTarget]="key.id"
-              [appDropTargetConnectedTo]="[scriptsDropList]"
-              [appDropTargetSortingDisabled]="true"
-              (appDropTargetAssign)="onDropAssign(key.id, $event)"
-              (click)="selectTarget(key.id)"
-            ></div>
-            <ng-container *ngFor="let knob of deviceLayout.knobs">
+          <ng-container *ngIf="normalizedLayout; else legacyCanvas">
+            <app-device-view
+              [layout]="normalizedLayout"
+              [selection]="layoutSelectionId"
+              [hoverId]="hoveredElementId"
+              [mode]="layoutMode"
+              [unitPx]="layoutUnitPx"
+              [dropConnectedTo]="[]"
+              [dropEnabled]="false"
+              (pointerdown)="$event.stopPropagation()"
+              (select)="onDeviceSelect($event)"
+              (deselect)="onDeviceDeselect()"
+              (hover)="onDeviceHover($event)"
+              (moveDelta)="onDeviceMove($event)"
+              (assignDrop)="onDropAssign($event.targetId, $event.payload)"
+            ></app-device-view>
+          </ng-container>
+          <ng-template #legacyCanvas>
+            <div class="drop-overlay" *ngIf="scriptsDropList" aria-hidden="true" (pointerdown)="$event.stopPropagation()">
               <div
-                *ngFor="let zone of knob.zones"
+                *ngFor="let key of deviceLayout.keys"
                 class="drop-hit"
-                [ngStyle]="knobZoneHitboxStyle(knob, zone)"
+                [ngStyle]="keyHitboxStyle(key)"
                 appDropTarget
-                [appDropTarget]="zone.id"
+                [appDropTarget]="key.id"
                 [appDropTargetConnectedTo]="[scriptsDropList]"
                 [appDropTargetSortingDisabled]="true"
-                (appDropTargetAssign)="onDropAssign(zone.id, $event)"
-                (click)="selectTarget(zone.id)"
+                (appDropTargetAssign)="onDropAssign(key.id, $event)"
+                (click)="selectTarget(key.id)"
               ></div>
-            </ng-container>
-          </div>
+              <ng-container *ngFor="let knob of deviceLayout.knobs">
+                <div
+                  *ngFor="let zone of knob.zones"
+                  class="drop-hit"
+                  [ngStyle]="knobZoneHitboxStyle(knob, zone)"
+                  appDropTarget
+                  [appDropTarget]="zone.id"
+                  [appDropTargetConnectedTo]="[scriptsDropList]"
+                  [appDropTargetSortingDisabled]="true"
+                  (appDropTargetAssign)="onDropAssign(zone.id, $event)"
+                  (click)="selectTarget(zone.id)"
+                ></div>
+              </ng-container>
+            </div>
+          </ng-template>
         </div>
       </div>
     </main>
@@ -126,30 +167,55 @@
       <div class="pane-title">Inspector</div>
 
       <div class="inspector-section">
-        <div class="inspector-label">Script</div>
-        <div class="inspector-value">{{ selectedScript?.name }}</div>
-      </div>
+        <div class="inspector-card card-stack" *ngIf="selectedTargetId; else noTarget">
+          <div class="card card--script">
+            <div class="card-heading">
+              <div class="card-icon">🎛️</div>
+              <div>
+                <div class="card-label">Script</div>
+                <div class="card-title">{{ selectedScript?.name || 'None' }}</div>
+              </div>
+            </div>
+          </div>
 
-      <div class="inspector-section">
-        <div class="inspector-label">Binding</div>
-        <div class="inspector-card" *ngIf="selectedTargetId; else noTarget">
-          <div class="selected-target">
-            <div class="target-label">Target</div>
-            <div class="target-value">{{ selectedTargetId }}</div>
-            <span class="target-dot" *ngIf="assignedTargetIds.includes(selectedTargetId)"></span>
+          <div class="card card--target">
+            <div class="card-heading">
+              <div class="card-label">Target</div>
+              <div class="target-pill">
+                <span>{{ selectedTargetId }}</span>
+                <span class="target-dot" *ngIf="assignedTargetIds.includes(selectedTargetId)"></span>
+              </div>
+            </div>
+            <div class="prop-list" *ngIf="selectedLayoutElement as el">
+              <div class="prop">
+                <div class="prop-key">Layer</div>
+                <div class="prop-val">#{{ activeLayer }}</div>
+              </div>
+              <div class="prop">
+                <div class="prop-key">Type</div>
+                <div class="prop-val">{{ isControlElement(el) ? el.kind : 'key' }}</div>
+              </div>
+              <div class="prop" *ngIf="isControlElement(el)">
+                <div class="prop-key">Raw Label</div>
+                <div class="prop-val">{{ el.rawLabel || '—' }}</div>
+              </div>
+              <div class="prop" *ngIf="isControlElement(el)">
+                <div class="prop-key">Matrix Hint</div>
+                <div class="prop-val">{{ el.matrixHint || '—' }}</div>
+              </div>
+              <div class="prop" *ngIf="isControlElement(el)">
+                <div class="prop-key">Layout Index</div>
+                <div class="prop-val">{{ el.layoutIndex ?? '—' }}</div>
+              </div>
+            </div>
           </div>
-          <div class="row">
-            <div class="k">Selected script</div>
-            <div class="v">{{ selectedScript?.name || 'None' }}</div>
-          </div>
-          <div class="row">
-            <div class="k">Layer</div>
-            <div class="v">#{{ activeLayer }}</div>
-          </div>
-          <div class="row">
-            <div class="k">Type</div>
-            <div class="v">
+
+          <div class="card card--bindings">
+            <div class="card-label">Binding</div>
+            <div class="field">
+              <label class="field-label">Binding type</label>
               <select
+                class="full"
                 aria-label="Binding type"
                 [value]="bindingType"
                 (change)="bindingType = $any($event.target).value"
@@ -161,100 +227,109 @@
                 <option value="none">None</option>
               </select>
             </div>
-          </div>
-          <div class="row" *ngIf="scriptBindingId">
-            <div class="k">Script</div>
-            <div class="v">{{ scriptName(scriptBindingId) }}</div>
-          </div>
-          <div class="field" *ngIf="bindingType === 'scriptRef'">
-            <label for="binding-script">Script</label>
-            <select
-              id="binding-script"
-              [value]="bindingScriptId || ''"
-              (change)="onBindingScriptChange($any($event.target).value)"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-            >
-              <option value="" disabled>Select script</option>
-              <option *ngFor="let s of scriptsForProfile" [value]="s.id">
-                {{ s.name }}
-              </option>
-            </select>
-          </div>
-          <div class="field" *ngIf="bindingType === 'simpleAction'">
-            <label>Action</label>
-            <input
-              type="text"
-              list="action-suggestions"
-              [value]="bindingAction"
-              (input)="bindingAction = $any($event.target).value"
-              placeholder="e.g., TAP KC_SPACE"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="simple-action-hint"
-            />
-            <datalist id="action-suggestions">
-              <option *ngFor="let a of actions" [value]="a"></option>
-            </datalist>
-            <input
-              type="text"
-              [value]="bindingActionArg"
-              (input)="bindingActionArg = $any($event.target).value"
-              placeholder="Optional arg"
-            />
-            <div class="hint" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
+            <div class="field" *ngIf="bindingType === 'scriptRef'">
+              <label class="field-label" for="binding-script">Script</label>
+              <select
+                class="full"
+                id="binding-script"
+                [value]="bindingScriptId || ''"
+                (change)="onBindingScriptChange($any($event.target).value)"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+              >
+                <option value="" disabled>Select script</option>
+                <option *ngFor="let s of scriptsForProfile" [value]="s.id">
+                  {{ s.name }}
+                </option>
+              </select>
+            </div>
+            <div class="field" *ngIf="bindingType === 'simpleAction'">
+              <label class="field-label">Action</label>
+              <input
+                class="full"
+                type="text"
+                list="action-suggestions"
+                [value]="bindingAction"
+                (input)="bindingAction = $any($event.target).value"
+                placeholder="e.g., TAP KC_SPACE"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="simple-action-hint"
+              />
+              <datalist id="action-suggestions">
+                <option *ngFor="let a of actions" [value]="a"></option>
+              </datalist>
+              <input
+                class="full"
+                type="text"
+                [value]="bindingActionArg"
+                (input)="bindingActionArg = $any($event.target).value"
+                placeholder="Optional arg"
+              />
+              <div class="hint" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
+            </div>
+
+            <div class="field" *ngIf="bindingType === 'program'">
+              <label class="field-label">Program path</label>
+              <input
+                class="full"
+                type="text"
+                [value]="bindingProgramPath"
+                (input)="bindingProgramPath = $any($event.target).value"
+                placeholder="C:\\Path\\to\\app.exe"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="program-path-hint"
+              />
+              <div class="hint" id="program-path-hint">Use an executable path that the OS can open.</div>
+            </div>
+
+            <div class="field" *ngIf="bindingType === 'inlineSequence'">
+              <label class="field-label">Text macro</label>
+              <textarea
+                class="full"
+                rows="4"
+                [value]="bindingInlineText"
+                (input)="bindingInlineText = $any($event.target).value"
+                placeholder="Text to type when pressed"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="inline-sequence-hint"
+              ></textarea>
+              <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
+            </div>
+
+            <div class="field errors" *ngIf="bindingErrors.length" role="alert" aria-live="polite">
+              <div class="error" *ngFor="let err of bindingErrors">{{ err }}</div>
+            </div>
+
+            <div class="binding-actions stack">
+              <button
+                class="btn primary full"
+                type="button"
+                (click)="assignSelectedScriptToTarget()"
+                [disabled]="!selectedTargetId || !!bindingErrors.length"
+              >
+                Assign
+              </button>
+              <button
+                class="btn ghost full"
+                type="button"
+                (click)="clearBinding()"
+                [disabled]="!selectedTargetId"
+              >
+                Clear
+              </button>
+            </div>
           </div>
 
-          <div class="field" *ngIf="bindingType === 'program'">
-            <label>Program path</label>
-            <input
-              type="text"
-              [value]="bindingProgramPath"
-              (input)="bindingProgramPath = $any($event.target).value"
-              placeholder="C:\\Path\\to\\app.exe"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="program-path-hint"
-            />
-            <div class="hint" id="program-path-hint">Use an executable path that the OS can open.</div>
-          </div>
-
-          <div class="field" *ngIf="bindingType === 'inlineSequence'">
-            <label>Text macro</label>
-            <textarea
-              rows="4"
-              [value]="bindingInlineText"
-              (input)="bindingInlineText = $any($event.target).value"
-              placeholder="Text to type when pressed"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="inline-sequence-hint"
-            ></textarea>
-            <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
-          </div>
-
-          <div class="field errors" *ngIf="bindingErrors.length" role="alert" aria-live="polite">
-            <div class="error" *ngFor="let err of bindingErrors">{{ err }}</div>
-          </div>
-
-          <div class="binding-actions">
-            <button
-              class="btn ghost"
-              type="button"
-              (click)="assignSelectedScriptToTarget()"
-              [disabled]="!selectedTargetId || !!bindingErrors.length"
-            >
-              Assign
-            </button>
-            <button
-              class="btn ghost"
-              type="button"
-              (click)="clearBinding()"
-              [disabled]="!selectedTargetId"
-            >
-              Clear
-            </button>
+          <div class="card card--context" *ngIf="selectedLayoutElement as el">
+            <div class="card-label">Context</div>
+            <div class="context-pill" *ngIf="!isControlElement(el)">Key options: Macro, Tap, Hold</div>
+            <div class="context-pill" *ngIf="isControlElement(el)">Encoder options: CC, Volume, Scroll</div>
           </div>
         </div>
         <ng-template #noTarget>
-          <div class="inspector-card empty-target">
-            <div class="muted">Select a key or knob on the device to edit its binding.</div>
+          <div class="inspector-card empty-target ghost-card">
+            <div class="ghost-icon">🎯</div>
+            <div class="ghost-title">Pick something to edit</div>
+            <div class="ghost-text">Click a key or encoder block on the canvas to start.</div>
           </div>
         </ng-template>
       </div>

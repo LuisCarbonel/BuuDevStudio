@@ -10,3 +10,76 @@ app-root {
   display: block;
   height: 100%;
 }
+
+/* CDK drag/drop visuals */
+.cdk-drag-preview {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  border: 1px solid #e0e7ff;
+  background: #fff;
+  color: #111;
+  padding: 6px 10px;
+  font-weight: 600;
+  opacity: 0.95;
+  cursor: grabbing;
+  outline: none;
+  overflow: hidden;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 220px;
+  width: 240px;
+  box-sizing: border-box;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.35;
+  border: 1px dashed #c6d4f5;
+  border-radius: 10px;
+  background: #e8f1ff;
+  box-sizing: border-box;
+}
+
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  opacity: 0.7;
+}
+
+.cdk-drag.cdk-drag-dragging {
+  cursor: grabbing !important;
+  user-select: none;
+}
+
+.cdk-drag-preview * {
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.cdk-drag-dragging *,
+.cdk-drag-dragging {
+  cursor: grabbing !important;
+}
+
+/* Make any drag handle/dragged item show grab on hover by default */
+.cdk-drag {
+  cursor: grab;
+}
+
+.cdk-drag:active {
+  cursor: grabbing;
+}
+
+.cdk-drag-handle {
+  cursor: grab;
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Root override for Tauri/WebView to force grabbing during drag */
+html.dragging,
+html.dragging * {
+  cursor: grabbing !important;
+}

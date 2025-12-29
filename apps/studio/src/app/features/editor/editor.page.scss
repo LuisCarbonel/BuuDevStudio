@@ -161,6 +161,19 @@
   opacity: 0.7;
 }
 
+.drag-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  cursor: grab;
+}
+
+.drag-item:active,
+.drag-item.cdk-drag-dragging {
+  cursor: grabbing;
+}
+
 .pill {
   border-radius: 999px;
   background: #f5f5f5;
@@ -282,10 +295,98 @@
   background: #f9fbff;
 }
 
+.card-stack {
+  gap: 12px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e9f2;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card--script {
+  background: linear-gradient(135deg, #e6f4ff, #f9fbff);
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.card-label {
+  font-size: 12px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.target-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f0f4ff;
+  font-weight: 700;
+}
+
+.prop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f9fbff;
+  border: 1px dashed #e1e7f3;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.prop {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.prop-key {
+  opacity: 0.7;
+}
+
+.prop-val {
+  font-weight: 700;
+}
+
 .field {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 12px;
+  opacity: 0.7;
 }
 
 .field select {
@@ -312,6 +413,21 @@
 .binding-actions {
   display: flex;
   gap: 8px;
+}
+
+.binding-actions.stack {
+  flex-direction: column;
+}
+
+.btn.primary {
+  background: #1677ff;
+  color: #fff;
+  border-color: #1677ff;
+}
+
+.btn.full,
+.full {
+  width: 100%;
 }
 
 .row {
@@ -385,6 +501,32 @@
   text-align: center;
 }
 
+.ghost-card {
+  align-items: center;
+  gap: 6px;
+  background: #f7f9fc;
+}
+
+.ghost-icon {
+  font-size: 28px;
+}
+
+.ghost-title {
+  font-weight: 700;
+}
+
+.ghost-text {
+  opacity: 0.7;
+}
+
+.context-pill {
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #f2f5ff;
+  font-weight: 600;
+  text-align: center;
+}
+
 .inspector-card .v {
   max-width: 100%;
   word-break: break-word;
@@ -395,12 +537,7 @@
   height: 400px;
   max-width: 100%;
   margin: 0 auto;
-  background-color: #f8f8f8;
-  background: url('/megalodon-knob3-updated.svg') center center / contain no-repeat;
-}
-
-.device-view svg {
-  display: none; /* hide inline SVG; background image + overlay handle visuals and interaction */
+  background: none;
 }
 
 .drop-overlay {
@@ -413,8 +550,17 @@
 .drop-hit {
   position: absolute;
   pointer-events: auto;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  border-radius: 8px;
+  transition: border-color 120ms ease, background 120ms ease;
 }
 
 .drop-hit:focus-visible {
   outline: 2px solid #3b82f6;
+}
+
+.drop-hit.cdk-drop-list-dragging {
+  border-color: #1677ff;
+  background: rgba(22, 119, 255, 0.12);
 }

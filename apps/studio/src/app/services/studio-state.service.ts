@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { NormalizedLayout } from '../shared/layout/models';
 
 export type Binding =
   | { type: 'none' }
@@ -151,6 +152,7 @@ const initialState: StudioState = {
 export class StudioStateService {
   private state = new BehaviorSubject<StudioState>(initialState);
   readonly state$ = this.state.asObservable();
+  private layout: NormalizedLayout | null = null;
 
   get snapshot(): StudioState {
     return this.state.value;
@@ -220,6 +222,14 @@ export class StudioStateService {
     return Object.entries(this.activeBindings)
       .filter(([, binding]) => binding.type !== 'none')
       .map(([targetId]) => targetId);
+  }
+
+  get normalizedLayout(): NormalizedLayout | null {
+    return this.layout;
+  }
+
+  setNormalizedLayout(layout: NormalizedLayout | null) {
+    this.layout = layout;
   }
 
   selectProfile(profileId: string) {

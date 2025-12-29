@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 
 import { StudioStateService } from '../../services/studio-state.service';
 import { DragSourceDirective } from '../../directives/drag-source.directive';
 import { DropTargetDirective } from '../../directives/drop-target.directive';
+import { DeviceViewComponent } from '../../shared/device-view/device-view';
+import { ControlElement, DiagnosticEntry, KeyElement, NormalizedLayout } from '../../shared/layout/models';
+import { normalizeAnyLayout } from '../../shared/layout/layout-registry';
 
 type TargetId =
   | 'key-01'
@@ -229,11 +232,11 @@ const DEVICE_LAYOUT: DeviceLayout = {
 @Component({
   selector: 'app-editor-page',
   standalone: true,
-  imports: [CommonModule, DragDropModule, DragSourceDirective, DropTargetDirective],
+  imports: [CommonModule, DragDropModule, DragSourceDirective, DropTargetDirective, DeviceViewComponent],
   templateUrl: './editor.page.html',
   styleUrl: './editor.page.scss',
 })
-export class EditorPage {
+export class EditorPage implements OnInit {
   readonly deviceLayout = DEVICE_LAYOUT;
   readonly keyHitSize = 66;
   readonly keyHitRadius = 8;
@@ -251,12 +254,35 @@ export class EditorPage {
   bindingActionArg = '';
   bindingInlineText = '';
   bindingProgramPath = '';
+  normalizedLayout: NormalizedLayout | null = null;
+  layoutDiagnostics: DiagnosticEntry[] = [];
+  layoutMode: 'view' | 'edit' = 'view';
+  layoutUnitPx = 50;
+  hoveredElementId: string | null = null;
+  layoutSelectionId: string | null = null;
+  fixtures = [
+    { label: 'Simple Grid', path: '/layout-fixtures/simple-grid.json' },
+    { label: 'Big Keys', path: '/layout-fixtures/big-keys.json' },
+    { label: 'Offsets X/Y', path: '/layout-fixtures/offsets-y.json' },
+    { label: 'DOIO KB16 (Vial)', path: '/layout-fixtures/doio-kb16.json' },
+    { label: 'KB16 Keebmonkey VIA', path: '/layout-fixtures/kb16-keebmonkey-via.json' },
+  ];
+  selectedFixture = this.fixtures[0].path;
+  loadingFixture = false;
+  fixtureError: string | null = null;
 
   actions = ['Wait', 'Key Down', 'Key Up', 'Tap', 'Mouse', 'If / Else', 'Set Variable', 'Loop'];
 
   presets = ['Micro-gap', 'Jitter pattern', 'Burst tap', 'Fast strafes'];
 
-  constructor(private studio: StudioStateService) {}
+  constructor(private studio: StudioStateService) {
+    this.normalizedLayout = this.studio.normalizedLayout;
+  }
+
+  ngOnInit(): void {
+    // Auto-load the first fixture as a mock fallback to render the canvas.
+    this.loadFixtureByPath(this.selectedFixture);
+  }
 
   toggleLibrary() {
     this.libraryOpen = !this.libraryOpen;
@@ -283,6 +309,10 @@ export class EditorPage {
 
   selectProfile(profileId: string) {
     this.studio.selectProfile(profileId);
+    this.layoutSelectionId = null;
+    this.hoveredElementId = null;
+    this.bindingType = 'scriptRef';
+    this.bindingScriptId = null;
   }
 
   selectScript(scriptId: string) {
@@ -472,6 +502,65 @@ export class EditorPage {
     };
   }
 
+  loadLayout(raw: unknown) {
+    const result = normalizeAnyLayout(raw);
+    this.layoutDiagnostics = result.diagnostics;
+    this.normalizedLayout = result.layout ?? null;
+    this.studio.setNormalizedLayout(this.normalizedLayout);
+  }
+
+  toggleLayoutMode() {
+    this.layoutMode = this.layoutMode === 'view' ? 'edit' : 'view';
+  }
+
+  onDeviceSelect(id: string) {
+    this.layoutSelectionId = id;
+    this.selectTarget(id);
+  }
+
+  onDeviceDeselect() {
+    this.layoutSelectionId = null;
+    this.hoveredElementId = null;
+    this.studio.setTarget(null);
+  }
+
+  onDeviceHover(id: string | null) {
+    this.hoveredElementId = id;
+  }
+
+  onDeviceMove(ev: { id: string; dx: number; dy: number }) {
+    if (!this.normalizedLayout) return;
+    this.normalizedLayout = {
+      ...this.normalizedLayout,
+      keys: this.normalizedLayout.keys.map(k =>
+        k.elementId === ev.id ? { ...k, x: k.x + ev.dx, y: k.y + ev.dy } : k
+      ),
+      controls: this.normalizedLayout.controls.map(c =>
+        c.elementId === ev.id ? { ...c, x: c.x + ev.dx, y: c.y + ev.dy } : c
+      ),
+    };
+    this.studio.setNormalizedLayout(this.normalizedLayout);
+  }
+
+  onCanvasDeselect() {
+    this.onDeviceDeselect();
+  }
+
+  async loadFixtureByPath(path: string) {
+    this.loadingFixture = true;
+    this.fixtureError = null;
+    try {
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const raw = await res.json();
+      this.loadLayout(raw);
+    } catch (e: any) {
+      this.fixtureError = e?.message || 'Failed to load fixture';
+    } finally {
+      this.loadingFixture = false;
+    }
+  }
+
   get bindingErrors(): string[] {
     const errors: string[] = [];
     switch (this.bindingType) {
@@ -513,5 +602,18 @@ export class EditorPage {
       const [op, ...rest] = line.split(' ');
       return { id: idx + 1, name: line, op: op.toUpperCase(), arg: rest.join(' ') };
     });
+  }
+
+  get selectedLayoutElement(): KeyElement | ControlElement | null {
+    if (!this.normalizedLayout || !this.layoutSelectionId) return null;
+    return (
+      this.normalizedLayout.keys.find(k => k.elementId === this.layoutSelectionId) ??
+      this.normalizedLayout.controls.find(c => c.elementId === this.layoutSelectionId) ??
+      null
+    );
+  }
+
+  isControlElement(el: KeyElement | ControlElement): el is ControlElement {
+    return (el as ControlElement).kind !== undefined;
   }
 }
