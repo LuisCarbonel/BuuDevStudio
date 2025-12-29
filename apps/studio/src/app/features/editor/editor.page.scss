@@ -66,6 +66,20 @@
   min-height: 540px;
 }
 
+.wb-body.library-closed {
+  grid-template-columns: 1fr 280px;
+}
+
+.wb-body.focus {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.wb-body.focus .pane--library,
+.wb-body.focus .pane--inspector {
+  display: none !important;
+}
+
 .pane {
   background: #fff;
   border-radius: 12px;

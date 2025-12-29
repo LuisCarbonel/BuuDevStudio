@@ -2,15 +2,15 @@
   <div class="wb-header">
     <div class="crumbs">
       <div class="crumb">
-        <div class="label">Profile</div>
-        <div class="value">
-          {{ activeProfile?.name }}
-          <span class="badge" *ngIf="activeProfile?.active">Active</span>
+          <div class="label">Profile</div>
+          <div class="value">
+          {{ selectedProfile?.name }}
+          <span class="badge" *ngIf="selectedProfile">Active</span>
         </div>
       </div>
       <div class="crumb">
         <div class="label">Script</div>
-        <div class="value">{{ activeScript?.name }}</div>
+        <div class="value">{{ selectedScript?.name }}</div>
       </div>
       <div class="crumb">
         <div class="label">Mode</div>
@@ -22,19 +22,30 @@
       <button class="btn ghost" type="button" (click)="toggleLibrary()">
         {{ libraryOpen ? 'Hide' : 'Show' }} Library
       </button>
+      <button class="btn ghost" type="button" (click)="toggleFocus()">
+        {{ focusMode ? 'Exit focus' : 'Focus mode' }}
+      </button>
     </div>
   </div>
 
-  <div class="wb-body">
-    <aside class="pane pane--library" *ngIf="libraryOpen">
+  <div
+    class="wb-body"
+    [class.library-closed]="!libraryOpen"
+    [class.focus]="focusMode"
+  >
+    <aside class="pane pane--library" *ngIf="libraryOpen && !focusMode">
       <div class="pane-title">Library</div>
 
       <div class="section">
         <div class="section-title">Profiles</div>
         <ul class="list">
-          <li *ngFor="let p of profiles" [class.active]="p.active">
+          <li
+            *ngFor="let p of profiles"
+            [class.active]="p.id === selectedProfile?.id"
+            (click)="selectProfile(p.id)"
+          >
             <div class="item-name">{{ p.name }}</div>
-            <span class="pill" *ngIf="p.active">Active</span>
+            <span class="pill" *ngIf="p.id === selectedProfile?.id">Active</span>
           </li>
         </ul>
       </div>
@@ -42,9 +53,13 @@
       <div class="section">
         <div class="section-title">Scripts</div>
         <ul class="list">
-          <li *ngFor="let s of scripts" [class.selected]="s === activeScript">
+          <li
+            *ngFor="let s of scriptsForProfile"
+            [class.selected]="s.id === selectedScript?.id"
+            (click)="selectScript(s.id)"
+          >
             <div class="item-name">{{ s.name }}</div>
-            <div class="item-meta">Profile: {{ s.profile }}</div>
+            <div class="item-meta">Profile: {{ selectedProfile?.name }}</div>
           </li>
         </ul>
       </div>
@@ -75,12 +90,12 @@
       <div class="pane-body pane-body--canvas">
         <div class="canvas-placeholder">
           <div class="canvas-title">Canvas placeholder</div>
-          <div class="canvas-subtitle">Selected script: {{ activeScript?.name }}</div>
+          <div class="canvas-subtitle">Selected script: {{ selectedScript?.name }}</div>
 
           <div class="steps">
             <div
               class="step"
-              *ngFor="let s of steps"
+              *ngFor="let s of currentSteps"
               [class.selected]="s.id === selectedStepId"
               (click)="selectStep(s.id)"
             >
@@ -92,12 +107,12 @@
       </div>
     </main>
 
-    <aside class="pane pane--inspector">
+    <aside class="pane pane--inspector" *ngIf="!focusMode">
       <div class="pane-title">Inspector</div>
 
       <div class="inspector-section">
         <div class="inspector-label">Script</div>
-        <div class="inspector-value">{{ activeScript?.name }}</div>
+        <div class="inspector-value">{{ selectedScript?.name }}</div>
       </div>
 
       <div class="inspector-section">

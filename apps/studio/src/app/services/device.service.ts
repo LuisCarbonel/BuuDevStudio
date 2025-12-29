@@ -14,6 +14,7 @@ export class DeviceService {
   private busy = new BehaviorSubject<boolean>(false);
   private running = new BehaviorSubject<boolean>(false);
   private ramLoaded = new BehaviorSubject<boolean>(false);
+  private revision = 0;
 
   readonly connected$ = this.connected.asObservable();
   readonly busy$ = this.busy.asObservable();
@@ -59,20 +60,20 @@ export class DeviceService {
     await new Promise(resolve => setTimeout(resolve, 120));
     this.ramLoaded.next(true);
     this.busy.next(false);
-    console.log('Uploaded to RAM (mock)');
+    console.log('Uploaded to RAM (mock) payload summary: scripts=1, steps=3, profile=active');
   }
 
   run() {
     if (!this.connected.value || this.busy.value) return;
     this.running.next(true);
-    console.log('Run (mock)');
+    console.log('Run (mock) started');
   }
 
   stopAll() {
     if (!this.connected.value) return;
     this.running.next(false);
     this.busy.next(false);
-    console.log('Stop all (mock panic)');
+    console.log('Stop all (mock panic) — running cleared, held keys released');
   }
 
   async commitToFlash() {
@@ -80,7 +81,8 @@ export class DeviceService {
     this.busy.next(true);
     // Simulate safe flash commit
     await new Promise(resolve => setTimeout(resolve, 180));
+    this.revision += 1;
     this.busy.next(false);
-    console.log('Commit to flash (mock)');
+    console.log(`Commit to flash (mock) revision #${this.revision} saved`);
   }
 }
