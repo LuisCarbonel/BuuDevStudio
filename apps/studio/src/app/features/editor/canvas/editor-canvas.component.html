@@ -1,0 +1,42 @@
+<div class="pane pane--canvas">
+  <div class="pane-title">Canvas</div>
+
+  <div class="canvas-tabs">
+    <button class="tab active" type="button">Device View</button>
+    <button class="tab" type="button">Timeline View</button>
+  </div>
+
+  <div class="layout-toolbar">
+    <span class="muted">Layout provided by connected device.</span>
+    <button class="btn ghost" type="button" (click)="toggleLayoutMode.emit()">
+      {{ layoutMode === 'view' ? 'Edit layout' : 'View mode' }}
+    </button>
+  </div>
+
+  <div class="pane-body pane-body--canvas" (pointerdown)="deselect.emit()">
+    <div class="device-view">
+      <ng-container *ngIf="normalizedLayout; else noLayout">
+        <app-device-view
+          [layout]="normalizedLayout"
+          [selection]="layoutSelectionId"
+          [hoverId]="hoveredElementId"
+          [mode]="layoutMode"
+          [unitPx]="layoutUnitPx"
+          [dropConnectedTo]="[]"
+          [dropEnabled]="false"
+          (pointerdown)="$event.stopPropagation()"
+          (select)="select.emit($event)"
+          (deselect)="deselect.emit()"
+          (hover)="hover.emit($event)"
+          (moveDelta)="moveDelta.emit($event)"
+          (assignDrop)="onAssignDrop($event.targetId, $event.payload)"
+        ></app-device-view>
+      </ng-container>
+      <ng-template #noLayout>
+        <div class="canvas-placeholder">
+          Connect to a device to load its layout.
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

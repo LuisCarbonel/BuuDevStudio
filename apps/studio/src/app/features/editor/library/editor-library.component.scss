@@ -1,0 +1,12 @@
+@import '../editor-shared';
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 13px;
+}

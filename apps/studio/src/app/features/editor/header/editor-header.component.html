@@ -1,0 +1,28 @@
+<div class="wb-header">
+  <div class="crumbs">
+    <div class="crumb">
+      <div class="label">Profile</div>
+      <div class="value">
+        {{ selectedProfileName }}
+        <span class="badge" *ngIf="selectedProfileName">Active</span>
+      </div>
+    </div>
+    <div class="crumb">
+      <div class="label">Script</div>
+      <div class="value">{{ selectedScriptName }}</div>
+    </div>
+    <div class="crumb">
+      <div class="label">Mode</div>
+      <div class="value">Device view · Editing layer {{ activeLayer }}</div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn ghost" type="button" (click)="toggleLibrary.emit()">
+      {{ libraryOpen ? 'Hide' : 'Show' }} Library
+    </button>
+    <button class="btn ghost" type="button" (click)="toggleFocus.emit()">
+      {{ focusMode ? 'Exit focus' : 'Focus mode' }}
+    </button>
+  </div>
+</div>

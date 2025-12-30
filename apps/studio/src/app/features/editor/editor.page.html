@@ -1,332 +1,71 @@
 <div class="workbench">
-  <div class="wb-header">
-    <div class="crumbs">
-      <div class="crumb">
-          <div class="label">Profile</div>
-          <div class="value">
-          {{ selectedProfile?.name }}
-          <span class="badge" *ngIf="selectedProfile">Active</span>
-        </div>
-      </div>
-      <div class="crumb">
-        <div class="label">Script</div>
-        <div class="value">{{ selectedScript?.name }}</div>
-      </div>
-      <div class="crumb">
-        <div class="label">Mode</div>
-        <div class="value">Device view · Editing layer {{ activeLayer }}</div>
-      </div>
-    </div>
-
-    <div class="header-actions">
-      <button class="btn ghost" type="button" (click)="toggleLibrary()">
-        {{ libraryOpen ? 'Hide' : 'Show' }} Library
-      </button>
-      <button class="btn ghost" type="button" (click)="toggleFocus()">
-        {{ focusMode ? 'Exit focus' : 'Focus mode' }}
-      </button>
-    </div>
-  </div>
+  <app-editor-header
+    [selectedProfileName]="selectedProfile?.name || null"
+    [selectedScriptName]="selectedScript?.name || null"
+    [activeLayer]="activeLayer"
+    [libraryOpen]="libraryOpen"
+    [focusMode]="focusMode"
+    (toggleLibrary)="toggleLibrary()"
+    (toggleFocus)="toggleFocus()"
+  ></app-editor-header>
 
   <div
     class="wb-body"
     [class.library-closed]="!libraryOpen"
     [class.focus]="focusMode"
   >
-    <aside class="pane pane--library" *ngIf="libraryOpen && !focusMode">
-      <div class="pane-title">Library</div>
+    <app-editor-library
+      *ngIf="libraryOpen && !focusMode"
+      [profiles]="profiles"
+      [selectedProfileId]="selectedProfile?.id || null"
+      [scriptsForProfile]="scriptsForProfile"
+      [selectedScriptId]="selectedScript?.id || null"
+      [actions]="actions"
+      [presets]="presets"
+      [focusMode]="focusMode"
+      (selectProfile)="selectProfile($event)"
+      (selectScript)="selectScript($event)"
+    ></app-editor-library>
 
-      <div class="section">
-        <div class="section-title">Profiles</div>
-        <ul class="list">
-          <li
-            *ngFor="let p of profiles"
-            [class.active]="p.id === selectedProfile?.id"
-            (click)="selectProfile(p.id)"
-          >
-            <div class="item-name">{{ p.name }}</div>
-            <span class="pill" *ngIf="p.id === selectedProfile?.id">Active</span>
-          </li>
-        </ul>
-      </div>
+    <app-editor-canvas
+      [normalizedLayout]="normalizedLayout"
+      [layoutMode]="layoutMode"
+      [layoutUnitPx]="layoutUnitPx"
+      [layoutSelectionId]="layoutSelectionId"
+      [hoveredElementId]="hoveredElementId"
+      (toggleLayoutMode)="toggleLayoutMode()"
+      (select)="onDeviceSelect($event)"
+      (deselect)="onDeviceDeselect()"
+      (hover)="onDeviceHover($event)"
+      (moveDelta)="onDeviceMove($event)"
+      (assignDrop)="onDropAssign($event.targetId, $event.payload)"
+    ></app-editor-canvas>
 
-      <div class="section">
-        <div class="section-title">Scripts</div>
-        <ul class="list" cdkDropList #scriptsList="cdkDropList" id="scriptsList" [cdkDropListSortingDisabled]="true">
-          <li
-            *ngFor="let s of scriptsForProfile"
-            [class.selected]="s.id === selectedScript?.id"
-            (click)="selectScript(s.id)"
-            appDragSource
-            [appDragSource]="s.id"
-            [appDragSourceDisabled]="focusMode"
-          >
-            <div class="drag-item" cdkDragHandle>
-              <div class="item-name">{{ s.name }}</div>
-              <div class="item-meta">Profile: {{ selectedProfile?.name }}</div>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div class="section">
-        <div class="section-title">Actions / Blocks</div>
-        <div class="tags">
-          <span class="tag" *ngFor="let a of actions">{{ a }}</span>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">Presets</div>
-        <div class="tags">
-          <span class="tag" *ngFor="let p of presets">{{ p }}</span>
-        </div>
-      </div>
-    </aside>
-
-    <main class="pane pane--canvas">
-      <div class="pane-title">Canvas</div>
-
-      <div class="canvas-tabs">
-        <button class="tab active" type="button">Device View</button>
-        <button class="tab" type="button">Timeline View</button>
-      </div>
-
-      <div class="layout-toolbar">
-        <span class="muted">Layout provided by connected device.</span>
-        <button class="btn ghost" type="button" (click)="toggleLayoutMode()">
-          {{ layoutMode === 'view' ? 'Edit layout' : 'View mode' }}
-        </button>
-      </div>
-      <div class="pane-body pane-body--canvas" (pointerdown)="onCanvasDeselect()">
-        <div class="device-view">
-          <ng-container *ngIf="normalizedLayout; else noLayout">
-            <app-device-view
-              [layout]="normalizedLayout"
-              [selection]="layoutSelectionId"
-              [hoverId]="hoveredElementId"
-              [mode]="layoutMode"
-              [unitPx]="layoutUnitPx"
-              [dropConnectedTo]="[]"
-              [dropEnabled]="false"
-              (pointerdown)="$event.stopPropagation()"
-              (select)="onDeviceSelect($event)"
-              (deselect)="onDeviceDeselect()"
-              (hover)="onDeviceHover($event)"
-              (moveDelta)="onDeviceMove($event)"
-              (assignDrop)="onDropAssign($event.targetId, $event.payload)"
-            ></app-device-view>
-          </ng-container>
-          <ng-template #noLayout>
-            <div class="canvas-placeholder">
-              Connect to a device to load its layout.
-            </div>
-          </ng-template>
-        </div>
-      </div>
-    </main>
-
-    <aside class="pane pane--inspector" *ngIf="!focusMode">
-      <div class="pane-title">Inspector</div>
-
-      <div class="inspector-section">
-        <div class="inspector-card card-stack" *ngIf="selectedTargetId; else noTarget">
-          <div class="card card--script">
-            <div class="card-heading">
-              <div class="card-icon">🎛️</div>
-              <div>
-                <div class="card-label">Script</div>
-                <div class="card-title">{{ selectedScript?.name || 'None' }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card--target">
-            <div class="card-heading">
-              <div class="card-label">Target</div>
-              <div class="target-pill">
-                <span>{{ selectedTargetId }}</span>
-                <span class="target-dot" *ngIf="assignedTargetIds.includes(selectedTargetId)"></span>
-              </div>
-            </div>
-            <div class="prop-list" *ngIf="selectedLayoutElement as el">
-              <div class="prop">
-                <div class="prop-key">Layer</div>
-                <div class="prop-val">#{{ activeLayer }}</div>
-              </div>
-              <div class="prop">
-                <div class="prop-key">Type</div>
-                <div class="prop-val">{{ isControlElement(el) ? el.kind : 'key' }}</div>
-              </div>
-              <div class="prop" *ngIf="isControlElement(el)">
-                <div class="prop-key">Raw Label</div>
-                <div class="prop-val">{{ el.rawLabel || '—' }}</div>
-              </div>
-              <div class="prop" *ngIf="isControlElement(el)">
-                <div class="prop-key">Matrix Hint</div>
-                <div class="prop-val">{{ el.matrixHint || '—' }}</div>
-              </div>
-              <div class="prop" *ngIf="isControlElement(el)">
-                <div class="prop-key">Layout Index</div>
-                <div class="prop-val">{{ el.layoutIndex ?? '—' }}</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card--bindings">
-            <div class="card-label">Binding</div>
-            <div class="field">
-              <label class="field-label">Binding type</label>
-              <select
-                class="full"
-                aria-label="Binding type"
-                [value]="bindingType"
-                (change)="bindingType = $any($event.target).value"
-              >
-                <option value="scriptRef">Script</option>
-                <option value="program">Program</option>
-                <option value="inlineSequence">Text macro</option>
-                <option value="simpleAction">Simple action</option>
-                <option value="none">None</option>
-              </select>
-            </div>
-            <div class="field" *ngIf="bindingType === 'scriptRef'">
-              <label class="field-label" for="binding-script">Script</label>
-              <select
-                class="full"
-                id="binding-script"
-                [value]="bindingScriptId || ''"
-                (change)="onBindingScriptChange($any($event.target).value)"
-                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              >
-                <option value="" disabled>Select script</option>
-                <option *ngFor="let s of scriptsForProfile" [value]="s.id">
-                  {{ s.name }}
-                </option>
-              </select>
-            </div>
-            <div class="field" *ngIf="bindingType === 'simpleAction'">
-              <label class="field-label">Action</label>
-              <input
-                class="full"
-                type="text"
-                list="action-suggestions"
-                [value]="bindingAction"
-                (input)="bindingAction = $any($event.target).value"
-                placeholder="e.g., TAP KC_SPACE"
-                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-                aria-describedby="simple-action-hint"
-              />
-              <datalist id="action-suggestions">
-                <option *ngFor="let a of actions" [value]="a"></option>
-              </datalist>
-              <input
-                class="full"
-                type="text"
-                [value]="bindingActionArg"
-                (input)="bindingActionArg = $any($event.target).value"
-                placeholder="Optional arg"
-              />
-              <div class="hint" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
-            </div>
-
-            <div class="field" *ngIf="bindingType === 'program'">
-              <label class="field-label">Program path</label>
-              <input
-                class="full"
-                type="text"
-                [value]="bindingProgramPath"
-                (input)="bindingProgramPath = $any($event.target).value"
-                placeholder="C:\\Path\\to\\app.exe"
-                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-                aria-describedby="program-path-hint"
-              />
-              <div class="hint" id="program-path-hint">Use an executable path that the OS can open.</div>
-            </div>
-
-            <div class="field" *ngIf="bindingType === 'inlineSequence'">
-              <label class="field-label">Text macro</label>
-              <textarea
-                class="full"
-                rows="4"
-                [value]="bindingInlineText"
-                (input)="bindingInlineText = $any($event.target).value"
-                placeholder="Text to type when pressed"
-                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-                aria-describedby="inline-sequence-hint"
-              ></textarea>
-              <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
-            </div>
-
-            <div class="field errors" *ngIf="bindingErrors.length" role="alert" aria-live="polite">
-              <div class="error" *ngFor="let err of bindingErrors">{{ err }}</div>
-            </div>
-
-            <div class="binding-actions stack">
-              <button
-                class="btn primary full"
-                type="button"
-                (click)="assignSelectedScriptToTarget()"
-                [disabled]="!selectedTargetId || !!bindingErrors.length"
-              >
-                Assign
-              </button>
-              <button
-                class="btn ghost full"
-                type="button"
-                (click)="clearBinding()"
-                [disabled]="!selectedTargetId"
-              >
-                Clear
-              </button>
-            </div>
-          </div>
-
-          <div class="card card--context" *ngIf="selectedLayoutElement as el">
-            <div class="card-label">Context</div>
-            <div class="context-pill" *ngIf="!isControlElement(el)">Key options: Macro, Tap, Hold</div>
-            <div class="context-pill" *ngIf="isControlElement(el)">Encoder options: CC, Volume, Scroll</div>
-          </div>
-        </div>
-        <ng-template #noTarget>
-          <div class="inspector-card empty-target ghost-card">
-            <div class="ghost-icon">🎯</div>
-            <div class="ghost-title">Pick something to edit</div>
-            <div class="ghost-text">Click a key or encoder block on the canvas to start.</div>
-          </div>
-        </ng-template>
-      </div>
-
-      <div class="inspector-section">
-        <div class="inspector-label">Selection</div>
-
-        <div class="inspector-empty" *ngIf="!selectedStep">Select a step to edit.</div>
-
-        <div class="inspector-card" *ngIf="selectedStep as step">
-          <div class="row">
-            <div class="k">Step</div>
-            <div class="v">#{{ step.id }}</div>
-          </div>
-          <div class="row">
-            <div class="k">Name</div>
-            <div class="v">{{ step.name }}</div>
-          </div>
-          <div class="row">
-            <div class="k">Op</div>
-            <div class="v">{{ step.op }}</div>
-          </div>
-          <div class="row" *ngIf="step.arg">
-            <div class="k">Arg</div>
-            <div class="v">{{ step.arg }}</div>
-          </div>
-          <div class="row" *ngIf="step.class">
-            <div class="k">Delay Class</div>
-            <div class="v">C{{ step.class }}</div>
-          </div>
-        </div>
-      </div>
-    </aside>
+    <app-editor-inspector
+      *ngIf="!focusMode"
+      [selectedTargetId]="selectedTargetId"
+      [selectedLayoutElement]="selectedLayoutElement"
+      [assignedTargetIds]="assignedTargetIds"
+      [activeLayer]="activeLayer"
+      [selectedScriptName]="selectedScript?.name || null"
+      [bindingType]="bindingType"
+      [bindingScriptId]="bindingScriptId"
+      [bindingAction]="bindingAction"
+      [bindingActionArg]="bindingActionArg"
+      [bindingInlineText]="bindingInlineText"
+      [bindingProgramPath]="bindingProgramPath"
+      [bindingErrors]="bindingErrors"
+      [scriptsForProfile]="scriptsForProfile"
+      [actions]="actions"
+      [selectedStep]="selectedStep"
+      (bindingTypeChange)="bindingType = $event"
+      (bindingScriptChange)="onBindingScriptChange($event)"
+      (bindingActionChange)="bindingAction = $event"
+      (bindingActionArgChange)="bindingActionArg = $event"
+      (bindingInlineTextChange)="bindingInlineText = $event"
+      (bindingProgramPathChange)="bindingProgramPath = $event"
+      (assign)="assignSelectedScriptToTarget()"
+      (clear)="clearBinding()"
+    ></app-editor-inspector>
   </div>
 </div>
-
-

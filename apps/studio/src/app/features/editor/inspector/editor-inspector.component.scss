@@ -1,0 +1,198 @@
+@import '../editor-shared';
+
+.inspector-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.inspector-label {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.inspector-empty {
+  opacity: 0.7;
+  padding: 8px 0;
+}
+
+.inspector-card {
+  border: 1px solid #eef1f7;
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f9fbff;
+}
+
+.card-stack {
+  gap: 12px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e5e9f2;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card--script {
+  background: linear-gradient(135deg, #e6f4ff, #f9fbff);
+}
+
+.card-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+}
+
+.card-label {
+  font-size: 12px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.target-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #f0f4ff;
+  font-weight: 700;
+}
+
+.target-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #52c41a;
+}
+
+.prop-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #f9fbff;
+  border: 1px dashed #e1e7f3;
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.prop {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.prop-key {
+  opacity: 0.7;
+}
+
+.prop-val {
+  font-weight: 700;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field-label {
+  font-weight: 600;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.field select,
+.field input,
+.field textarea {
+  border: 1px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 6px 8px;
+  background: #fff;
+  font-family: inherit;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.binding-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.binding-actions.stack {
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.k {
+  opacity: 0.7;
+}
+
+.v {
+  font-weight: 700;
+}
+
+.ghost-card {
+  align-items: center;
+  gap: 6px;
+  background: #f7f9fc;
+}
+
+.ghost-icon {
+  font-size: 28px;
+}
+
+.ghost-title {
+  font-weight: 700;
+}
+
+.ghost-text {
+  opacity: 0.7;
+}
+
+.context-pill {
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: #f2f5ff;
+  font-weight: 600;
+  text-align: center;
+}
+
+.inspector-card .v {
+  max-width: 100%;
+  word-break: break-word;
+}

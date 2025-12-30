@@ -1,18 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { StudioStateService } from '../../services/studio-state.service';
 import { DeviceService } from '../../services/device.service';
 import { Binding } from '../../shared/models/device';
-import { DragSourceDirective } from '../../directives/drag-source.directive';
-import { DeviceViewComponent } from '../../shared/device-view/device-view';
 import { ControlElement, KeyElement } from '../../shared/layout/models';
+import { EditorHeaderComponent } from './header/editor-header.component';
+import { EditorLibraryComponent } from './library/editor-library.component';
+import { EditorCanvasComponent } from './canvas/editor-canvas.component';
+import { EditorInspectorComponent } from './inspector/editor-inspector.component';
 
 @Component({
   selector: 'app-editor-page',
   standalone: true,
-  imports: [CommonModule, DragDropModule, DragSourceDirective, DeviceViewComponent],
+  imports: [
+    CommonModule,
+    EditorHeaderComponent,
+    EditorLibraryComponent,
+    EditorCanvasComponent,
+    EditorInspectorComponent,
+  ],
   templateUrl: './editor.page.html',
   styleUrl: './editor.page.scss',
 })

@@ -1,0 +1,200 @@
+<div class="pane pane--inspector">
+  <div class="pane-title">Inspector</div>
+
+  <div class="inspector-section">
+    <div class="inspector-card card-stack" *ngIf="selectedTargetId; else noTarget">
+      <div class="card card--script">
+        <div class="card-heading">
+          <div class="card-icon">dYZ>‹,?</div>
+          <div>
+            <div class="card-label">Script</div>
+            <div class="card-title">{{ selectedScriptName || 'None' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card--target">
+        <div class="card-heading">
+          <div class="card-label">Target</div>
+          <div class="target-pill">
+            <span>{{ selectedTargetId }}</span>
+            <span class="target-dot" *ngIf="assignedTargetIds.includes(selectedTargetId)"></span>
+          </div>
+        </div>
+        <div class="prop-list" *ngIf="selectedLayoutElement as el">
+          <div class="prop">
+            <div class="prop-key">Layer</div>
+            <div class="prop-val">#{{ activeLayer }}</div>
+          </div>
+          <div class="prop">
+            <div class="prop-key">Type</div>
+            <div class="prop-val">{{ isControlElement(el) ? el.kind : 'key' }}</div>
+          </div>
+          <div class="prop" *ngIf="isControlElement(el)">
+            <div class="prop-key">Raw Label</div>
+            <div class="prop-val">{{ el.rawLabel || 'ƒ?"' }}</div>
+          </div>
+          <div class="prop" *ngIf="isControlElement(el)">
+            <div class="prop-key">Matrix Hint</div>
+            <div class="prop-val">{{ el.matrixHint || 'ƒ?"' }}</div>
+          </div>
+          <div class="prop" *ngIf="isControlElement(el)">
+            <div class="prop-key">Layout Index</div>
+            <div class="prop-val">{{ el.layoutIndex ?? 'ƒ?"' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card card--bindings">
+        <div class="card-label">Binding</div>
+        <div class="field">
+          <label class="field-label">Binding type</label>
+          <select
+            class="full"
+            aria-label="Binding type"
+            [value]="bindingType"
+            (change)="bindingTypeChange.emit($any($event.target).value)"
+          >
+            <option value="scriptRef">Script</option>
+            <option value="program">Program</option>
+            <option value="inlineSequence">Text macro</option>
+            <option value="simpleAction">Simple action</option>
+            <option value="none">None</option>
+          </select>
+        </div>
+        <div class="field" *ngIf="bindingType === 'scriptRef'">
+          <label class="field-label" for="binding-script">Script</label>
+          <select
+            class="full"
+            id="binding-script"
+            [value]="bindingScriptId || ''"
+            (change)="bindingScriptChange.emit($any($event.target).value)"
+            [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+          >
+            <option value="" disabled>Select script</option>
+            <option *ngFor="let s of scriptsForProfile" [value]="s.id">
+              {{ s.name }}
+            </option>
+          </select>
+        </div>
+        <div class="field" *ngIf="bindingType === 'simpleAction'">
+          <label class="field-label">Action</label>
+          <input
+            class="full"
+            type="text"
+            list="action-suggestions"
+            [value]="bindingAction"
+            (input)="bindingActionChange.emit($any($event.target).value)"
+            placeholder="e.g., TAP KC_SPACE"
+            [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+            aria-describedby="simple-action-hint"
+          />
+          <datalist id="action-suggestions">
+            <option *ngFor="let a of actions" [value]="a"></option>
+          </datalist>
+          <input
+            class="full"
+            type="text"
+            [value]="bindingActionArg"
+            (input)="bindingActionArgChange.emit($any($event.target).value)"
+            placeholder="Optional arg"
+          />
+          <div class="hint" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
+        </div>
+
+        <div class="field" *ngIf="bindingType === 'program'">
+          <label class="field-label">Program path</label>
+          <input
+            class="full"
+            type="text"
+            [value]="bindingProgramPath"
+            (input)="bindingProgramPathChange.emit($any($event.target).value)"
+            placeholder="C:\\Path\\to\\app.exe"
+            [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+            aria-describedby="program-path-hint"
+          />
+          <div class="hint" id="program-path-hint">Use an executable path that the OS can open.</div>
+        </div>
+
+        <div class="field" *ngIf="bindingType === 'inlineSequence'">
+          <label class="field-label">Text macro</label>
+          <textarea
+            class="full"
+            rows="4"
+            [value]="bindingInlineText"
+            (input)="bindingInlineTextChange.emit($any($event.target).value)"
+            placeholder="Text to type when pressed"
+            [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+            aria-describedby="inline-sequence-hint"
+          ></textarea>
+          <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
+        </div>
+
+        <div class="field errors" *ngIf="bindingErrors.length" role="alert" aria-live="polite">
+          <div class="error" *ngFor="let err of bindingErrors">{{ err }}</div>
+        </div>
+
+        <div class="binding-actions stack">
+          <button
+            class="btn primary full"
+            type="button"
+            (click)="assign.emit()"
+            [disabled]="!selectedTargetId || !!bindingErrors.length"
+          >
+            Assign
+          </button>
+          <button
+            class="btn ghost full"
+            type="button"
+            (click)="clear.emit()"
+            [disabled]="!selectedTargetId"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div class="card card--context" *ngIf="selectedLayoutElement as el">
+        <div class="card-label">Context</div>
+        <div class="context-pill" *ngIf="!isControlElement(el)">Key options: Macro, Tap, Hold</div>
+        <div class="context-pill" *ngIf="isControlElement(el)">Encoder options: CC, Volume, Scroll</div>
+      </div>
+    </div>
+    <ng-template #noTarget>
+      <div class="inspector-card empty-target ghost-card">
+        <div class="ghost-icon">dYZ_</div>
+        <div class="ghost-title">Pick something to edit</div>
+        <div class="ghost-text">Click a key or encoder block on the canvas to start.</div>
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="inspector-section">
+    <div class="inspector-label">Selection</div>
+
+    <div class="inspector-empty" *ngIf="!selectedStep">Select a step to edit.</div>
+
+    <div class="inspector-card" *ngIf="selectedStep as step">
+      <div class="row">
+        <div class="k">Step</div>
+        <div class="v">#{{ step.id }}</div>
+      </div>
+      <div class="row">
+        <div class="k">Name</div>
+        <div class="v">{{ step.name }}</div>
+      </div>
+      <div class="row">
+        <div class="k">Op</div>
+        <div class="v">{{ step.op }}</div>
+      </div>
+      <div class="row" *ngIf="step.arg">
+        <div class="k">Arg</div>
+        <div class="v">{{ step.arg }}</div>
+      </div>
+      <div class="row" *ngIf="step.class">
+        <div class="k">Delay Class</div>
+        <div class="v">C{{ step.class }}</div>
+      </div>
+    </div>
+  </div>
+</div>

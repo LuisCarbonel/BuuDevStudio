@@ -1,0 +1,50 @@
+<div class="pane pane--library">
+  <div class="pane-title">Library</div>
+
+  <div class="section">
+    <div class="section-title">Profiles</div>
+    <ul class="list">
+      <li
+        *ngFor="let p of profiles"
+        [class.active]="p.id === selectedProfileId"
+        (click)="selectProfile.emit(p.id)"
+      >
+        <div class="item-name">{{ p.name }}</div>
+        <span class="pill" *ngIf="p.id === selectedProfileId">Active</span>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Scripts</div>
+    <ul class="list" cdkDropList id="scriptsList" [cdkDropListSortingDisabled]="true">
+      <li
+        *ngFor="let s of scriptsForProfile"
+        [class.selected]="s.id === selectedScriptId"
+        (click)="selectScript.emit(s.id)"
+        appDragSource
+        [appDragSource]="s.id"
+        [appDragSourceDisabled]="focusMode"
+      >
+        <div class="drag-item" cdkDragHandle>
+          <div class="item-name">{{ s.name }}</div>
+          <div class="item-meta">Profile: {{ selectedProfileName }}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Actions / Blocks</div>
+    <div class="tags">
+      <span class="tag" *ngFor="let a of actions">{{ a }}</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Presets</div>
+    <div class="tags">
+      <span class="tag" *ngFor="let p of presets">{{ p }}</span>
+    </div>
+  </div>
+</div>
