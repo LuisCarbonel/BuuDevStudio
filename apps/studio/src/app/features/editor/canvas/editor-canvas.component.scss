@@ -15,7 +15,7 @@
 .tab {
   border: 1px solid var(--ed-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--ed-panel-bg);
   padding: 8px 14px;
   cursor: pointer;
   font-weight: 600;
@@ -45,20 +45,20 @@
 }
 
 .btn {
-  border: 1px solid #d9d9d9;
+  border: 1px solid var(--ed-border);
   border-radius: 8px;
-  background: #fff;
+  background: var(--ed-panel-bg);
   padding: 8px 12px;
   cursor: pointer;
   font-weight: 600;
 }
 
 .btn.ghost {
-  background: #f7f9fc;
+  background: var(--ed-surface-muted);
 }
 
 .canvas-placeholder {
-  background: #f9fbff;
+  background: var(--ed-surface-muted);
   border: 1px dashed #c2d9ff;
   border-radius: 10px;
   padding: 16px;

@@ -30,7 +30,7 @@
 
 .badge {
   background: #e6f4ff;
-  color: #1677ff;
+  color: var(--ed-primary);
   border-radius: 10px;
   padding: 2px 8px;
   font-size: 12px;
@@ -40,17 +40,4 @@
 .header-actions {
   display: flex;
   gap: 10px;
-}
-
-.btn {
-  border: 1px solid #d9d9d9;
-  border-radius: 8px;
-  background: #fff;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.btn.ghost {
-  background: #f7f9fc;
 }

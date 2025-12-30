@@ -4,17 +4,16 @@
 }
 
 .shell__sider {
+  --rail-speed: var(--rail-speed);
+  --rail-ease: var(--rail-ease);
+  --rail-transition: var(--rail-transition);
   padding: 10px 0;
   box-shadow: 1px 0 6px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 1;
   display: flex;
   min-height: 100vh;
-  transition: width 480ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 480ms cubic-bezier(0.4, 0, 0.2, 1) !important;
-}
-
-:host ::ng-deep .ant-layout-sider {
-  transition: width 480ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 480ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: var(--rail-transition) !important;
 }
 
 .brand {
@@ -26,6 +25,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  transition: padding var(--rail-speed) var(--rail-ease), gap var(--rail-speed) var(--rail-ease);
+}
+
+.brand-mark {
+  display: inline-block;
+  max-width: 140px;
+  transition: opacity var(--rail-speed) var(--rail-ease), max-width var(--rail-speed) var(--rail-ease);
 }
 
 .sider-inner {
@@ -35,6 +41,7 @@
   min-height: 100%;
   width: 100%;
   gap: 8px;
+  transition: padding var(--rail-speed) var(--rail-ease);
 }
 
 [nz-menu].nav-main {
@@ -44,7 +51,7 @@
 [nz-menu] {
   border-inline-end: 0;
   font-size: 16px;
-  transition: padding 320ms cubic-bezier(0.4, 0, 0.2, 1), width 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--rail-transition-menu);
 }
 
 [nz-menu] .ant-menu-item {
@@ -53,12 +60,12 @@
   align-items: center;
   gap: 10px;
   padding: 10px 16px !important;
-  transition: padding 320ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: var(--rail-transition-item);
 }
 
 .nav-label {
   font-weight: 600;
-  transition: opacity 260ms ease, max-width 260ms ease;
+  transition: var(--rail-transition-text);
   max-width: 160px;
   overflow: hidden;
 }
@@ -66,7 +73,7 @@
 .nav-desc {
   font-size: 12px;
   opacity: 0.7;
-  transition: opacity 260ms ease, max-width 260ms ease;
+  transition: var(--rail-transition-text);
   max-width: 160px;
   overflow: hidden;
 }
@@ -79,7 +86,7 @@
 
 .pin-btn {
   opacity: 0.6;
-  transition: opacity 120ms ease;
+  transition: opacity var(--rail-speed) var(--rail-ease), transform var(--rail-speed) var(--rail-ease);
 }
 
 .pin-btn:hover {
@@ -89,6 +96,15 @@
 .shell__sider.collapsed .brand {
   justify-content: center;
   padding: 0 8px 12px;
+}
+
+.shell__sider.collapsed .brand-mark {
+  max-width: 40px;
+  opacity: 1;
+}
+
+.shell__sider.collapsed .pin-btn {
+  opacity: 0.6;
 }
 
 .shell__sider.collapsed [nz-menu] .ant-menu-item {
