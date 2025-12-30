@@ -1,0 +1,66 @@
+{
+  "device": {
+    "id": "mock-kb16",
+    "name": "Mock KB16",
+    "transport": "mock",
+    "vendorId": "0xD010",
+    "productId": "0x1601",
+    "firmwareVersion": "0.0.1-mock"
+  },
+  "capabilities": {
+    "volatileApply": true,
+    "commit": true,
+    "layouts": true,
+    "keymap": true,
+    "scripts": true
+  },
+  "profile": {
+    "id": "p-default",
+    "name": "Default",
+    "layers": [
+      {
+        "id": 1,
+        "bindings": []
+      }
+    ]
+  },
+  "layout": {
+    "keys": [
+      { "elementId": "key:0,0", "matrixId": "0,0", "row": 0, "col": 0, "x": 0, "y": 0, "w": 1, "h": 1 },
+      { "elementId": "key:0,1", "matrixId": "0,1", "row": 0, "col": 1, "x": 1, "y": 0, "w": 1, "h": 1 },
+      { "elementId": "key:1,0", "matrixId": "1,0", "row": 1, "col": 0, "x": 0, "y": 1, "w": 1, "h": 1 },
+      { "elementId": "key:1,1", "matrixId": "1,1", "row": 1, "col": 1, "x": 1, "y": 1, "w": 1, "h": 1 }
+    ],
+    "controls": [],
+    "bounds": { "minX": 0, "maxX": 2, "minY": 0, "maxY": 2, "width": 2, "height": 2 }
+  },
+  "scripts": [
+    {
+      "id": "s-bhop",
+      "profileId": "p-default",
+      "name": "Bunnyhop",
+      "steps": [
+        { "id": 1, "name": "Tap SPACE", "op": "TAP", "arg": "KC_SPACE" },
+        { "id": 2, "name": "Wait 30ms", "op": "WAIT", "arg": "30", "class": 1 },
+        { "id": 3, "name": "Tap SPACE", "op": "TAP", "arg": "KC_SPACE" }
+      ]
+    }
+  ],
+  "committedState": {
+    "profileId": "p-default",
+    "layers": [
+      {
+        "id": 1,
+        "bindings": [
+          {
+            "layerId": 1,
+            "targetId": "key:0,0",
+            "binding": { "type": "scriptRef", "scriptId": "s-bhop" }
+          }
+        ]
+      }
+    ],
+    "revision": 0,
+    "checksum": 0
+  }
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "mock-kb16",
+    "name": "Mock KB16",
+    "transport": "mock",
+    "vendorId": "0xD010",
+    "productId": "0x1601",
+    "firmwareVersion": "0.0.1-mock"
+  }
+]
