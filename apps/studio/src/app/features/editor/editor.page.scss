@@ -200,6 +200,13 @@
   gap: 10px;
 }
 
+.layout-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
 .tab {
   border: 1px solid #d9d9d9;
   border-radius: 8px;
@@ -538,29 +545,4 @@
   max-width: 100%;
   margin: 0 auto;
   background: none;
-}
-
-.drop-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 2;
-}
-
-.drop-hit {
-  position: absolute;
-  pointer-events: auto;
-  cursor: pointer;
-  border: 1px dashed transparent;
-  border-radius: 8px;
-  transition: border-color 120ms ease, background 120ms ease;
-}
-
-.drop-hit:focus-visible {
-  outline: 2px solid #3b82f6;
-}
-
-.drop-hit.cdk-drop-list-dragging {
-  border-color: #1677ff;
-  background: rgba(22, 119, 255, 0.12);
 }

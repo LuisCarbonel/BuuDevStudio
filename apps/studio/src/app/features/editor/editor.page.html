@@ -92,29 +92,15 @@
         <button class="tab" type="button">Timeline View</button>
       </div>
 
-      <div class="layout-fixture-bar">
-        <label for="fixture-select">Fixture</label>
-        <select
-          id="fixture-select"
-          [value]="selectedFixture"
-          (change)="selectedFixture = $any($event.target).value"
-          [disabled]="loadingFixture"
-        >
-          <option *ngFor="let f of fixtures" [value]="f.path">{{ f.label }}</option>
-        </select>
-        <button class="btn ghost" type="button" (click)="loadFixtureByPath(selectedFixture)" [disabled]="loadingFixture">
-          Load
-        </button>
+      <div class="layout-toolbar">
+        <span class="muted">Layout provided by connected device.</span>
         <button class="btn ghost" type="button" (click)="toggleLayoutMode()">
           {{ layoutMode === 'view' ? 'Edit layout' : 'View mode' }}
         </button>
-        <span class="muted" *ngIf="loadingFixture">Loading…</span>
-        <span class="error" *ngIf="fixtureError">{{ fixtureError }}</span>
       </div>
-
       <div class="pane-body pane-body--canvas" (pointerdown)="onCanvasDeselect()">
         <div class="device-view">
-          <ng-container *ngIf="normalizedLayout; else legacyCanvas">
+          <ng-container *ngIf="normalizedLayout; else noLayout">
             <app-device-view
               [layout]="normalizedLayout"
               [selection]="layoutSelectionId"
@@ -131,32 +117,9 @@
               (assignDrop)="onDropAssign($event.targetId, $event.payload)"
             ></app-device-view>
           </ng-container>
-          <ng-template #legacyCanvas>
-            <div class="drop-overlay" *ngIf="scriptsDropList" aria-hidden="true" (pointerdown)="$event.stopPropagation()">
-              <div
-                *ngFor="let key of deviceLayout.keys"
-                class="drop-hit"
-                [ngStyle]="keyHitboxStyle(key)"
-                appDropTarget
-                [appDropTarget]="key.id"
-                [appDropTargetConnectedTo]="[scriptsDropList]"
-                [appDropTargetSortingDisabled]="true"
-                (appDropTargetAssign)="onDropAssign(key.id, $event)"
-                (click)="selectTarget(key.id)"
-              ></div>
-              <ng-container *ngFor="let knob of deviceLayout.knobs">
-                <div
-                  *ngFor="let zone of knob.zones"
-                  class="drop-hit"
-                  [ngStyle]="knobZoneHitboxStyle(knob, zone)"
-                  appDropTarget
-                  [appDropTarget]="zone.id"
-                  [appDropTargetConnectedTo]="[scriptsDropList]"
-                  [appDropTargetSortingDisabled]="true"
-                  (appDropTargetAssign)="onDropAssign(zone.id, $event)"
-                  (click)="selectTarget(zone.id)"
-                ></div>
-              </ng-container>
+          <ng-template #noLayout>
+            <div class="canvas-placeholder">
+              Connect to a device to load its layout.
             </div>
           </ng-template>
         </div>
@@ -365,3 +328,5 @@
     </aside>
   </div>
 </div>
+
+
