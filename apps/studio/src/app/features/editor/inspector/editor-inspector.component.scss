@@ -3,7 +3,7 @@
 .inspector-section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
 }
 
 .inspector-label {
@@ -17,48 +17,42 @@
 }
 
 .inspector-card {
-  border: 1px solid var(--ed-border-muted);
-  border-radius: 10px;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: var(--ed-surface-muted);
-}
-
-.card-stack {
-  gap: 12px;
-}
-
-.card {
-  background: var(--ed-panel-bg);
   border: 1px solid var(--ed-border);
   border-radius: 12px;
-  padding: 10px;
-  box-shadow: var(--ed-panel-shadow);
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  background: var(--surface-panel);
+  box-shadow: var(--shadow-raise-sm);
 }
 
-.card--sequance {
-  background: linear-gradient(135deg, #e6f4ff, var(--ed-surface-muted));
+.card--summary {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent-soft) 25%, var(--surface-panel)) 0%, var(--surface-panel) 100%);
+}
+
+.summary-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-strong);
+}
+
+.summary-strong {
+  font-weight: 700;
+}
+
+.summary-divider {
+  color: var(--text-subtle);
 }
 
 .card-heading {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-}
-
-.card-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--ed-panel-bg);
-  display: grid;
-  place-items: center;
-  font-size: 18px;
 }
 
 .card-label {
@@ -73,59 +67,16 @@
   font-size: 16px;
 }
 
-.target-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: #f0f4ff;
-  font-weight: 700;
-}
-
-.target-dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 999px;
-  background: #52c41a;
-}
-
-.prop-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  background: var(--ed-surface-muted);
-  border: 1px dashed var(--ed-border-muted);
-  border-radius: 10px;
-  padding: 8px;
-}
-
-.prop {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.prop-key {
-  opacity: 0.7;
-}
-
-.prop-val {
-  font-weight: 700;
-}
-
 .field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .field-label {
   font-weight: 600;
   font-size: 12px;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .field select,
@@ -133,7 +84,7 @@
 .field textarea {
   border: 1px solid var(--ed-border);
   border-radius: 8px;
-  padding: 6px 8px;
+  padding: 10px;
   background: var(--ed-panel-bg);
   font-family: inherit;
 }
@@ -145,11 +96,38 @@
 
 .binding-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
 }
 
 .binding-actions.stack {
   flex-direction: column;
+}
+
+.context-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.chevron {
+  transition: transform 120ms ease;
+}
+
+.chevron.open {
+  transform: rotate(-180deg);
+}
+
+.context-body {
+  padding-top: 6px;
+}
+
+.context-pill {
+  border-radius: 999px;
+  padding: 8px 12px;
+  background: var(--accent-soft);
+  font-weight: 600;
+  text-align: center;
 }
 
 .row {
@@ -182,14 +160,6 @@
 
 .ghost-text {
   opacity: 0.7;
-}
-
-.context-pill {
-  border-radius: 999px;
-  padding: 8px 12px;
-  background: #f2f5ff;
-  font-weight: 600;
-  text-align: center;
 }
 
 .inspector-card .v {

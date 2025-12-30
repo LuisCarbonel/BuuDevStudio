@@ -1,28 +1,140 @@
 <div class="wb-header">
-  <div class="crumbs">
-    <div class="crumb">
-      <div class="label">Profile</div>
-      <div class="value">
-        {{ selectedProfileName }}
-        <span class="badge" *ngIf="selectedProfileName">Active</span>
+  <div class="header-row">
+    <div class="left">
+      <div class="status-line toolbar">
+        <div class="toolbar__section">
+          <span class="dot" [class.off]="!connected"></span>
+          <span class="status-label">{{ connected ? 'Connected' : 'Disconnected' }}</span>
+          <span class="status-strong" *ngIf="deviceName">{{ deviceName }}</span>
+        </div>
+
+        <div class="toolbar__section toolbar__section--grow toolbar__meta">
+          <span class="divider" *ngIf="sessionId">&middot;</span>
+          <span
+            class="status-meta session toolbar__meta-item"
+            *ngIf="sessionId"
+            nz-tooltip
+            [nzTooltipTitle]="sessionId"
+          >
+            Session ID: {{ sessionId }}
+          </span>
+          <span class="divider">&middot;</span>
+          <span
+            class="status-meta toolbar__meta-item"
+            nz-tooltip
+            [nzTooltipTitle]="'Revision ' + (revision ?? 'n/a')"
+          >
+            Revision {{ revision ?? 'n/a' }}
+          </span>
+          <span class="divider">&middot;</span>
+          <span
+            class="status-meta toolbar__meta-item"
+            nz-tooltip
+            [nzTooltipTitle]="dirty ? 'Changes staged' : 'No changes staged'"
+          >
+            {{ dirty ? 'Changes staged' : 'No changes staged' }}
+          </span>
+        </div>
+      </div>
+
+      <div class="layer-row toolbar toolbar--wrap">
+        <div class="toolbar__section">
+          <button
+          nz-button
+          nzSize="small"
+          nzType="default"
+          class="pill-btn ctrl ctrl--pill ctrl--wide"
+          [nzDropdownMenu]="layerMenu"
+          [nzOverlayStyle]="layerOverlayStyle"
+          [nzOverlayClassName]="'overlay-match-trigger'"
+          nz-dropdown
+          [disabled]="!layerOptions.length"
+          (nzVisibleChange)="syncOverlayWidths()"
+          #layerBtn
+        >
+          <span class="pill-btn__label">Layer {{ activeLayer }} · Revision {{ revision ?? 'n/a' }}</span>
+          <span nz-icon nzType="down"></span>
+        </button>
+        <nz-dropdown-menu #layerMenu="nzDropdownMenu">
+            <ul nz-menu>
+              <li
+                nz-menu-item
+                *ngFor="let layer of layerOptions"
+                [nzSelected]="layer === activeLayer"
+                (click)="selectLayer.emit(layer)"
+              >
+                Layer {{ layer }}
+              </li>
+              <li nz-menu-item *ngIf="!layerOptions?.length" nzDisabled>No layers provided</li>
+            </ul>
+          </nz-dropdown-menu>
+        </div>
+
+        <div class="layer-meta toolbar__section toolbar__meta toolbar__section--grow">
+          <span class="meta" [class.muted]="!dirty">{{ dirty ? 'Dirty' : 'Clean' }}</span>
+          <span class="divider">&middot;</span>
+          <span class="meta" nz-tooltip [nzTooltipTitle]="'Revision ' + (revision ?? 'n/a')">
+            Revision {{ revision ?? 'n/a' }}
+          </span>
+          <span class="divider">&middot;</span>
+          <span class="meta" nz-tooltip [nzTooltipTitle]="dirty ? 'Changes staged' : '0 changes staged'">
+            {{ dirty ? 'Changes staged' : '0 changes staged' }}
+          </span>
+        </div>
       </div>
     </div>
-    <div class="crumb">
-      <div class="label">Sequance</div>
-      <div class="value">{{ selectedSequanceName }}</div>
-    </div>
-    <div class="crumb">
-      <div class="label">Mode</div>
-      <div class="value">Device view · Editing layer {{ activeLayer }}</div>
-    </div>
-  </div>
 
-  <div class="header-actions">
-    <button class="btn ghost" type="button" (click)="toggleLibrary.emit()">
-      {{ libraryOpen ? 'Hide' : 'Show' }} Library
-    </button>
-    <button class="btn ghost" type="button" (click)="toggleFocus.emit()">
-      {{ focusMode ? 'Exit focus' : 'Focus mode' }}
-    </button>
+    <div class="header-actions">
+      <nz-segmented
+        class="view-toggle ctrl ctrl--pill"
+        [nzOptions]="viewOptions"
+        nzSize="default"
+        [(ngModel)]="segmentValue"
+        (ngModelChange)="onViewChange($event)"
+      ></nz-segmented>
+
+      <ng-container *ngIf="connected; else connectBtn">
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="default"
+          [nzDropdownMenu]="actionsMenu"
+          [nzOverlayStyle]="actionsOverlayStyle"
+          [nzOverlayClassName]="'overlay-match-trigger'"
+          nz-dropdown
+          [nzLoading]="busy"
+          (nzVisibleChange)="syncOverlayWidths()"
+          #actionsBtn
+          class="ctrl ctrl--wide"
+        >
+          Actions
+          <span nz-icon nzType="down"></span>
+        </button>
+        <nz-dropdown-menu #actionsMenu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="upload.emit()" [nzDisabled]="busy || !dirty">Upload to RAM</li>
+            <li nz-menu-item (click)="revert.emit()" [nzDisabled]="busy || !ramLoaded">Revert</li>
+            <li nz-menu-item (click)="commit.emit()" [nzDisabled]="busy || !ramLoaded">Commit</li>
+            <li nz-menu-item (click)="run.emit()" *ngIf="!running" [nzDisabled]="busy">Run</li>
+            <li nz-menu-item (click)="stopAll.emit()" *ngIf="running" [nzDisabled]="busy">Stop All</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="disconnect.emit()" [nzDisabled]="busy">Disconnect</li>
+          </ul>
+        </nz-dropdown-menu>
+      </ng-container>
+
+      <ng-template #connectBtn>
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="default"
+          class="ctrl ctrl--wide"
+          (click)="connect.emit()"
+          [nzLoading]="busy"
+        >
+          Connect
+        </button>
+      </ng-template>
+    </div>
   </div>
 </div>

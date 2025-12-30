@@ -1,20 +1,22 @@
 :host {
-  --ed-panel-bg: #fff;
-  --ed-panel-radius: 12px;
-  --ed-panel-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
-  --ed-border: #e5e7eb;
-  --ed-border-muted: #eef1f7;
-  --ed-primary: #1677ff;
-  --ed-surface-muted: #f7f9fc;
-  --ed-text-muted: 0.75;
-  --ed-gap: 10px;
-  --ed-font-body: 14px;
+  --ed-panel-bg: var(--surface-panel);
+  --ed-panel-radius: var(--radius-lg);
+  --ed-panel-shadow: var(--shadow-elevated);
+  --ed-border: var(--border-soft);
+  --ed-border-muted: var(--border-soft);
+  --ed-primary: var(--accent);
+  --ed-surface-muted: var(--surface-muted);
+  --ed-text-muted: var(--text-muted);
+  --ed-gap: var(--space-3);
+  --ed-font-body: var(--font-size-base);
+  --ed-accent-border: var(--accent-border);
+  --ed-accent-soft: var(--accent-soft);
 }
 
 .pane {
   background: var(--ed-panel-bg);
   border-radius: var(--ed-panel-radius);
-  padding: 12px;
+  padding: var(--space-3);
   box-shadow: var(--ed-panel-shadow);
   display: flex;
   flex-direction: column;
@@ -28,17 +30,17 @@
 
 .btn {
   border: 1px solid var(--ed-border);
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   background: var(--ed-panel-bg);
-  padding: 8px 12px;
+  padding: var(--space-2) var(--space-3);
   cursor: pointer;
   font-weight: 600;
   transition: border-color 120ms ease, box-shadow 120ms ease, background 120ms ease;
 }
 
 .btn:hover {
-  border-color: #bfbfbf;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  border-color: var(--ed-accent-border);
+  box-shadow: var(--shadow-raise-sm);
 }
 
 .btn.ghost {
@@ -47,7 +49,7 @@
 
 .btn.primary {
   background: var(--ed-primary);
-  color: #fff;
+  color: var(--text-on-accent);
   border-color: var(--ed-primary);
 }
 
@@ -66,27 +68,27 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .list li {
-  padding: 8px 10px;
+  padding: var(--space-2) var(--space-3);
   border: 1px solid var(--ed-border-muted);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--space-2);
 }
 
 .list li.active {
-  border-color: #bae0ff;
-  background: #f0f8ff;
+  border-color: var(--ed-accent-border);
+  background: var(--ed-accent-soft);
 }
 
 .list li.selected {
-  border-color: #bae0ff;
-  background: #e6f4ff;
+  border-color: var(--ed-accent-border);
+  background: var(--ed-accent-soft);
 }
 
 .item-name {
@@ -95,13 +97,13 @@
 
 .item-meta {
   font-size: 12px;
-  opacity: 0.7;
+  opacity: var(--ed-text-muted);
 }
 
 .drag-item {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--space-1);
   width: 100%;
   cursor: grab;
 }
@@ -121,13 +123,13 @@
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: var(--space-2);
 }
 
 .tag {
   border: 1px dashed var(--ed-border);
-  border-radius: 10px;
-  padding: 6px 10px;
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
   font-size: 12px;
   background: var(--ed-panel-bg);
 }

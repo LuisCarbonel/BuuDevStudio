@@ -1,28 +1,41 @@
 <div class="workbench">
   <app-editor-header
-    [selectedProfileName]="selectedProfile?.name || null"
-    [selectedSequanceName]="selectedSequance?.name || null"
+    *ngIf="vm$ | async as vm"
+    [connected]="vm.connected"
+    [busy]="vm.busy"
+    [running]="vm.running"
+    [ramLoaded]="vm.ramLoaded"
+    [dirty]="syncStats.dirty"
+    [appliedInSync]="appliedInSync"
+    [deviceName]="deviceName"
+    [sessionId]="syncStats.sessionId"
+    [revision]="syncStats.committed?.revision ?? null"
+    [layerOptions]="layerOptions"
     [activeLayer]="activeLayer"
     [libraryOpen]="libraryOpen"
-    [focusMode]="focusMode"
     (toggleLibrary)="toggleLibrary()"
-    (toggleFocus)="toggleFocus()"
+    (selectLayer)="setLayer($event)"
+    (connect)="device.connect()"
+    (disconnect)="device.disconnect()"
+    (upload)="device.uploadToRam()"
+    (revert)="device.revertRam()"
+    (commit)="device.commitToFlash()"
+    (run)="device.run()"
+    (stopAll)="device.stopAll()"
   ></app-editor-header>
 
   <div
     class="wb-body"
     [class.library-closed]="!libraryOpen"
-    [class.focus]="focusMode"
   >
     <app-editor-library
-      *ngIf="libraryOpen && !focusMode"
+      *ngIf="libraryOpen"
       [profiles]="profiles"
       [selectedProfileId]="selectedProfile?.id || null"
       [sequancesForProfile]="sequancesForProfile"
       [selectedSequanceId]="selectedSequance?.id || null"
       [actions]="actions"
       [presets]="presets"
-      [focusMode]="focusMode"
       (selectProfile)="selectProfile($event)"
       (selectSequance)="selectSequance($event)"
     ></app-editor-library>
@@ -42,7 +55,6 @@
     ></app-editor-canvas>
 
     <app-editor-inspector
-      *ngIf="!focusMode"
       [selectedTargetId]="selectedTargetId"
       [selectedLayoutElement]="selectedLayoutElement"
       [assignedTargetIds]="assignedTargetIds"

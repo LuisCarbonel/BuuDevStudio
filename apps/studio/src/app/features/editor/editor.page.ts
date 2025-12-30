@@ -24,9 +24,7 @@ import { EditorInspectorComponent } from './inspector/editor-inspector.component
   styleUrl: './editor.page.scss',
 })
 export class EditorPage {
-  focusMode = false;
   libraryOpen = true;
-  private prevLibraryOpen = true;
   bindingSequanceId: string | null = null;
   bindingType: 'sequanceRef' | 'simpleAction' | 'inlineSequence' | 'program' | 'none' = 'sequanceRef';
   bindingAction = '';
@@ -42,21 +40,10 @@ export class EditorPage {
 
   presets = ['Micro-gap', 'Jitter pattern', 'Burst tap', 'Fast strafes'];
 
-  constructor(private studio: StudioStateService, private device: DeviceService) {}
+  constructor(public studio: StudioStateService, public device: DeviceService) {}
 
   toggleLibrary() {
     this.libraryOpen = !this.libraryOpen;
-  }
-
-  toggleFocus() {
-    const next = !this.focusMode;
-    if (next) {
-      this.prevLibraryOpen = this.libraryOpen;
-      this.libraryOpen = false;
-    } else {
-      this.libraryOpen = this.prevLibraryOpen;
-    }
-    this.focusMode = next;
   }
 
   selectStep(id: number) {
@@ -115,6 +102,10 @@ export class EditorPage {
     return this.studio.activeLayer;
   }
 
+  get layerOptions(): number[] {
+    return this.selectedProfile?.layers.map(l => l.id) ?? [];
+  }
+
   get selectedBinding() {
     return this.studio.selectedBinding;
   }
@@ -129,6 +120,23 @@ export class EditorPage {
 
   get selectedTargetId() {
     return this.studio.selectedTargetId;
+  }
+
+  get deviceName() {
+    return this.studio.snapshot.device.name;
+  }
+
+  get syncStats() {
+    return this.device.getSyncStats();
+  }
+
+  get vm$() {
+    return this.device.vm$;
+  }
+
+  get appliedInSync(): boolean {
+    const s = this.syncStats;
+    return !!(s.applied && s.staged && s.applied.checksum === s.staged.checksum);
   }
 
   get sequances() {

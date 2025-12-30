@@ -2,53 +2,27 @@
   <div class="pane-title">Inspector</div>
 
   <div class="inspector-section">
-    <div class="inspector-card card-stack" *ngIf="selectedTargetId; else noTarget">
-      <div class="card card--sequance">
+    <ng-container *ngIf="selectedTargetId; else noTarget">
+      <div class="inspector-card card--summary" *ngIf="selectedLayoutElement as el">
+        <div class="summary-line">
+          <span class="summary-strong">Key {{ selectedTargetId }}</span>
+          <span class="summary-divider">&middot;</span>
+          <span>Layer {{ activeLayer }}</span>
+          <span class="summary-divider">&middot;</span>
+          <span>Type: {{ isControlElement(el) ? el.kind : 'Key' }}</span>
+        </div>
+      </div>
+
+      <div class="inspector-card card--binding">
         <div class="card-heading">
-          <div class="card-icon">dYZ>‹,?</div>
           <div>
-            <div class="card-label">Sequance</div>
+            <div class="card-label">Binding</div>
             <div class="card-title">{{ selectedSequanceName || 'None' }}</div>
           </div>
         </div>
-      </div>
 
-      <div class="card card--target">
-        <div class="card-heading">
-          <div class="card-label">Target</div>
-          <div class="target-pill">
-            <span>{{ selectedTargetId }}</span>
-            <span class="target-dot" *ngIf="assignedTargetIds.includes(selectedTargetId)"></span>
-          </div>
-        </div>
-        <div class="prop-list" *ngIf="selectedLayoutElement as el">
-          <div class="prop">
-            <div class="prop-key">Layer</div>
-            <div class="prop-val">#{{ activeLayer }}</div>
-          </div>
-          <div class="prop">
-            <div class="prop-key">Type</div>
-            <div class="prop-val">{{ isControlElement(el) ? el.kind : 'key' }}</div>
-          </div>
-          <div class="prop" *ngIf="isControlElement(el)">
-            <div class="prop-key">Raw Label</div>
-            <div class="prop-val">{{ el.rawLabel || 'ƒ?"' }}</div>
-          </div>
-          <div class="prop" *ngIf="isControlElement(el)">
-            <div class="prop-key">Matrix Hint</div>
-            <div class="prop-val">{{ el.matrixHint || 'ƒ?"' }}</div>
-          </div>
-          <div class="prop" *ngIf="isControlElement(el)">
-            <div class="prop-key">Layout Index</div>
-            <div class="prop-val">{{ el.layoutIndex ?? 'ƒ?"' }}</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card card--bindings">
-        <div class="card-label">Binding</div>
         <div class="field">
-          <label class="field-label">Binding type</label>
+          <label class="field-label">Binding Type</label>
           <select
             class="full"
             aria-label="Binding type"
@@ -62,6 +36,7 @@
             <option value="none">None</option>
           </select>
         </div>
+
         <div class="field" *ngIf="bindingType === 'sequanceRef'">
           <label class="field-label" for="binding-sequance">Sequance</label>
           <select
@@ -77,6 +52,7 @@
             </option>
           </select>
         </div>
+
         <div class="field" *ngIf="bindingType === 'simpleAction'">
           <label class="field-label">Action</label>
           <input
@@ -154,12 +130,17 @@
         </div>
       </div>
 
-      <div class="card card--context" *ngIf="selectedLayoutElement as el">
-        <div class="card-label">Context</div>
-        <div class="context-pill" *ngIf="!isControlElement(el)">Key options: Macro, Tap, Hold</div>
-        <div class="context-pill" *ngIf="isControlElement(el)">Encoder options: CC, Volume, Scroll</div>
+      <div class="inspector-card card--context">
+        <div class="context-header" (click)="contextOpen = !contextOpen">
+          <span class="card-label">Context</span>
+          <span class="chevron" [class.open]="contextOpen">⌄</span>
+        </div>
+        <div class="context-body" *ngIf="contextOpen && selectedLayoutElement as el">
+          <div class="context-pill" *ngIf="!isControlElement(el)">Key options: Macro, Tap, Hold</div>
+          <div class="context-pill" *ngIf="isControlElement(el)">Encoder options: CC, Volume, Scroll</div>
+        </div>
       </div>
-    </div>
+    </ng-container>
     <ng-template #noTarget>
       <div class="inspector-card empty-target ghost-card">
         <div class="ghost-icon">dYZ_</div>

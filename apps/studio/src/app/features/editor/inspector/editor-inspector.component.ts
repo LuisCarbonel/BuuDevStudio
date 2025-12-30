@@ -36,6 +36,8 @@ export class EditorInspectorComponent {
   @Output() assign = new EventEmitter<void>();
   @Output() clear = new EventEmitter<void>();
 
+  contextOpen = true;
+
   isControlElement(el: KeyElement | ControlElement): el is ControlElement {
     return (el as ControlElement).kind !== undefined;
   }

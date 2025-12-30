@@ -1,4 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -6,8 +6,6 @@ import { filter, Subscription } from 'rxjs';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -33,13 +31,12 @@ interface ShellNavItem {
     NzLayoutModule,
     NzMenuModule,
     NzButtonModule,
-    NzTagModule,
-    NzSpinModule,
     NzIconModule,
     NzToolTipModule,
   ],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent implements OnInit, OnDestroy {
   navMain: ShellNavItem[] = [

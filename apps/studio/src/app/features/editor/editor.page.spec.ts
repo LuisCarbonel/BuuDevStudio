@@ -1,3 +1,4 @@
+import { of } from 'rxjs';
 import { EditorPage } from './editor.page';
 
 class MockStudioStateService {
@@ -30,13 +31,22 @@ class MockStudioStateService {
   setLayer = jasmine.createSpy('setLayer');
 }
 
+class MockDeviceService {
+  vm$ = of({ connected: false, busy: false, running: false, ramLoaded: false });
+  getSyncStats() {
+    return { committed: null, applied: null, staged: null, dirty: false, sessionId: null };
+  }
+}
+
 describe('EditorPage (logic only)', () => {
   let studio: MockStudioStateService;
+  let device: MockDeviceService;
   let component: EditorPage;
 
   beforeEach(() => {
     studio = new MockStudioStateService();
-    component = new EditorPage(studio as unknown as any);
+    device = new MockDeviceService();
+    component = new EditorPage(studio as unknown as any, device as unknown as any);
   });
 
   it('parses inline sequence text into normalized steps', () => {

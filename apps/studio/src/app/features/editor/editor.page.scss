@@ -14,13 +14,3 @@
 .wb-body.library-closed {
   grid-template-columns: 1fr 280px;
 }
-
-.wb-body.focus {
-  grid-template-columns: 1fr;
-  gap: 0;
-}
-
-.wb-body.focus app-editor-library,
-.wb-body.focus app-editor-inspector {
-  display: none !important;
-}

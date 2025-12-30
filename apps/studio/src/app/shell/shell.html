@@ -64,84 +64,12 @@
   </nz-sider>
 
   <nz-layout>
-    <nz-header class="shell__topbar">
+    <!-- <nz-header class="shell__topbar">
       <div class="topbar-left">
-        <div class="brand brand--inline">Device toolbar</div>
-        <div class="sync" *ngIf="vm$ | async as vm">
-          <nz-tag [nzColor]="device.isDirty() ? 'orange' : 'green'">
-            {{ device.isDirty() ? 'Dirty' : 'Clean' }}
-          </nz-tag>
-          <ng-container *ngIf="syncStats as s">
-            <nz-tag [nzColor]="s.applied && s.staged && s.applied.checksum === s.staged.checksum ? 'blue' : 'default'">
-              {{ s.applied && s.staged && s.applied.checksum === s.staged.checksum ? 'Applied' : 'Not applied' }}
-            </nz-tag>
-            <nz-tag nzColor="default" *ngIf="s.committed?.revision != null">
-              Rev {{ s.committed?.revision }}
-            </nz-tag>
-          </ng-container>
-          <nz-spin *ngIf="vm.busy" nzSize="small" style="margin-left: 8px;"></nz-spin>
-        </div>
-        <div class="diag" *ngIf="syncStats as s">
-          <span class="muted">Session:</span> <code>{{ s.sessionId || 'n/a' }}</code>
-          <span class="muted">Committed:</span> <code>{{ s.committed?.revision ?? 'n/a' }}</code>
-          <span class="muted">Applied:</span> <code>{{ s.applied?.revision ?? 'n/a' }}</code>
-          <span class="muted">Staged:</span> <code>{{ s.staged?.revision ?? 'n/a' }}</code>
-        </div>
+        <div class="brand brand--inline">Studio</div>
       </div>
-      <div class="topbar-actions" *ngIf="vm$ | async as vm">
-        <button nz-button nzType="default" [nzLoading]="vm.busy" (click)="vm.connected ? device.disconnect() : device.connect()">
-          {{ vm.connected ? 'Disconnect' : 'Connect' }}
-        </button>
-
-        <ng-container *ngIf="vm.connected">
-          <button
-            nz-button
-            nzType="default"
-            [disabled]="vm.busy || !device.isDirty()"
-            (click)="device.uploadToRam()"
-          >
-            Upload to RAM
-          </button>
-
-          <button
-            nz-button
-            nzType="default"
-            [disabled]="vm.busy || !vm.ramLoaded"
-            (click)="device.revertRam()"
-          >
-            Revert
-          </button>
-
-          <button
-            *ngIf="!vm.running"
-            nz-button
-            nzType="primary"
-            [disabled]="vm.busy"
-            (click)="device.run()"
-          >
-            Run
-          </button>
-          <button
-            *ngIf="vm.running"
-            nz-button
-            nzDanger
-            [disabled]="vm.busy"
-            (click)="device.stopAll()"
-          >
-            Stop All
-          </button>
-
-          <button
-            nz-button
-            nzType="default"
-            [disabled]="vm.busy || !vm.ramLoaded"
-            (click)="device.commitToFlash()"
-          >
-            Commit
-          </button>
-        </ng-container>
-      </div>
-    </nz-header>
+      <div class="topbar-actions"></div>
+    </nz-header> -->
 
     <nz-content class="shell__content">
       <router-outlet></router-outlet>
