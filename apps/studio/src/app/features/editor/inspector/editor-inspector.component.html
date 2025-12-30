@@ -3,12 +3,12 @@
 
   <div class="inspector-section">
     <div class="inspector-card card-stack" *ngIf="selectedTargetId; else noTarget">
-      <div class="card card--script">
+      <div class="card card--sequance">
         <div class="card-heading">
           <div class="card-icon">dYZ>‹,?</div>
           <div>
-            <div class="card-label">Script</div>
-            <div class="card-title">{{ selectedScriptName || 'None' }}</div>
+            <div class="card-label">Sequance</div>
+            <div class="card-title">{{ selectedSequanceName || 'None' }}</div>
           </div>
         </div>
       </div>
@@ -55,24 +55,24 @@
             [value]="bindingType"
             (change)="bindingTypeChange.emit($any($event.target).value)"
           >
-            <option value="scriptRef">Script</option>
+            <option value="sequanceRef">Sequance</option>
             <option value="program">Program</option>
             <option value="inlineSequence">Text macro</option>
             <option value="simpleAction">Simple action</option>
             <option value="none">None</option>
           </select>
         </div>
-        <div class="field" *ngIf="bindingType === 'scriptRef'">
-          <label class="field-label" for="binding-script">Script</label>
+        <div class="field" *ngIf="bindingType === 'sequanceRef'">
+          <label class="field-label" for="binding-sequance">Sequance</label>
           <select
             class="full"
-            id="binding-script"
-            [value]="bindingScriptId || ''"
-            (change)="bindingScriptChange.emit($any($event.target).value)"
+            id="binding-sequance"
+            [value]="bindingSequanceId || ''"
+            (change)="bindingSequanceChange.emit($any($event.target).value)"
             [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
           >
-            <option value="" disabled>Select script</option>
-            <option *ngFor="let s of scriptsForProfile" [value]="s.id">
+            <option value="" disabled>Select sequance</option>
+            <option *ngFor="let s of sequancesForProfile" [value]="s.id">
               {{ s.name }}
             </option>
           </select>

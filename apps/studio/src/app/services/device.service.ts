@@ -143,7 +143,7 @@ export class DeviceService {
     if (!this.connected.value || this.busy.value) return;
     this.running.next(true);
     if (this.sessionId) {
-      this.gateway.run(this.sessionId, this.studio.selectedScriptId ?? '').catch(() => {});
+      this.gateway.run(this.sessionId, this.studio.selectedSequanceId ?? '').catch(() => {});
     }
   }
 
@@ -201,7 +201,7 @@ export class DeviceService {
       capabilities: bundle.capabilities as any,
       profile: { ...bundle.profile, layers },
       layout: bundle.layout,
-      scripts: bundle.scripts as any,
+      sequances: bundle.sequances as any,
       committedState: bundle.committedState as any,
       appliedState: bundle.appliedState as any,
       stagedState: bundle.stagedState as any,

@@ -15,20 +15,20 @@ export class EditorInspectorComponent {
   @Input() selectedLayoutElement: KeyElement | ControlElement | null = null;
   @Input() assignedTargetIds: string[] = [];
   @Input() activeLayer = 1;
-  @Input() selectedScriptName: string | null = null;
-  @Input() bindingType: 'scriptRef' | 'simpleAction' | 'inlineSequence' | 'program' | 'none' = 'scriptRef';
-  @Input() bindingScriptId: string | null = null;
+  @Input() selectedSequanceName: string | null = null;
+  @Input() bindingType: 'sequanceRef' | 'simpleAction' | 'inlineSequence' | 'program' | 'none' = 'sequanceRef';
+  @Input() bindingSequanceId: string | null = null;
   @Input() bindingAction = '';
   @Input() bindingActionArg = '';
   @Input() bindingInlineText = '';
   @Input() bindingProgramPath = '';
   @Input() bindingErrors: string[] = [];
-  @Input() scriptsForProfile: { id: string; name: string }[] = [];
+  @Input() sequancesForProfile: { id: string; name: string }[] = [];
   @Input() actions: string[] = [];
   @Input() selectedStep: { id: number; name: string; op: string; arg?: string; class?: number } | null = null;
 
   @Output() bindingTypeChange = new EventEmitter<typeof this.bindingType>();
-  @Output() bindingScriptChange = new EventEmitter<string>();
+  @Output() bindingSequanceChange = new EventEmitter<string>();
   @Output() bindingActionChange = new EventEmitter<string>();
   @Output() bindingActionArgChange = new EventEmitter<string>();
   @Output() bindingInlineTextChange = new EventEmitter<string>();

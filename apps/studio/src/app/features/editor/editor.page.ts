@@ -27,8 +27,8 @@ export class EditorPage {
   focusMode = false;
   libraryOpen = true;
   private prevLibraryOpen = true;
-  bindingScriptId: string | null = null;
-  bindingType: 'scriptRef' | 'simpleAction' | 'inlineSequence' | 'program' | 'none' = 'scriptRef';
+  bindingSequanceId: string | null = null;
+  bindingType: 'sequanceRef' | 'simpleAction' | 'inlineSequence' | 'program' | 'none' = 'sequanceRef';
   bindingAction = '';
   bindingActionArg = '';
   bindingInlineText = '';
@@ -71,24 +71,24 @@ export class EditorPage {
     this.studio.selectProfile(profileId);
     this.layoutSelectionId = null;
     this.hoveredElementId = null;
-    this.bindingType = 'scriptRef';
-    this.bindingScriptId = null;
+    this.bindingType = 'sequanceRef';
+    this.bindingSequanceId = null;
   }
 
-  selectScript(scriptId: string) {
-    this.studio.selectScript(scriptId);
+  selectSequance(sequanceId: string) {
+    this.studio.selectSequance(sequanceId);
   }
 
   get selectedProfile() {
     return this.studio.selectedProfile;
   }
 
-  get scriptsForProfile() {
-    return this.studio.scriptsForProfile;
+  get sequancesForProfile() {
+    return this.studio.sequancesForProfile;
   }
 
-  get selectedScript() {
-    return this.studio.selectedScript;
+  get selectedSequance() {
+    return this.studio.selectedSequance;
   }
 
   get currentSteps() {
@@ -103,8 +103,8 @@ export class EditorPage {
     return this.studio.selectedProfileId;
   }
 
-  get selectedScriptId() {
-    return this.studio.selectedScriptId;
+  get selectedSequanceId() {
+    return this.studio.selectedSequanceId;
   }
 
   get selectedStepId() {
@@ -131,8 +131,8 @@ export class EditorPage {
     return this.studio.selectedTargetId;
   }
 
-  get scripts() {
-    return this.studio.scripts;
+  get sequances() {
+    return this.studio.sequances;
   }
 
   get assignedTargetIds() {
@@ -143,8 +143,8 @@ export class EditorPage {
     this.studio.setTarget(id);
     const binding = this.selectedBinding;
     this.bindingType = binding?.type ?? 'none';
-    this.bindingScriptId =
-      binding && binding.type === 'scriptRef' ? binding.scriptId : this.selectedScriptId ?? null;
+    this.bindingSequanceId =
+      binding && binding.type === 'sequanceRef' ? binding.sequanceId : this.selectedSequanceId ?? null;
     if (binding?.type === 'simpleAction') {
       this.bindingAction = binding.action;
       this.bindingActionArg = binding.arg ?? '';
@@ -164,16 +164,16 @@ export class EditorPage {
     }
   }
 
-  assignSelectedScriptToTarget() {
+  assignSelectedSequanceToTarget() {
     if (!this.selectedTargetId) return;
     if (this.bindingType !== 'none' && this.bindingErrors.length) return;
     const layerId = this.activeLayer;
     switch (this.bindingType) {
-      case 'scriptRef': {
-        const scriptId = this.bindingScriptId || this.selectedScript?.id;
-        if (!scriptId) return;
-        this.studio.assignScriptToTarget(scriptId);
-        this.device.pushBinding(layerId, this.selectedTargetId, { type: 'scriptRef', scriptId });
+      case 'sequanceRef': {
+        const sequanceId = this.bindingSequanceId || this.selectedSequance?.id;
+        if (!sequanceId) return;
+        this.studio.assignSequanceToTarget(sequanceId);
+        this.device.pushBinding(layerId, this.selectedTargetId, { type: 'sequanceRef', sequanceId });
         break;
       }
       case 'simpleAction': {
@@ -211,7 +211,7 @@ export class EditorPage {
 
   clearBinding() {
     this.studio.clearBinding();
-    this.bindingScriptId = null;
+    this.bindingSequanceId = null;
     this.bindingAction = '';
     this.bindingActionArg = '';
     this.bindingInlineText = '';
@@ -223,27 +223,27 @@ export class EditorPage {
     this.studio.setLayer(layer);
   }
 
-  onBindingScriptChange(value: string) {
-    this.bindingScriptId = value;
+  onBindingSequanceChange(value: string) {
+    this.bindingSequanceId = value;
   }
 
-  scriptName(id: string | null) {
+  sequanceName(id: string | null) {
     if (!id) return '';
-    return this.scripts.find(s => s.id === id)?.name ?? '';
+    return this.sequances.find(s => s.id === id)?.name ?? '';
   }
 
-  get scriptBindingId(): string | null {
+  get sequanceBindingId(): string | null {
     const b = this.selectedBinding;
-    return b && b.type === 'scriptRef' ? b.scriptId : null;
+    return b && b.type === 'sequanceRef' ? b.sequanceId : null;
   }
 
   onDropAssign(targetId: string, payload: unknown) {
-    const scriptId = payload as string | null;
-    if (!scriptId) return;
+    const sequanceId = payload as string | null;
+    if (!sequanceId) return;
     this.selectTarget(targetId);
-    this.bindingType = 'scriptRef';
-    this.bindingScriptId = scriptId;
-    this.studio.assignScriptToTarget(scriptId);
+    this.bindingType = 'sequanceRef';
+    this.bindingSequanceId = sequanceId;
+    this.studio.assignSequanceToTarget(sequanceId);
   }
 
   onTargetKeydown(event: KeyboardEvent, targetId: string) {
@@ -290,9 +290,9 @@ export class EditorPage {
   get bindingErrors(): string[] {
     const errors: string[] = [];
     switch (this.bindingType) {
-      case 'scriptRef': {
-        const scriptId = this.bindingScriptId || this.selectedScript?.id;
-        if (!scriptId) errors.push('Select a script to assign.');
+      case 'sequanceRef': {
+        const sequanceId = this.bindingSequanceId || this.selectedSequance?.id;
+        if (!sequanceId) errors.push('Select a sequance to assign.');
         break;
       }
       case 'simpleAction':

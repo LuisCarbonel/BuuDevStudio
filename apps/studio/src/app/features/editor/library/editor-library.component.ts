@@ -10,7 +10,7 @@ interface ProfileItem {
   name: string;
 }
 
-interface ScriptItem {
+interface SequanceItem {
   id: string;
   name: string;
 }
@@ -25,14 +25,14 @@ interface ScriptItem {
 export class EditorLibraryComponent {
   @Input() profiles: ProfileItem[] = [];
   @Input() selectedProfileId: string | null = null;
-  @Input() scriptsForProfile: ScriptItem[] = [];
-  @Input() selectedScriptId: string | null = null;
+  @Input() sequancesForProfile: SequanceItem[] = [];
+  @Input() selectedSequanceId: string | null = null;
   @Input() actions: string[] = [];
   @Input() presets: string[] = [];
   @Input() focusMode = false;
 
   @Output() selectProfile = new EventEmitter<string>();
-  @Output() selectScript = new EventEmitter<string>();
+  @Output() selectSequance = new EventEmitter<string>();
   get selectedProfileName(): string {
     if (!this.selectedProfileId) {
       return '';

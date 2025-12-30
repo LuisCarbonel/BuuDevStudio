@@ -4,7 +4,7 @@ import { NormalizedLayout } from '../shared/layout/models';
 
 export type Binding =
   | { type: 'none' }
-  | { type: 'scriptRef'; scriptId: string; meta?: Record<string, string> }
+  | { type: 'sequanceRef'; sequanceId: string; meta?: Record<string, string> }
   | { type: 'simpleAction'; action: string; arg?: string; meta?: Record<string, string> }
   | { type: 'inlineSequence'; steps: Step[]; meta?: Record<string, string> }
   | { type: 'program'; path: string; meta?: Record<string, string> };
@@ -28,7 +28,7 @@ export interface Step {
   class?: number;
 }
 
-export interface Script {
+export interface Sequance {
   id: string;
   profileId: string;
   name: string;
@@ -41,7 +41,7 @@ export interface DeviceCapabilities {
   commit: boolean;
   layouts: boolean;
   keymap: boolean;
-  scripts: boolean;
+  sequances: boolean;
 }
 
 export interface CommittedState {
@@ -64,7 +64,7 @@ export interface DeviceState {
   name: string | null;
   connected: boolean;
   transport: 'mock' | 'hid';
-  runningScriptId: string | null;
+  runningSequanceId: string | null;
   lastError: string | null;
   firmwareVersion: string;
   capabilities: DeviceCapabilities;
@@ -79,10 +79,10 @@ export interface StudioState {
   activeProfileId: string;
   activeLayer: number;
   selectedTargetId: string | null;
-  selectedScriptId: string | null;
+  selectedSequanceId: string | null;
   selectedStepId: number | null;
   profiles: Profile[];
-  scripts: Script[];
+  sequances: Sequance[];
   targets: string[];
 }
 
@@ -91,7 +91,7 @@ export interface ProfileBundle {
   capabilities: DeviceCapabilities;
   profile: Profile;
   layout: NormalizedLayout | null;
-  scripts: Script[];
+  sequances: Sequance[];
   committedState: CommittedState | null;
   appliedState?: CommittedState | null;
   stagedState?: CommittedState | null;
@@ -104,10 +104,10 @@ const initialState: StudioState = {
     name: null,
     connected: false,
     transport: 'mock',
-    runningScriptId: null,
+    runningSequanceId: null,
     lastError: null,
     firmwareVersion: '0.0.1-mock',
-    capabilities: { volatileApply: true, commit: true, layouts: true, keymap: true, scripts: true },
+    capabilities: { volatileApply: true, commit: true, layouts: true, keymap: true, sequances: true },
     committedState: null,
     appliedState: null,
     stagedState: null,
@@ -116,7 +116,7 @@ const initialState: StudioState = {
   activeProfileId: 'p-default',
   activeLayer: 1,
   selectedTargetId: null,
-  selectedScriptId: 's-bhop',
+  selectedSequanceId: 's-bhop',
   selectedStepId: null,
   targets: [],
   profiles: [
@@ -133,7 +133,7 @@ const initialState: StudioState = {
     { id: 'p-apex', name: 'Apex', layers: [{ id: 1, bindingsByTargetId: {} }] },
     { id: 'p-tacops', name: 'TacOps', layers: [{ id: 1, bindingsByTargetId: {} }] },
   ],
-  scripts: [
+  sequances: [
     {
       id: 's-sprint',
       profileId: 'p-apex',
@@ -180,16 +180,16 @@ export class StudioStateService {
     return this.snapshot.profiles;
   }
 
-  get scripts(): Script[] {
-    return this.snapshot.scripts;
+  get sequances(): Sequance[] {
+    return this.snapshot.sequances;
   }
 
   get selectedProfileId(): string | null {
     return this.snapshot.activeProfileId;
   }
 
-  get selectedScriptId(): string | null {
-    return this.snapshot.selectedScriptId;
+  get selectedSequanceId(): string | null {
+    return this.snapshot.selectedSequanceId;
   }
 
   get selectedStepId(): number | null {
@@ -212,16 +212,16 @@ export class StudioStateService {
     return this.profiles.find(p => p.id === this.snapshot.activeProfileId) ?? null;
   }
 
-  get scriptsForProfile(): Script[] {
-    return this.scripts.filter(s => s.profileId === this.snapshot.activeProfileId);
+  get sequancesForProfile(): Sequance[] {
+    return this.sequances.filter(s => s.profileId === this.snapshot.activeProfileId);
   }
 
-  get selectedScript(): Script | null {
-    return this.scripts.find(s => s.id === this.snapshot.selectedScriptId) ?? null;
+  get selectedSequance(): Sequance | null {
+    return this.sequances.find(s => s.id === this.snapshot.selectedSequanceId) ?? null;
   }
 
   get currentSteps(): Step[] {
-    return this.selectedScript?.steps ?? [];
+    return this.selectedSequance?.steps ?? [];
   }
 
   get activeBindings(): Record<string, Binding> {
@@ -267,8 +267,8 @@ export class StudioStateService {
     this.layout = bundle.layout;
     const targets = this.computeTargets(bundle.layout);
     const activeProfileId = bundle.profile.id;
-    const scriptsForProfile = bundle.scripts.filter(s => s.profileId === activeProfileId);
-    const selectedScriptId = scriptsForProfile[0]?.id ?? null;
+    const sequancesForProfile = bundle.sequances.filter(s => s.profileId === activeProfileId);
+    const selectedSequanceId = sequancesForProfile[0]?.id ?? null;
     this.state.next({
       ...this.snapshot,
       device: {
@@ -279,7 +279,7 @@ export class StudioStateService {
         transport: bundle.device.transport as any,
         firmwareVersion: bundle.device.firmwareVersion || 'unknown',
         lastError: null,
-        runningScriptId: null,
+        runningSequanceId: null,
         capabilities: bundle.capabilities,
         committedState: bundle.committedState,
         appliedState: bundle.appliedState ?? null,
@@ -287,9 +287,9 @@ export class StudioStateService {
         sessionId: bundle.sessionId ?? null,
       },
       profiles: [bundle.profile],
-      scripts: bundle.scripts,
+      sequances: bundle.sequances,
       activeProfileId,
-      selectedScriptId,
+      selectedSequanceId,
       selectedStepId: null,
       selectedTargetId: null,
       activeLayer: bundle.profile.layers[0]?.id ?? 1,
@@ -299,7 +299,7 @@ export class StudioStateService {
 
   buildProfileBundle(deviceId: string): ProfileBundle {
     const profile = this.selectedProfile ?? this.profiles[0] ?? { id: 'p-default', name: 'Default', layers: [{ id: 1, bindingsByTargetId: {} }] };
-    const scripts = this.scripts.filter(s => s.profileId === profile.id);
+    const sequances = this.sequances.filter(s => s.profileId === profile.id);
     const committedState =
       this.snapshot.device.committedState ?? {
         profileId: profile.id,
@@ -317,7 +317,7 @@ export class StudioStateService {
       capabilities: this.snapshot.device.capabilities,
       profile,
       layout: this.layout,
-      scripts,
+      sequances,
       committedState,
     };
   }
@@ -328,7 +328,7 @@ export class StudioStateService {
       device: {
         ...this.snapshot.device,
         connected: false,
-        runningScriptId: null,
+        runningSequanceId: null,
         committedState: null,
         appliedState: null,
         stagedState: null,
@@ -340,19 +340,19 @@ export class StudioStateService {
   }
 
   selectProfile(profileId: string) {
-    const scriptsForProfile = this.scripts.filter(s => s.profileId === profileId);
-    const nextScriptId = scriptsForProfile[0]?.id ?? null;
+    const sequancesForProfile = this.sequances.filter(s => s.profileId === profileId);
+    const nextSequanceId = sequancesForProfile[0]?.id ?? null;
     this.patch({
       activeProfileId: profileId,
-      selectedScriptId: nextScriptId,
+      selectedSequanceId: nextSequanceId,
       selectedStepId: null,
       selectedTargetId: null,
       activeLayer: 1,
     });
   }
 
-  selectScript(scriptId: string) {
-    this.patch({ selectedScriptId: scriptId, selectedStepId: null });
+  selectSequance(sequanceId: string) {
+    this.patch({ selectedSequanceId: sequanceId, selectedStepId: null });
   }
 
   selectStep(stepId: number | null) {
@@ -370,9 +370,9 @@ export class StudioStateService {
     this.patch({ selectedTargetId: targetId });
   }
 
-  assignScriptToTarget(scriptId: string) {
+  assignSequanceToTarget(sequanceId: string) {
     if (!this.selectedTargetId || !this.selectedProfile) return;
-    this.updateBinding(this.selectedTargetId, { type: 'scriptRef', scriptId });
+    this.updateBinding(this.selectedTargetId, { type: 'sequanceRef', sequanceId });
   }
 
   assignSimpleAction(action: string, arg?: string) {
@@ -398,7 +398,7 @@ export class StudioStateService {
   updateBindingMeta(targetId: string, meta: Record<string, string>) {
     if (!this.selectedProfile) return;
     const current = this.activeBindings[targetId];
-    if (!current || current.type !== 'scriptRef') return;
+    if (!current || current.type !== 'sequanceRef') return;
     this.updateBinding(targetId, { ...current, meta });
   }
 
@@ -442,26 +442,26 @@ export class StudioStateService {
       return { id: layerId, bindings };
     });
 
-    const scriptIds = new Set<string>();
+    const sequanceIds = new Set<string>();
     layers.forEach(layer => {
       layer.bindings.forEach(({ binding }) => {
-        if (binding.type === 'scriptRef') scriptIds.add(binding.scriptId);
+        if (binding.type === 'sequanceRef') sequanceIds.add(binding.sequanceId);
       });
     });
 
-    const scripts = Array.from(scriptIds)
-      .map(id => this.scripts.find(s => s.id === id))
-      .filter((s): s is Script => !!s)
+    const sequances = Array.from(sequanceIds)
+      .map(id => this.sequances.find(s => s.id === id))
+      .filter((s): s is Sequance => !!s)
       .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 
-    const stepsCount = scripts.reduce((acc, s) => acc + s.steps.length, 0);
+    const stepsCount = sequances.reduce((acc, s) => acc + s.steps.length, 0);
     const targetsBound = layers.reduce((acc, l) => acc + l.bindings.length, 0);
 
     const payload = {
       profileId: profile.id,
       layerIds,
       layers,
-      scripts,
+      sequances,
       timing: {
         gapMs: null,
         jitterMs: null,
@@ -479,7 +479,7 @@ export class StudioStateService {
       payload,
       stats: {
         targetsBound,
-        scriptsIncluded: scripts.length,
+        sequancesIncluded: sequances.length,
         steps: stepsCount,
         byteSize,
         checksum,

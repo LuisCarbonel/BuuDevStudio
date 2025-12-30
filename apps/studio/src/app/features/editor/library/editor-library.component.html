@@ -16,12 +16,12 @@
   </div>
 
   <div class="section">
-    <div class="section-title">Scripts</div>
-    <ul class="list" cdkDropList id="scriptsList" [cdkDropListSortingDisabled]="true">
+    <div class="section-title">Sequances</div>
+    <ul class="list" cdkDropList id="sequancesList" [cdkDropListSortingDisabled]="true">
       <li
-        *ngFor="let s of scriptsForProfile"
-        [class.selected]="s.id === selectedScriptId"
-        (click)="selectScript.emit(s.id)"
+        *ngFor="let s of sequancesForProfile"
+        [class.selected]="s.id === selectedSequanceId"
+        (click)="selectSequance.emit(s.id)"
         appDragSource
         [appDragSource]="s.id"
         [appDragSourceDisabled]="focusMode"

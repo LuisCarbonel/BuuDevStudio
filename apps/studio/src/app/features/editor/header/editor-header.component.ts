@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class EditorHeaderComponent {
   @Input() selectedProfileName: string | null = null;
-  @Input() selectedScriptName: string | null = null;
+  @Input() selectedSequanceName: string | null = null;
   @Input() activeLayer = 1;
   @Input() libraryOpen = true;
   @Input() focusMode = false;

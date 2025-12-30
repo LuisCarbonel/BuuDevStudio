@@ -8,6 +8,8 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { NzMessageService } from 'ng-zorro-antd/message';
 
 import { DeviceService } from '../services/device.service';
@@ -18,27 +20,40 @@ interface ShellNavItem {
   label: string;
   path: string;
   description: string;
+  icon: string;
   disabled?: boolean;
 }
 
 @Component({
   selector: 'app-shell',
   standalone: true,
-  imports: [CommonModule, RouterModule, NzLayoutModule, NzMenuModule, NzButtonModule, NzTagModule, NzSpinModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    NzLayoutModule,
+    NzMenuModule,
+    NzButtonModule,
+    NzTagModule,
+    NzSpinModule,
+    NzIconModule,
+    NzToolTipModule,
+  ],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
 })
 export class ShellComponent implements OnInit, OnDestroy {
   navMain: ShellNavItem[] = [
-    { key: 'editor', label: 'Editor', path: '/editor', description: 'Macros & layouts' },
-    { key: 'firmware', label: 'Firmware', path: '/firmware', description: 'QMK / device' },
-    { key: 'recorder', label: 'Recorder', path: '/recorder', description: 'Capture inputs', disabled: true },
+    { key: 'editor', label: 'Editor', path: '/editor', description: 'Macros & layouts', icon: 'appstore' },
+    { key: 'firmware', label: 'Firmware', path: '/firmware', description: 'QMK / device', icon: 'usb' },
+    { key: 'recorder', label: 'Recorder', path: '/recorder', description: 'Capture inputs', icon: 'sound', disabled: true },
   ];
   navSettings: ShellNavItem[] = [
-    { key: 'settings', label: 'Settings', path: '/settings', description: 'App preferences' },
+    { key: 'settings', label: 'Settings', path: '/settings', description: 'App preferences', icon: 'setting' },
   ];
 
   activeKey = 'editor';
+  collapsed = true;
+  pinned = false;
   private sub = new Subscription();
 
   constructor(
@@ -107,6 +122,16 @@ export class ShellComponent implements OnInit, OnDestroy {
   private syncActiveKey(url: string) {
     const first = url.split('/').filter(Boolean)[0];
     this.activeKey = first || 'editor';
+  }
+
+  handleHover(inside: boolean) {
+    if (this.pinned) return;
+    this.collapsed = !inside;
+  }
+
+  togglePinned() {
+    this.pinned = !this.pinned;
+    this.collapsed = !this.pinned;
   }
 
   private showSnackbar(

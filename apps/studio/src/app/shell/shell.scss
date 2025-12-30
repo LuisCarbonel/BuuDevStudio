@@ -4,19 +4,28 @@
 }
 
 .shell__sider {
-  padding: 16px 0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  padding: 10px 0;
+  box-shadow: 1px 0 6px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 1;
   display: flex;
   min-height: 100vh;
+  transition: width 480ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 480ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+:host ::ng-deep .ant-layout-sider {
+  transition: width 480ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 480ms cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .brand {
-  padding: 0 24px 12px;
+  padding: 0 16px 12px;
   font-weight: 700;
   font-size: 16px;
   letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .sider-inner {
@@ -25,6 +34,7 @@
   flex: 1;
   min-height: 100%;
   width: 100%;
+  gap: 8px;
 }
 
 [nz-menu].nav-main {
@@ -34,29 +44,62 @@
 [nz-menu] {
   border-inline-end: 0;
   font-size: 16px;
+  transition: padding 320ms cubic-bezier(0.4, 0, 0.2, 1), width 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [nz-menu] .ant-menu-item {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-  padding: 0px 25px !important;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px !important;
+  transition: padding 320ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-label {
   font-weight: 600;
+  transition: opacity 260ms ease, max-width 260ms ease;
+  max-width: 160px;
+  overflow: hidden;
 }
 
 .nav-desc {
   font-size: 12px;
   opacity: 0.7;
+  transition: opacity 260ms ease, max-width 260ms ease;
+  max-width: 160px;
+  overflow: hidden;
 }
 
 .sider-footer {
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pin-btn {
+  opacity: 0.6;
+  transition: opacity 120ms ease;
+}
+
+.pin-btn:hover {
+  opacity: 1;
+}
+
+.shell__sider.collapsed .brand {
+  justify-content: center;
+  padding: 0 8px 12px;
+}
+
+.shell__sider.collapsed [nz-menu] .ant-menu-item {
+  justify-content: center;
+  padding: 10px 12px !important;
+}
+
+.shell__sider.collapsed .nav-label,
+.shell__sider.collapsed .nav-desc {
+  opacity: 0;
+  max-width: 0;
 }
 
 .shell__content {

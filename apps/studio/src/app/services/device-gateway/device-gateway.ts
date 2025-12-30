@@ -13,7 +13,7 @@ export interface DeviceGateway {
   applyToRam(sessionId: string): Promise<void>;
   revertRam(sessionId: string): Promise<void>;
   commit(sessionId: string): Promise<void>;
-  run(sessionId: string, scriptId: string): Promise<void>;
+  run(sessionId: string, sequanceId: string): Promise<void>;
   stopAll(sessionId: string): Promise<void>;
 }
 

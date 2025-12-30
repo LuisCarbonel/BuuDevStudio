@@ -39,8 +39,8 @@ export class TauriDeviceGateway implements DeviceGateway {
     return tauriInvoke('commit', { sessionId });
   }
 
-  run(sessionId: string, scriptId: string): Promise<void> {
-    return tauriInvoke('run', { sessionId, scriptId });
+  run(sessionId: string, sequanceId: string): Promise<void> {
+    return tauriInvoke('run', { sessionId, sequanceId });
   }
 
   stopAll(sessionId: string): Promise<void> {

@@ -5,7 +5,7 @@ export interface Capabilities {
   commit: boolean;
   layouts: boolean;
   keymap: boolean;
-  scripts: boolean;
+  sequances: boolean;
 }
 
 export interface DeviceInfo {
@@ -27,7 +27,7 @@ export interface Step {
 
 export type Binding =
   | { type: 'none' }
-  | { type: 'scriptRef'; scriptId: string; meta?: Record<string, unknown> }
+  | { type: 'sequanceRef'; sequanceId: string; meta?: Record<string, unknown> }
   | { type: 'simpleAction'; action: string; arg?: string; meta?: Record<string, unknown> }
   | { type: 'inlineSequence'; steps: Step[]; meta?: Record<string, unknown> }
   | { type: 'program'; path: string; meta?: Record<string, unknown> };
@@ -38,7 +38,7 @@ export interface BindingEntry {
   layerId?: number;
 }
 
-export interface Script {
+export interface Sequance {
   id: string;
   profileId: string;
   name: string;
@@ -71,7 +71,7 @@ export interface ProfileBundle {
   profile: Profile;
   layout: NormalizedLayout | null;
   targets: string[];
-  scripts: Script[];
+  sequances: Sequance[];
   committedState?: DeviceState | null;
   appliedState?: DeviceState | null;
   stagedState?: DeviceState | null;
