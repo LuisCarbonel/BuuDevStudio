@@ -1,0 +1,27 @@
+:root,
+:root .theme-light,
+.theme-light {
+  color-scheme: light;
+
+  --surface-shell: var(--color-gray-50);
+  --surface-panel: var(--color-white);
+  --surface-muted: color-mix(in srgb, var(--color-gray-50) 60%, var(--color-white));
+
+  --border-soft: var(--color-gray-200);
+  --border-strong: color-mix(in srgb, var(--color-gray-200) 70%, var(--color-white) 30%);
+
+  --text-strong: var(--color-gray-900);
+  --text-subtle: color-mix(in srgb, var(--color-gray-900) 60%, transparent);
+  --text-muted: 0.7;
+  --text-on-accent: var(--color-white);
+
+  --accent: var(--color-blue-500);
+  --accent-success: var(--color-green-500);
+  --accent-danger: var(--color-red-500);
+  --accent-warning: var(--color-orange-500);
+  --accent-soft: color-mix(in srgb, var(--color-blue-500) 14%, var(--color-white));
+  --accent-border: color-mix(in srgb, var(--color-blue-500) 26%, var(--color-white));
+
+  --shadow-elevated: var(--shadow-raise-md);
+  --shadow-rail: var(--shadow-border);
+}

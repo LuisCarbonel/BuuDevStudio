@@ -1,0 +1,25 @@
+.theme-dark {
+  color-scheme: dark;
+
+  --surface-shell: color-mix(in srgb, var(--color-gray-900) 85%, #000000);
+  --surface-panel: color-mix(in srgb, var(--color-gray-900) 70%, #000000);
+  --surface-muted: color-mix(in srgb, var(--color-gray-900) 55%, #000000);
+
+  --border-soft: color-mix(in srgb, var(--color-gray-900) 45%, #4a5568);
+  --border-strong: color-mix(in srgb, var(--color-gray-900) 60%, #4a5568);
+
+  --text-strong: color-mix(in srgb, var(--color-white) 88%, var(--color-gray-900) 12%);
+  --text-subtle: color-mix(in srgb, var(--text-strong) 72%, transparent);
+  --text-muted: 0.75;
+  --text-on-accent: color-mix(in srgb, var(--color-white) 92%, transparent);
+
+  --accent: color-mix(in srgb, var(--color-blue-500) 90%, var(--color-white));
+  --accent-success: color-mix(in srgb, var(--color-green-500) 90%, var(--color-white));
+  --accent-danger: color-mix(in srgb, var(--color-red-500) 90%, var(--color-white));
+  --accent-warning: color-mix(in srgb, var(--color-orange-500) 90%, var(--color-white));
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, transparent);
+  --accent-border: color-mix(in srgb, var(--accent) 42%, transparent);
+
+  --shadow-elevated: 0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-rail: 1px 0 6px rgba(0, 0, 0, 0.35);
+}

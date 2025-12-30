@@ -1,0 +1,14 @@
+:root {
+  --rail-speed: 800ms;
+  --rail-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --rail-transition: width var(--rail-speed) var(--rail-ease),
+    max-width var(--rail-speed) var(--rail-ease),
+    min-width var(--rail-speed) var(--rail-ease),
+    flex-basis var(--rail-speed) var(--rail-ease),
+    box-shadow var(--rail-speed) var(--rail-ease);
+
+  --rail-transition-menu: padding var(--rail-speed) var(--rail-ease), width var(--rail-speed) var(--rail-ease);
+  --rail-transition-item: padding var(--rail-speed) var(--rail-ease), gap var(--rail-speed) var(--rail-ease);
+  --rail-transition-text: opacity var(--rail-speed) ease, max-width var(--rail-speed) ease;
+}

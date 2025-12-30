@@ -1,0 +1,41 @@
+:root,
+:root .theme-light,
+.theme-light,
+.theme-dark {
+  /* Core colors */
+  --ant-primary-color: var(--accent);
+  --ant-primary-color-hover: color-mix(in srgb, var(--accent) 88%, var(--color-white));
+  --ant-primary-color-active: color-mix(in srgb, var(--accent) 92%, var(--color-gray-900));
+  --ant-success-color: var(--accent-success);
+  --ant-error-color: var(--accent-danger);
+  --ant-warning-color: var(--accent-warning);
+  --ant-info-color: var(--accent);
+
+  /* Surfaces */
+  --ant-body-background: var(--surface-shell);
+  --ant-component-background: var(--surface-panel);
+  --ant-layout-header-background: var(--surface-panel);
+  --ant-layout-sider-background: var(--surface-panel);
+  --ant-menu-background: var(--surface-panel);
+
+  /* Borders */
+  --ant-border-color: var(--border-soft);
+  --ant-border-color-base: var(--border-soft);
+  --ant-border-radius-base: var(--radius-sm);
+  --ant-border-radius-lg: var(--radius-md);
+
+  /* Text */
+  --ant-color-text: var(--text-strong);
+  --ant-color-text-secondary: var(--text-subtle);
+  --ant-color-text-disabled: color-mix(in srgb, var(--text-strong) 40%, transparent);
+  --ant-color-white: var(--text-on-accent);
+
+  /* Misc */
+  --ant-box-shadow: var(--shadow-raise-sm);
+  --ant-box-shadow-secondary: var(--shadow-elevated);
+
+  /* Menu states */
+  --ant-menu-item-active-bg: color-mix(in srgb, var(--accent) 8%, var(--surface-panel));
+  --ant-menu-item-selected-bg: color-mix(in srgb, var(--accent) 12%, var(--surface-panel));
+  --ant-menu-item-selected-color: var(--text-strong);
+}

@@ -1,0 +1,29 @@
+:root,
+:root .theme-light,
+.theme-light {
+  --sider-bg: var(--surface-panel);
+  --sider-shadow: var(--shadow-rail);
+  --sider-width-expanded: 220px;
+  --sider-width-collapsed: 72px;
+
+  --nav-item-gap: var(--space-2);
+  --nav-item-pad-y: var(--space-3);
+  --nav-item-pad-x: var(--space-4);
+
+  --topbar-height: 56px;
+  --shell-content-padding: var(--space-6);
+}
+
+.theme-dark {
+  --sider-bg: var(--surface-panel);
+  --sider-shadow: var(--shadow-rail);
+  --sider-width-expanded: 220px;
+  --sider-width-collapsed: 72px;
+
+  --nav-item-gap: var(--space-2);
+  --nav-item-pad-y: var(--space-3);
+  --nav-item-pad-x: var(--space-4);
+
+  --topbar-height: 56px;
+  --shell-content-padding: var(--space-6);
+}
