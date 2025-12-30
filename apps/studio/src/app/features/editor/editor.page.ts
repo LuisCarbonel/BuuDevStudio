@@ -3,6 +3,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 
 import { StudioStateService } from '../../services/studio-state.service';
+import { DeviceService } from '../../services/device.service';
+import { Binding } from '../../shared/models/device';
 import { DragSourceDirective } from '../../directives/drag-source.directive';
 import { DropTargetDirective } from '../../directives/drop-target.directive';
 import { DeviceViewComponent } from '../../shared/device-view/device-view';
@@ -274,7 +276,7 @@ export class EditorPage implements OnInit {
 
   presets = ['Micro-gap', 'Jitter pattern', 'Burst tap', 'Fast strafes'];
 
-  constructor(private studio: StudioStateService) {}
+  constructor(private studio: StudioStateService, private device: DeviceService) {}
 
   ngOnInit(): void {
     // Auto-load the first fixture as a mock fallback to render the canvas.
@@ -404,31 +406,44 @@ export class EditorPage implements OnInit {
   assignSelectedScriptToTarget() {
     if (!this.selectedTargetId) return;
     if (this.bindingType !== 'none' && this.bindingErrors.length) return;
+    const layerId = this.activeLayer;
     switch (this.bindingType) {
       case 'scriptRef': {
         const scriptId = this.bindingScriptId || this.selectedScript?.id;
         if (!scriptId) return;
         this.studio.assignScriptToTarget(scriptId);
+        this.device.pushBinding(layerId, this.selectedTargetId, { type: 'scriptRef', scriptId });
         break;
       }
       case 'simpleAction': {
         if (!this.bindingAction.trim()) return;
         this.studio.assignSimpleAction(this.bindingAction.trim(), this.bindingActionArg.trim() || undefined);
+        this.device.pushBinding(layerId, this.selectedTargetId, {
+          type: 'simpleAction',
+          action: this.bindingAction.trim(),
+          arg: this.bindingActionArg.trim() || undefined,
+        });
         break;
       }
       case 'program': {
         if (!this.bindingProgramPath.trim()) return;
         this.studio.assignProgram(this.bindingProgramPath.trim());
+        this.device.pushBinding(layerId, this.selectedTargetId, {
+          type: 'program',
+          path: this.bindingProgramPath.trim(),
+        });
         break;
       }
       case 'inlineSequence': {
         const steps = this.parseInlineSequence(this.bindingInlineText);
         if (!steps.length) return;
         this.studio.assignInlineSequence(steps);
+        this.device.pushBinding(layerId, this.selectedTargetId, { type: 'inlineSequence', steps });
         break;
       }
       case 'none':
         this.studio.clearBinding();
+        this.device.pushBinding(layerId, this.selectedTargetId, { type: 'none' });
         break;
     }
   }

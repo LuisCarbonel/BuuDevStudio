@@ -53,8 +53,8 @@ export interface CommittedState {
 export interface DeviceInfo {
   id: string;
   name: string;
-  transport: 'mock' | 'hid';
-  firmwareVersion: string;
+  transport: string;
+  firmwareVersion?: string;
   vendorId?: string;
   productId?: string;
 }
@@ -69,6 +69,9 @@ export interface DeviceState {
   firmwareVersion: string;
   capabilities: DeviceCapabilities;
   committedState: CommittedState | null;
+  appliedState?: CommittedState | null;
+  stagedState?: CommittedState | null;
+  sessionId?: string | null;
 }
 
 export interface StudioState {
@@ -84,12 +87,15 @@ export interface StudioState {
 }
 
 export interface ProfileBundle {
-  deviceInfo: DeviceInfo;
+  device: DeviceInfo;
   capabilities: DeviceCapabilities;
   profile: Profile;
   layout: NormalizedLayout | null;
   scripts: Script[];
-  committedState: CommittedState;
+  committedState: CommittedState | null;
+  appliedState?: CommittedState | null;
+  stagedState?: CommittedState | null;
+  sessionId?: string | null;
 }
 
 const initialState: StudioState = {
@@ -103,6 +109,9 @@ const initialState: StudioState = {
     firmwareVersion: '0.0.1-mock',
     capabilities: { volatileApply: true, commit: true, layouts: true, keymap: true, scripts: true },
     committedState: null,
+    appliedState: null,
+    stagedState: null,
+    sessionId: null,
   },
   activeProfileId: 'p-default',
   activeLayer: 1,
@@ -264,15 +273,18 @@ export class StudioStateService {
       ...this.snapshot,
       device: {
         ...this.snapshot.device,
-        id: bundle.deviceInfo.id,
-        name: bundle.deviceInfo.name,
+        id: bundle.device.id,
+        name: bundle.device.name,
         connected: true,
-        transport: bundle.deviceInfo.transport,
-        firmwareVersion: bundle.deviceInfo.firmwareVersion,
+        transport: bundle.device.transport as any,
+        firmwareVersion: bundle.device.firmwareVersion || 'unknown',
         lastError: null,
         runningScriptId: null,
         capabilities: bundle.capabilities,
         committedState: bundle.committedState,
+        appliedState: bundle.appliedState ?? null,
+        stagedState: bundle.stagedState ?? null,
+        sessionId: bundle.sessionId ?? null,
       },
       profiles: [bundle.profile],
       scripts: bundle.scripts,
@@ -296,7 +308,7 @@ export class StudioStateService {
       };
 
     return {
-      deviceInfo: {
+      device: {
         id: deviceId,
         name: profile.name,
         transport: this.snapshot.device.transport,
@@ -313,7 +325,15 @@ export class StudioStateService {
   markDisconnected() {
     this.state.next({
       ...this.snapshot,
-      device: { ...this.snapshot.device, connected: false, runningScriptId: null },
+      device: {
+        ...this.snapshot.device,
+        connected: false,
+        runningScriptId: null,
+        committedState: null,
+        appliedState: null,
+        stagedState: null,
+        sessionId: null,
+      },
       selectedTargetId: null,
       selectedStepId: null,
     });

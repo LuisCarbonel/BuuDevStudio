@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, map, Observable } from 'rxjs';
 
-import { StudioStateService } from './studio-state.service';
+import { DEVICE_GATEWAY, DeviceGateway } from './device-gateway/device-gateway';
+import { StudioStateService, Binding, ProfileBundle as StoreProfileBundle, Layer as StoreLayer } from './studio-state.service';
+import { BindingEntry, ProfileBundle as WireProfileBundle } from '../shared/models/device';
 
 interface DeviceVm {
   connected: boolean;
@@ -16,14 +18,15 @@ export class DeviceService {
   private busy = new BehaviorSubject<boolean>(false);
   private running = new BehaviorSubject<boolean>(false);
   private ramLoaded = new BehaviorSubject<boolean>(false);
-  private revision = 0;
-  private lastUploadedChecksum: number | null = null;
-  private lastUploadedProfileId: string | null = null;
+  private lastError = new BehaviorSubject<string | null>(null);
+  private sessionId: string | null = null;
+  private deviceId: string | null = null;
 
   readonly connected$ = this.connected.asObservable();
   readonly busy$ = this.busy.asObservable();
   readonly running$ = this.running.asObservable();
   readonly ramLoaded$ = this.ramLoaded.asObservable();
+  readonly error$ = this.lastError.asObservable();
 
   readonly vm$: Observable<DeviceVm> = combineLatest([
     this.connected$,
@@ -39,100 +42,162 @@ export class DeviceService {
     }))
   );
 
-  constructor(private studio: StudioStateService) {}
+  constructor(private studio: StudioStateService, @Inject(DEVICE_GATEWAY) private gateway: DeviceGateway) {}
 
-  async connect(deviceId = 'mock-device') {
+  async connect(deviceId?: string) {
     if (this.busy.value) return;
     this.busy.next(true);
-    // Simulate handshake + status fetch + bundle hydrate
-    await new Promise(resolve => setTimeout(resolve, 150));
-    await this.openSession(deviceId);
-    this.connected.next(true);
-    this.busy.next(false);
-    console.log(`Connected (mock handshake complete) device=${deviceId}`);
+    try {
+      const devices = await this.gateway.listDevices();
+      const chosen = deviceId || devices[0]?.id;
+      if (!chosen) throw new Error('No devices available');
+      await this.openSession(chosen);
+      this.connected.next(true);
+      this.lastError.next(null);
+    } finally {
+      this.busy.next(false);
+    }
   }
 
-  async openSession(deviceId: string) {
-    const bundle = this.studio.buildProfileBundle(deviceId);
-    this.studio.hydrateFromBundle(bundle);
-    return bundle;
+  private async openSession(deviceId: string) {
+    const bundle = await this.gateway.openSession(deviceId);
+    const adapted = this.adaptBundle(bundle);
+    this.sessionId = adapted.sessionId ?? null;
+    this.deviceId = deviceId;
+    this.studio.hydrateFromBundle(adapted);
+    this.ramLoaded.next(!!adapted.appliedState);
+    return adapted;
   }
 
-  disconnect() {
+  async refreshSession() {
+    if (!this.deviceId) return;
+    await this.openSession(this.deviceId);
+  }
+
+  async disconnect() {
     if (this.busy.value) return;
+    if (this.sessionId) {
+      try {
+        await this.gateway.closeSession(this.sessionId);
+      } catch {
+        // ignore
+      }
+    }
     this.running.next(false);
     this.ramLoaded.next(false);
     this.connected.next(false);
+    this.sessionId = null;
+    this.deviceId = null;
     this.studio.markDisconnected();
-    console.log('Disconnected (mock)');
   }
 
   async uploadToRam() {
-    if (!this.connected.value || this.busy.value) return;
+    if (!this.connected.value || this.busy.value || !this.sessionId) return;
     this.busy.next(true);
-    const compiled = this.studio.compileUploadPayload();
-    await new Promise(resolve => setTimeout(resolve, 120));
-    this.ramLoaded.next(true);
-    this.busy.next(false);
-    if (compiled.payload && compiled.stats) {
-      const s = compiled.stats;
-      this.lastUploadedChecksum = s.checksum;
-      this.lastUploadedProfileId = compiled.payload.profileId;
-      console.log(
-        `Upload to RAM (mock) profile=${compiled.payload.profileId} targets=${s.targetsBound} scripts=${s.scriptsIncluded} steps=${s.steps} bytes=${s.byteSize} checksum=${s.checksum}`
-      );
-    } else {
-      console.log('Upload to RAM (mock) no payload (no active profile)');
+    try {
+      await this.gateway.applyToRam(this.sessionId);
+      await this.refreshSession();
+      this.ramLoaded.next(true);
+      this.lastError.next(null);
+    } finally {
+      this.busy.next(false);
+    }
+  }
+
+  async revertRam() {
+    if (!this.connected.value || this.busy.value || !this.sessionId) return;
+    this.busy.next(true);
+    try {
+      await this.gateway.revertRam(this.sessionId);
+      await this.refreshSession();
+      this.lastError.next(null);
+    } finally {
+      this.busy.next(false);
+    }
+  }
+
+  async commitToFlash() {
+    if (!this.connected.value || this.busy.value || !this.sessionId) return;
+    this.busy.next(true);
+    try {
+      await this.gateway.commit(this.sessionId);
+      await this.refreshSession();
+      this.lastError.next(null);
+    } finally {
+      this.busy.next(false);
     }
   }
 
   run() {
     if (!this.connected.value || this.busy.value) return;
     this.running.next(true);
-    console.log('Run (mock) started');
+    if (this.sessionId) {
+      this.gateway.run(this.sessionId, this.studio.selectedScriptId ?? '').catch(() => {});
+    }
   }
 
   stopAll() {
     if (!this.connected.value) return;
     this.running.next(false);
     this.busy.next(false);
-    console.log('Stop all (mock panic) — running cleared, held keys released');
+    if (this.sessionId) {
+      this.gateway.stopAll(this.sessionId).catch(() => {});
+    }
   }
 
-  async commitToFlash() {
-    if (!this.connected.value || !this.ramLoaded.value || this.busy.value || this.running.value) return;
-    this.busy.next(true);
-    // Simulate safe flash commit
-    await new Promise(resolve => setTimeout(resolve, 180));
-    this.revision += 1;
-    this.busy.next(false);
-    console.log(`Commit to flash (mock) revision #${this.revision} saved`);
+  async pushBinding(layerId: number, targetId: string, binding: Binding) {
+    if (!this.sessionId) return;
+    try {
+      await this.gateway.setBinding(this.sessionId, { layerId, targetId, binding });
+      await this.refreshSession();
+      this.lastError.next(null);
+    } catch (e) {
+      this.lastError.next((e as Error)?.message ?? 'Failed to push binding');
+      console.warn('Failed to push binding', e);
+    }
   }
 
   isDirty(): boolean {
-    const compiled = this.studio.compileUploadPayload();
-    if (!compiled.payload || !compiled.stats) return false;
-    if (this.lastUploadedChecksum === null) return true;
-    return !(
-      compiled.payload.profileId === this.lastUploadedProfileId &&
-      compiled.stats.checksum === this.lastUploadedChecksum
-    );
+    const device = this.studio.snapshot.device;
+    const committed = device.committedState?.checksum ?? null;
+    const staged = device.stagedState?.checksum ?? committed;
+    return committed !== staged;
   }
 
   getSyncStats() {
-    const compiled = this.studio.compileUploadPayload();
-    if (!compiled.payload || !compiled.stats) {
-      return { dirty: false, current: null, last: null };
-    }
-    const dirty =
-      this.lastUploadedChecksum === null ||
-      compiled.payload.profileId !== this.lastUploadedProfileId ||
-      compiled.stats.checksum !== this.lastUploadedChecksum;
+    const device = this.studio.snapshot.device;
     return {
-      dirty,
-      current: compiled.stats,
-      last: this.lastUploadedChecksum,
-      profileId: compiled.payload.profileId,
+      committed: device.committedState,
+      applied: device.appliedState ?? null,
+      staged: device.stagedState ?? null,
+      dirty: this.isDirty(),
+      sessionId: device.sessionId ?? null,
     };
+  }
+
+  private adaptBundle(bundle: WireProfileBundle): StoreProfileBundle {
+    const layers: StoreLayer[] = bundle.profile.layers.map(l => ({
+      id: l.id,
+      bindingsByTargetId: l.bindings.reduce<Record<string, Binding>>((acc, entry) => {
+        acc[entry.targetId] = entry.binding as Binding;
+        return acc;
+      }, {}),
+    }));
+
+    return {
+      device: bundle.device,
+      capabilities: bundle.capabilities as any,
+      profile: { ...bundle.profile, layers },
+      layout: bundle.layout,
+      scripts: bundle.scripts as any,
+      committedState: bundle.committedState as any,
+      appliedState: bundle.appliedState as any,
+      stagedState: bundle.stagedState as any,
+      sessionId: bundle.sessionId,
+    };
+  }
+
+  get lastErrorMessage() {
+    return this.lastError.value;
   }
 }

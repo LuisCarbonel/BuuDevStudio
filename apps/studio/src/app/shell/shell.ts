@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
@@ -9,6 +9,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTagModule } from 'ng-zorro-antd/tag';
 
 import { DeviceService } from '../services/device.service';
+import { DEVICE_GATEWAY, DeviceGateway } from '../services/device-gateway/device-gateway';
 
 interface ShellNavItem {
   key: string;
@@ -38,10 +39,18 @@ export class ShellComponent implements OnInit, OnDestroy {
   activeKey = 'editor';
   private sub?: Subscription;
 
-  constructor(private router: Router, public device: DeviceService) {}
+  constructor(
+    private router: Router,
+    public device: DeviceService,
+    @Inject(DEVICE_GATEWAY) private gateway: DeviceGateway
+  ) {}
 
   get vm$() {
     return this.device.vm$;
+  }
+
+  get syncStats() {
+    return this.device.getSyncStats();
   }
 
   ngOnInit(): void {
@@ -49,6 +58,13 @@ export class ShellComponent implements OnInit, OnDestroy {
     this.sub = this.router.events
       .pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd))
       .subscribe(e => this.syncActiveKey(e.urlAfterRedirects));
+
+    if (typeof window !== 'undefined' && (window as any).__TAURI__) {
+      this.gateway
+        .listDevices()
+        .then(devs => console.log('[gateway] devices', devs))
+        .catch(err => console.warn('[gateway] listDevices failed', err));
+    }
   }
 
   ngOnDestroy(): void {
