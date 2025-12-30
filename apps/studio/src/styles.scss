@@ -11,6 +11,65 @@ app-root {
   height: 100%;
 }
 
+/* Toast styling */
+.ant-message {
+  top: auto !important;
+  bottom: 16px !important;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ant-message-notice {
+  padding: 0;
+}
+
+.ant-message-notice-content {
+  width: 100%;
+  min-height: 65px;
+  margin: 0 auto;
+  border-radius: 6px;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  pointer-events: auto;
+}
+
+.ant-message-custom-content > .anticon {
+  display: none;
+}
+
+.app-snackbar {
+  display: flex;
+  justify-content: center;
+}
+
+.app-snackbar .ant-message-notice-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+}
+
+.app-snackbar .ant-message-custom-content {
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.app-snackbar-error .ant-message-notice-content {
+  background: #b42318;
+}
+
+.app-snackbar-success .ant-message-notice-content {
+  background: #0f9d58;
+}
+
 /* CDK drag/drop visuals */
 .cdk-drag-preview {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);

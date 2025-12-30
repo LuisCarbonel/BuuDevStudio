@@ -248,7 +248,7 @@ export class StudioStateService {
 
   setNormalizedLayout(layout: NormalizedLayout | null) {
     this.layout = layout;
-    const targets = this.computeTargets(layout);
+    const targets = this.computeTargets(layout, this.snapshot.targets);
     const selectedTargetId = targets.includes(this.snapshot.selectedTargetId ?? '') ? this.snapshot.selectedTargetId : null;
     this.patch({ targets, selectedTargetId });
   }
@@ -487,8 +487,8 @@ export class StudioStateService {
     };
   }
 
-  private computeTargets(layout: NormalizedLayout | null): string[] {
-    if (!layout) return [];
+  private computeTargets(layout: NormalizedLayout | null, fallback: string[] = []): string[] {
+    if (!layout) return fallback;
     return [
       ...layout.keys.map(k => k.elementId),
       ...layout.controls.map(c => c.elementId),

@@ -49,6 +49,7 @@
               Rev {{ s.committed?.revision }}
             </nz-tag>
           </ng-container>
+          <nz-spin *ngIf="vm.busy" nzSize="small" style="margin-left: 8px;"></nz-spin>
         </div>
         <div class="diag" *ngIf="syncStats as s">
           <span class="muted">Session:</span> <code>{{ s.sessionId || 'n/a' }}</code>
@@ -61,17 +62,54 @@
         <button nz-button nzType="default" [nzLoading]="vm.busy" (click)="vm.connected ? device.disconnect() : device.connect()">
           {{ vm.connected ? 'Disconnect' : 'Connect' }}
         </button>
-        <button nz-button nzType="default" [disabled]="!vm.connected || vm.busy" (click)="device.uploadToRam()">Upload to RAM</button>
-        <button nz-button nzType="default" [disabled]="!vm.connected || vm.busy" (click)="device.revertRam()">Revert</button>
-        <button nz-button nzType="primary" [disabled]="!vm.connected || vm.busy" (click)="device.run()">
-          Run
-        </button>
-        <button nz-button nzDanger [disabled]="!vm.connected" (click)="device.stopAll()">
-          Stop All
-        </button>
-        <button nz-button nzType="default" [disabled]="!vm.connected || vm.busy" (click)="device.commitToFlash()">
-          Commit
-        </button>
+
+        <ng-container *ngIf="vm.connected">
+          <button
+            nz-button
+            nzType="default"
+            [disabled]="vm.busy || !device.isDirty()"
+            (click)="device.uploadToRam()"
+          >
+            Upload to RAM
+          </button>
+
+          <button
+            nz-button
+            nzType="default"
+            [disabled]="vm.busy || !vm.ramLoaded"
+            (click)="device.revertRam()"
+          >
+            Revert
+          </button>
+
+          <button
+            *ngIf="!vm.running"
+            nz-button
+            nzType="primary"
+            [disabled]="vm.busy"
+            (click)="device.run()"
+          >
+            Run
+          </button>
+          <button
+            *ngIf="vm.running"
+            nz-button
+            nzDanger
+            [disabled]="vm.busy"
+            (click)="device.stopAll()"
+          >
+            Stop All
+          </button>
+
+          <button
+            nz-button
+            nzType="default"
+            [disabled]="vm.busy || !vm.ramLoaded"
+            (click)="device.commitToFlash()"
+          >
+            Commit
+          </button>
+        </ng-container>
       </div>
     </nz-header>
 

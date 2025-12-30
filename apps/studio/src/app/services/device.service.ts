@@ -19,6 +19,7 @@ export class DeviceService {
   private running = new BehaviorSubject<boolean>(false);
   private ramLoaded = new BehaviorSubject<boolean>(false);
   private lastError = new BehaviorSubject<string | null>(null);
+  private lastSuccess = new BehaviorSubject<string | null>(null);
   private sessionId: string | null = null;
   private deviceId: string | null = null;
 
@@ -27,6 +28,7 @@ export class DeviceService {
   readonly running$ = this.running.asObservable();
   readonly ramLoaded$ = this.ramLoaded.asObservable();
   readonly error$ = this.lastError.asObservable();
+  readonly success$ = this.lastSuccess.asObservable();
 
   readonly vm$: Observable<DeviceVm> = combineLatest([
     this.connected$,
@@ -54,6 +56,11 @@ export class DeviceService {
       await this.openSession(chosen);
       this.connected.next(true);
       this.lastError.next(null);
+      this.lastSuccess.next('Connected');
+    } catch (e) {
+      const msg = (e as Error)?.message ?? 'Failed to connect';
+      this.lastError.next(msg);
+      console.warn('Connect failed', e);
     } finally {
       this.busy.next(false);
     }
@@ -99,6 +106,7 @@ export class DeviceService {
       await this.refreshSession();
       this.ramLoaded.next(true);
       this.lastError.next(null);
+      this.lastSuccess.next('Applied to RAM');
     } finally {
       this.busy.next(false);
     }
@@ -110,7 +118,9 @@ export class DeviceService {
     try {
       await this.gateway.revertRam(this.sessionId);
       await this.refreshSession();
+      this.ramLoaded.next(false);
       this.lastError.next(null);
+      this.lastSuccess.next('Reverted');
     } finally {
       this.busy.next(false);
     }
@@ -123,6 +133,7 @@ export class DeviceService {
       await this.gateway.commit(this.sessionId);
       await this.refreshSession();
       this.lastError.next(null);
+      this.lastSuccess.next('Committed');
     } finally {
       this.busy.next(false);
     }
@@ -151,6 +162,7 @@ export class DeviceService {
       await this.gateway.setBinding(this.sessionId, { layerId, targetId, binding });
       await this.refreshSession();
       this.lastError.next(null);
+      this.lastSuccess.next('Binding updated');
     } catch (e) {
       this.lastError.next((e as Error)?.message ?? 'Failed to push binding');
       console.warn('Failed to push binding', e);
@@ -199,5 +211,9 @@ export class DeviceService {
 
   get lastErrorMessage() {
     return this.lastError.value;
+  }
+
+  get lastSuccessMessage() {
+    return this.lastSuccess.value;
   }
 }

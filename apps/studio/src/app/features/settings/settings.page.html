@@ -1,4 +1,18 @@
 <div class="feature">
   <h1>Settings</h1>
   <p>Studio preferences, delay classes, and other shell settings.</p>
+
+  <section class="card">
+    <h3>Diagnostics</h3>
+    <p class="muted">Session and state snapshot</p>
+    <div class="diag-grid" *ngIf="sync as s">
+      <div><strong>Session</strong><div class="muted">{{ s.sessionId || 'n/a' }}</div></div>
+      <div><strong>Committed rev</strong><div class="muted">{{ s.committed?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Applied rev</strong><div class="muted">{{ s.applied?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Staged rev</strong><div class="muted">{{ s.staged?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Dirty</strong><div class="muted">{{ s.dirty ? 'Yes' : 'No' }}</div></div>
+      <div><strong>Device</strong><div class="muted">{{ s.deviceId || 'n/a' }}</div></div>
+    </div>
+    <button class="btn ghost" type="button" (click)="refresh()">Refresh session</button>
+  </section>
 </div>

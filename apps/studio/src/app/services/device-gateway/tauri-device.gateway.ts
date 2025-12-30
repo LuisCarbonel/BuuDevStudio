@@ -1,12 +1,13 @@
+import { invoke } from '@tauri-apps/api/core';
 import { BindingEntry, DeviceInfo, ProfileBundle } from '../../shared/models/device';
 import { DeviceGateway } from './device-gateway';
 
 async function tauriInvoke<T>(cmd: string, args?: Record<string, unknown>): Promise<T> {
-  const tauri = (globalThis as any).__TAURI__;
-  if (tauri?.invoke) {
-    return tauri.invoke(cmd, args) as Promise<T>;
+  // Tauri v2 exposes invoke via __TAURI_INTERNALS__ and @tauri-apps/api/core.
+  if (!(globalThis as any).__TAURI_INTERNALS__?.invoke) {
+    return Promise.reject(new Error('Tauri API not available in this environment'));
   }
-  return Promise.reject(new Error('Tauri API not available'));
+  return invoke<T>(cmd, args);
 }
 
 export class TauriDeviceGateway implements DeviceGateway {
