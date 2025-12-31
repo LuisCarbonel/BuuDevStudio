@@ -70,6 +70,27 @@
   row-gap: var(--space-2);
 }
 
+.toolbar.device-picker {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  flex-wrap: wrap;
+
+  .picker-label {
+    font-size: 12px;
+    color: var(--text-subtle);
+  }
+
+  .picker {
+    min-width: 170px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--ed-border-muted);
+    background: var(--surface-panel);
+    color: var(--text-strong);
+  }
+}
+
 .layer-meta {
   gap: var(--space-2);
   align-items: center;

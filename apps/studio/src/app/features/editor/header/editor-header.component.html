@@ -37,6 +37,30 @@
         </div>
       </div>
 
+      <div class="toolbar device-picker">
+        <label class="picker-label">Device</label>
+        <select
+          class="picker"
+          [disabled]="busy"
+          [value]="selectedDeviceId || ''"
+          (change)="connectDevice.emit($any($event.target).value)"
+        >
+          <option value="" disabled>Select device</option>
+          <option *ngFor="let d of devices" [value]="d.id">{{ d.name || d.id }}</option>
+        </select>
+        <button
+          nz-button
+          nzType="primary"
+          nzSize="small"
+          class="ctrl ctrl--wide"
+          (click)="connectDevice.emit(selectedDeviceId || '')"
+          [disabled]="busy || !devices.length"
+          [nzLoading]="busy"
+        >
+          {{ connected ? 'Reconnect' : 'Connect' }}
+        </button>
+      </div>
+
       <div class="layer-row toolbar toolbar--wrap">
         <div class="toolbar__section">
           <button

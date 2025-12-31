@@ -49,10 +49,13 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   @Input() layerOptions: number[] = [];
   @Input() activeLayer = 1;
   @Input() libraryOpen = true;
+  @Input() devices: { id: string; name: string }[] = [];
+  @Input() selectedDeviceId: string | null = null;
 
   @Output() toggleLibrary = new EventEmitter<void>();
   @Output() selectLayer = new EventEmitter<number>();
   @Output() connect = new EventEmitter<void>();
+  @Output() connectDevice = new EventEmitter<string>();
   @Output() disconnect = new EventEmitter<void>();
   @Output() upload = new EventEmitter<void>();
   @Output() revert = new EventEmitter<void>();
