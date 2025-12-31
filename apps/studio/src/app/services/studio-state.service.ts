@@ -268,7 +268,16 @@ export class StudioStateService {
     const targets = this.computeTargets(bundle.layout);
     const activeProfileId = bundle.profile.id;
     const sequancesForProfile = bundle.sequances.filter(s => s.profileId === activeProfileId);
-    const selectedSequanceId = sequancesForProfile[0]?.id ?? null;
+    const prevSelectedSequanceId = this.snapshot.selectedSequanceId;
+    const selectedSequanceId =
+      prevSelectedSequanceId && sequancesForProfile.some(s => s.id === prevSelectedSequanceId)
+        ? prevSelectedSequanceId
+        : sequancesForProfile[0]?.id ?? null;
+    const prevSelectedTargetId = this.snapshot.selectedTargetId;
+    const selectedTargetId = prevSelectedTargetId && targets.includes(prevSelectedTargetId) ? prevSelectedTargetId : null;
+    const prevActiveLayer = this.snapshot.activeLayer;
+    const activeLayer =
+      bundle.profile.layers.some(l => l.id === prevActiveLayer) ? prevActiveLayer : bundle.profile.layers[0]?.id ?? 1;
     this.state.next({
       ...this.snapshot,
       device: {
@@ -291,8 +300,8 @@ export class StudioStateService {
       activeProfileId,
       selectedSequanceId,
       selectedStepId: null,
-      selectedTargetId: null,
-      activeLayer: bundle.profile.layers[0]?.id ?? 1,
+      selectedTargetId,
+      activeLayer,
       targets,
     });
   }
