@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DeviceViewComponent } from '../../../shared/device-view/device-view';
+import { BindingIndicator, DeviceViewComponent } from '../../../shared/device-view/device-view';
 
 @Component({
   selector: 'app-editor-canvas',
@@ -16,6 +16,9 @@ export class EditorCanvasComponent {
   @Input() layoutUnitPx = 50;
   @Input() layoutSelectionId: string | null = null;
   @Input() hoveredElementId: string | null = null;
+  @Input() bindingIndicators: Record<string, BindingIndicator> = {};
+  @Input() canvasView: 'device' | 'sequance' = 'device';
+  @Input() hasSequance = false;
 
   @Output() toggleLayoutMode = new EventEmitter<void>();
   @Output() select = new EventEmitter<string>();
@@ -23,8 +26,14 @@ export class EditorCanvasComponent {
   @Output() hover = new EventEmitter<string | null>();
   @Output() moveDelta = new EventEmitter<{ id: string; dx: number; dy: number }>();
   @Output() assignDrop = new EventEmitter<{ targetId: string; payload: unknown }>();
+  @Output() canvasViewChange = new EventEmitter<'device' | 'sequance'>();
 
   onAssignDrop(targetId: string, payload: unknown) {
     this.assignDrop.emit({ targetId, payload });
+  }
+
+  setView(view: 'device' | 'sequance') {
+    if (view === 'sequance' && !this.hasSequance) return;
+    this.canvasViewChange.emit(view);
   }
 }

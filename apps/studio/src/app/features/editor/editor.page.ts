@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { StudioStateService } from '../../services/studio-state.service';
+import { Binding as StudioBinding, StudioStateService } from '../../services/studio-state.service';
 import { DeviceService } from '../../services/device.service';
-import { Binding } from '../../shared/models/device';
 import { ControlElement, KeyElement } from '../../shared/layout/models';
+import { BindingIndicator } from '../../shared/device-view/device-view';
 import { EditorHeaderComponent } from './header/editor-header.component';
 import { EditorLibraryComponent } from './library/editor-library.component';
 import { EditorCanvasComponent } from './canvas/editor-canvas.component';
@@ -32,7 +32,7 @@ export class EditorPage {
   bindingInlineText = '';
   bindingProgramPath = '';
   layoutMode: 'view' | 'edit' = 'view';
-  layoutUnitPx = 50;
+  canvasView: 'device' | 'sequance' = 'device';
   hoveredElementId: string | null = null;
   layoutSelectionId: string | null = null;
 
@@ -60,6 +60,9 @@ export class EditorPage {
     this.hoveredElementId = null;
     this.bindingType = 'sequanceRef';
     this.bindingSequanceId = null;
+    if (!this.selectedSequanceId) {
+      this.canvasView = 'device';
+    }
   }
 
   selectSequance(sequanceId: string) {
@@ -80,6 +83,25 @@ export class EditorPage {
 
   get currentSteps() {
     return this.studio.currentSteps;
+  }
+
+  get bindingIndicators(): Record<string, BindingIndicator> {
+    const sequanceNames = new Map(this.sequancesForProfile.map(s => [s.id, s.name]));
+    const indicators: Record<string, BindingIndicator> = {};
+    Object.entries(this.studio.activeBindings).forEach(([targetId, binding]) => {
+      if (!binding || binding.type === 'none') return;
+      indicators[targetId] = this.bindingToIndicator(binding, sequanceNames);
+    });
+    return indicators;
+  }
+
+  get layoutUnitPx() {
+    const bounds = this.normalizedLayout?.bounds;
+    if (!bounds) return 60;
+    const paddedWidth = bounds.width + 2; // padding already applied in device view
+    const targetWidthPx = 900;
+    const unit = targetWidthPx / paddedWidth;
+    return Math.max(50, Math.min(unit, 110));
   }
 
   get profiles() {
@@ -218,7 +240,11 @@ export class EditorPage {
   }
 
   clearBinding() {
-    this.studio.clearBinding();
+    const targetId = this.selectedTargetId;
+    if (targetId) {
+      this.studio.clearBinding(targetId);
+      this.device.pushBinding(this.activeLayer, targetId, { type: 'none' });
+    }
     this.bindingSequanceId = null;
     this.bindingAction = '';
     this.bindingActionArg = '';
@@ -270,6 +296,11 @@ export class EditorPage {
 
   toggleLayoutMode() {
     this.layoutMode = this.layoutMode === 'view' ? 'edit' : 'view';
+  }
+
+  setCanvasView(view: 'device' | 'sequance') {
+    if (view === 'sequance' && !this.selectedSequanceId) return;
+    this.canvasView = view;
   }
 
   onDeviceSelect(id: string) {
@@ -350,5 +381,24 @@ export class EditorPage {
 
   isControlElement(el: KeyElement | ControlElement): el is ControlElement {
     return (el as ControlElement).kind !== undefined;
+  }
+
+  private bindingToIndicator(binding: StudioBinding, sequanceNames: Map<string, string>): BindingIndicator {
+    switch (binding.type) {
+      case 'sequanceRef':
+        return { label: `Sequance: ${this.truncateLabel(sequanceNames.get(binding.sequanceId) ?? 'Unknown')}` };
+      case 'simpleAction':
+        return { label: `Action: ${this.truncateLabel(binding.action || 'Action')}` };
+      case 'inlineSequence':
+        return { label: 'Inline macro' };
+      case 'program':
+        return { label: 'Program' };
+      default:
+        return { label: 'Set' };
+    }
+  }
+
+  private truncateLabel(label: string, max = 10) {
+    return label.length > max ? `${label.slice(0, max)}…` : label;
   }
 }

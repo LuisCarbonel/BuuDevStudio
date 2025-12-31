@@ -150,7 +150,7 @@
     </ng-template>
   </div>
 
-  <div class="inspector-section">
+  <div class="inspector-section" *ngIf="showSelectionSection">
     <div class="inspector-label">Selection</div>
 
     <div class="inspector-empty" *ngIf="!selectedStep">Select a step to edit.</div>

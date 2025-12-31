@@ -26,6 +26,7 @@ export class EditorInspectorComponent {
   @Input() sequancesForProfile: { id: string; name: string }[] = [];
   @Input() actions: string[] = [];
   @Input() selectedStep: { id: number; name: string; op: string; arg?: string; class?: number } | null = null;
+  @Input() showSelectionSection = true;
 
   @Output() bindingTypeChange = new EventEmitter<typeof this.bindingType>();
   @Output() bindingSequanceChange = new EventEmitter<string>();

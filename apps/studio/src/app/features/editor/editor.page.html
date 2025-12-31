@@ -46,12 +46,16 @@
       [layoutUnitPx]="layoutUnitPx"
       [layoutSelectionId]="layoutSelectionId"
       [hoveredElementId]="hoveredElementId"
+      [bindingIndicators]="bindingIndicators"
+      [canvasView]="canvasView"
+      [hasSequance]="!!selectedSequanceId"
       (toggleLayoutMode)="toggleLayoutMode()"
       (select)="onDeviceSelect($event)"
       (deselect)="onDeviceDeselect()"
       (hover)="onDeviceHover($event)"
       (moveDelta)="onDeviceMove($event)"
       (assignDrop)="onDropAssign($event.targetId, $event.payload)"
+      (canvasViewChange)="setCanvasView($event)"
     ></app-editor-canvas>
 
     <app-editor-inspector
@@ -67,6 +71,7 @@
       [bindingInlineText]="bindingInlineText"
       [bindingProgramPath]="bindingProgramPath"
       [bindingErrors]="bindingErrors"
+      [showSelectionSection]="canvasView === 'sequance'"
       [sequancesForProfile]="sequancesForProfile"
       [actions]="actions"
       [selectedStep]="selectedStep"

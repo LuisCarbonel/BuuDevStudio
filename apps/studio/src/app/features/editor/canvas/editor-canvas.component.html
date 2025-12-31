@@ -2,8 +2,24 @@
   <div class="pane-title">Canvas</div>
 
   <div class="canvas-tabs">
-    <button class="tab active" type="button">Device View</button>
-    <button class="tab" type="button">Timeline View</button>
+    <button
+      class="tab"
+      type="button"
+      [class.active]="canvasView === 'device'"
+      (click)="setView('device')"
+    >
+      Device View
+    </button>
+    <button
+      class="tab"
+      type="button"
+      [class.active]="canvasView === 'sequance'"
+      [disabled]="!hasSequance"
+      [attr.aria-disabled]="!hasSequance ? 'true' : null"
+      (click)="setView('sequance')"
+    >
+      Sequance View
+    </button>
   </div>
 
   <div class="layout-toolbar">
@@ -13,8 +29,8 @@
     </button>
   </div>
 
-  <div class="pane-body pane-body--canvas" (pointerdown)="deselect.emit()">
-    <div class="device-view">
+  <div class="pane-body pane-body--canvas">
+    <div class="device-view" *ngIf="canvasView === 'device'">
       <ng-container *ngIf="normalizedLayout; else noLayout">
         <app-device-view
           [layout]="normalizedLayout"
@@ -22,6 +38,7 @@
           [hoverId]="hoveredElementId"
           [mode]="layoutMode"
           [unitPx]="layoutUnitPx"
+          [bindingIndicators]="bindingIndicators"
           [dropConnectedTo]="[]"
           [dropEnabled]="false"
           (pointerdown)="$event.stopPropagation()"
@@ -37,6 +54,12 @@
           Connect to a device to load its layout.
         </div>
       </ng-template>
+    </div>
+
+    <div class="device-view" *ngIf="canvasView === 'sequance'">
+      <div class="canvas-placeholder">
+        Select a step to edit.
+      </div>
     </div>
   </div>
 </div>
