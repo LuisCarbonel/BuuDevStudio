@@ -1,26 +1,29 @@
 <div class="workbench">
-  <app-editor-header
-    *ngIf="vm$ | async as vm"
-    [connected]="vm.connected"
-    [busy]="vm.busy"
-    [running]="vm.running"
-    [ramLoaded]="vm.ramLoaded"
-    [dirty]="syncStats.dirty"
-    [appliedInSync]="appliedInSync"
-    [deviceName]="deviceName"
-    [sessionId]="syncStats.sessionId"
-    [revision]="syncStats.committed?.revision ?? null"
-    [layerOptions]="layerOptions"
-    [activeLayer]="activeLayer"
-    [libraryOpen]="libraryOpen"
-    (toggleLibrary)="toggleLibrary()"
-    (selectLayer)="setLayer($event)"
-    (connect)="device.connect()"
-    (disconnect)="device.disconnect()"
-    (upload)="device.uploadToRam()"
-    (revert)="device.revertRam()"
-    (commit)="device.commitToFlash()"
-    (run)="device.run()"
+    <app-editor-header
+      *ngIf="vm$ | async as vm"
+      [connected]="vm.connected"
+      [busy]="vm.busy"
+      [running]="vm.running"
+      [ramLoaded]="vm.ramLoaded"
+      [dirty]="syncStats.dirty"
+      [appliedInSync]="appliedInSync"
+      [deviceName]="deviceName"
+      [sessionId]="syncStats.sessionId"
+      [revision]="syncStats.committed?.revision ?? null"
+      [layerOptions]="layerOptions"
+      [activeLayer]="activeLayer"
+      [libraryOpen]="libraryOpen"
+      [devices]="(devices$ | async) || []"
+      [selectedDeviceId]="selectedDeviceId || ''"
+      (toggleLibrary)="toggleLibrary()"
+      (selectLayer)="setLayer($event)"
+      (connect)="device.connect()"
+      (connectDevice)="onConnectDevice($event)"
+      (disconnect)="device.disconnect()"
+      (upload)="device.uploadToRam()"
+      (revert)="device.revertRam()"
+      (commit)="device.commitToFlash()"
+      (run)="device.run()"
     (stopAll)="device.stopAll()"
   ></app-editor-header>
 
@@ -28,6 +31,13 @@
     class="wb-body"
     [class.library-closed]="!libraryOpen"
   >
+    <div class="import-bar">
+      <button class="btn ghost" type="button" (click)="importInput.click()" [disabled]="importBusy">
+        {{ importBusy ? 'Importing...' : 'Import VIA/Vial JSON' }}
+      </button>
+      <input #importInput type="file" accept=".json" (change)="onImportFile($event)" hidden />
+    </div>
+
     <app-editor-library
       *ngIf="libraryOpen"
       [profiles]="profiles"
@@ -54,6 +64,7 @@
       (deselect)="onDeviceDeselect()"
       (hover)="onDeviceHover($event)"
       (moveDelta)="onDeviceMove($event)"
+      (moveEnd)="onDeviceMoveEnd($event)"
       (assignDrop)="onDropAssign($event.targetId, $event.payload)"
       (canvasViewChange)="setCanvasView($event)"
     ></app-editor-canvas>

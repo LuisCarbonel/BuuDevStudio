@@ -35,6 +35,7 @@ export class EditorPage {
   canvasView: 'device' | 'sequance' = 'device';
   hoveredElementId: string | null = null;
   layoutSelectionId: string | null = null;
+  importBusy = false;
 
   actions = ['Wait', 'Key Down', 'Key Up', 'Tap', 'Mouse', 'If / Else', 'Set Variable', 'Loop'];
 
@@ -146,6 +147,14 @@ export class EditorPage {
 
   get deviceName() {
     return this.studio.snapshot.device.name;
+  }
+
+  get devices$() {
+    return this.device.devices$;
+  }
+
+  get selectedDeviceId() {
+    return this.device.currentDeviceId;
   }
 
   get syncStats() {
@@ -322,8 +331,41 @@ export class EditorPage {
     this.studio.offsetLayoutElement(ev.id, ev.dx, ev.dy);
   }
 
+  onDeviceMoveEnd(_ev: { id: string; x: number; y: number }) {
+    this.device.persistLayout();
+  }
+
   onCanvasDeselect() {
     this.onDeviceDeselect();
+  }
+
+  async onConnectDevice(deviceId: string) {
+    if (!deviceId) return;
+    await this.device.connect(deviceId);
+  }
+
+  async onImportFile(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    input.value = '';
+    if (!file) return;
+    this.importBusy = true;
+    try {
+      const content = await file.text();
+      await this.device.importViaBundle(content);
+      this.layoutSelectionId = null;
+      this.hoveredElementId = null;
+      this.bindingType = 'sequanceRef';
+      this.bindingSequanceId = null;
+    } catch (e) {
+      console.warn('Import failed', e);
+    } finally {
+      this.importBusy = false;
+    }
+  }
+
+  ngOnInit() {
+    this.device.refreshDevices();
   }
 
   get bindingErrors(): string[] {

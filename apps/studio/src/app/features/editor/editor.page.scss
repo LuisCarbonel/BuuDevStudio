@@ -21,6 +21,7 @@
   min-height: 0;
   align-items: stretch;
   grid-auto-rows: 1fr;
+  grid-template-rows: auto 1fr;
 }
 
 .wb-body.library-closed {
@@ -33,4 +34,8 @@
 
 .wb-body .pane {
   height: 100%;
+}
+
+.import-bar {
+  grid-column: 1 / -1;
 }
