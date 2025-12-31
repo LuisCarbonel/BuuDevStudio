@@ -46,6 +46,7 @@
           (deselect)="deselect.emit()"
           (hover)="hover.emit($event)"
           (moveDelta)="moveDelta.emit($event)"
+          (moveEnd)="onMoveEnd($event)"
           (assignDrop)="onAssignDrop($event.targetId, $event.payload)"
         ></app-device-view>
       </ng-container>

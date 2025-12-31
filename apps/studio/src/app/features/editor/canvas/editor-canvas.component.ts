@@ -25,11 +25,16 @@ export class EditorCanvasComponent {
   @Output() deselect = new EventEmitter<void>();
   @Output() hover = new EventEmitter<string | null>();
   @Output() moveDelta = new EventEmitter<{ id: string; dx: number; dy: number }>();
+  @Output() moveEnd = new EventEmitter<{ id: string; x: number; y: number }>();
   @Output() assignDrop = new EventEmitter<{ targetId: string; payload: unknown }>();
   @Output() canvasViewChange = new EventEmitter<'device' | 'sequance'>();
 
   onAssignDrop(targetId: string, payload: unknown) {
     this.assignDrop.emit({ targetId, payload });
+  }
+
+  onMoveEnd(ev: { id: string; x: number; y: number }) {
+    this.moveEnd.emit(ev);
   }
 
   setView(view: 'device' | 'sequance') {
