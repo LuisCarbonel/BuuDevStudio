@@ -8,6 +8,10 @@ import { DropTargetDirective } from '../../directives/drop-target.directive';
 import { DragMonitorService } from '../../services/drag-monitor.service';
 import { Subscription } from 'rxjs';
 
+export interface BindingIndicator {
+  label: string;
+}
+
 @Component({
   selector: 'app-device-view',
   standalone: true,
@@ -20,10 +24,11 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
   @Input() selection: string | null = null;
   @Input() hoverId: string | null = null;
   @Input() mode: 'view' | 'edit' = 'view';
-  @Input() unitPx = 50; // u → px scale for rendered size when needed
+  @Input() unitPx = 50; // u ƒ+' px scale for rendered size when needed
   @Input() padding = 1; // u padding around computed bounds
   @Input() dropConnectedTo: Array<string | CdkDropList<unknown>> = [];
   @Input() dropEnabled = true;
+  @Input() bindingIndicators: Record<string, BindingIndicator> = {};
 
   @Output() select = new EventEmitter<string>();
   @Output() hover = new EventEmitter<string | null>();
@@ -37,6 +42,7 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
   private dragSub?: Subscription;
   private dragHoverId: string | null = null;
   private dragPayload: unknown = null;
+  private keyGap = 0.14;
 
   constructor(private dragMonitor: DragMonitorService) {}
 
@@ -54,6 +60,7 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
     return {
       selected: this.selection === key.elementId,
       hovered: this.hoverId === key.elementId,
+      bound: !!this.bindingIndicators?.[key.elementId],
       dragging: false,
     };
   }
@@ -62,6 +69,7 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
     return {
       selected: this.selection === ctrl.elementId,
       hovered: this.hoverId === ctrl.elementId,
+      bound: !!this.bindingIndicators?.[ctrl.elementId],
       dragging: false,
     };
   }
@@ -87,6 +95,14 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
     if (!target) return;
     const hit = target.closest('.key, .control, .drop-hit');
     if (hit) return;
+
+    const b = this.layout?.bounds;
+    const pos = this.pointerToLayoutUnits({ x: ev.clientX, y: ev.clientY });
+    if (b && pos) {
+      const insideBounds = pos.x >= b.minX && pos.x <= b.maxX && pos.y >= b.minY && pos.y <= b.maxY;
+      if (insideBounds) return;
+    }
+
     this.deselect.emit();
   }
 
@@ -110,10 +126,11 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
   dropStyle(el: KeyElement | ControlElement): Record<string, string> {
     const b = this.layout?.bounds;
     if (!b) return {};
-    const left = (el.x - b.minX + this.padding) * this.unitPx;
-    const top = (el.y - b.minY + this.padding) * this.unitPx;
-    const width = el.w * this.unitPx;
-    const height = el.h * this.unitPx;
+    const rect = this.renderRect(el);
+    const left = (rect.x - b.minX + this.padding) * this.unitPx;
+    const top = (rect.y - b.minY + this.padding) * this.unitPx;
+    const width = rect.w * this.unitPx;
+    const height = rect.h * this.unitPx;
     return {
       left: `${left}px`,
       top: `${top}px`,
@@ -164,9 +181,22 @@ export class DeviceViewComponent implements OnInit, OnDestroy {
     const { keys, controls } = this.layout;
     const all = [...keys, ...controls];
     for (const el of all) {
-      const inside = x >= el.x && x <= el.x + el.w && y >= el.y && y <= el.y + el.h;
+      const rect = this.renderRect(el);
+      const inside = x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h;
       if (inside) return el.elementId;
     }
     return null;
+  }
+
+  renderRect(el: KeyElement | ControlElement): { x: number; y: number; w: number; h: number } {
+    const gap = this.keyGap;
+    const w = Math.max(0.25, el.w - gap);
+    const h = Math.max(0.25, el.h - gap);
+    return {
+      x: el.x + gap / 2,
+      y: el.y + gap / 2,
+      w,
+      h,
+    };
   }
 }

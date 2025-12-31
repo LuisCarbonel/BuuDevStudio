@@ -14,11 +14,12 @@
     (pointerdown)="$event.stopPropagation()"
   >
     <rect
+      *ngIf="layout as l"
       class="svg-bg-hit"
-      x="-10000"
-      y="-10000"
-      width="20000"
-      height="20000"
+      [attr.x]="l.bounds.minX - padding"
+      [attr.y]="l.bounds.minY - padding"
+      [attr.width]="l.bounds.width + padding * 2"
+      [attr.height]="l.bounds.height + padding * 2"
       fill="transparent"
       pointer-events="all"
       (pointerdown)="onBackgroundClick($event)"
@@ -40,21 +41,22 @@
         >
           <rect
             class="key-cap"
-            [attr.x]="key.x"
-            [attr.y]="key.y"
-            [attr.width]="key.w"
-            [attr.height]="key.h"
-            [attr.rx]="0.08"
+            [attr.x]="renderRect(key).x"
+            [attr.y]="renderRect(key).y"
+            [attr.width]="renderRect(key).w"
+            [attr.height]="renderRect(key).h"
+            [attr.rx]="0.22"
           ></rect>
           <text
             class="key-label"
-            [attr.x]="key.x + key.w / 2"
-            [attr.y]="key.y + key.h / 2"
+            [attr.x]="renderRect(key).x + renderRect(key).w / 2"
+            [attr.y]="renderRect(key).y + renderRect(key).h / 2"
             dominant-baseline="middle"
             text-anchor="middle"
           >
             {{ key.rawLabel || key.matrixId || key.elementId }}
           </text>
+          <title *ngIf="bindingIndicators[key.elementId] as badge">{{ badge.label }}</title>
         </g>
       </ng-container>
     </g>
@@ -78,20 +80,21 @@
           <rect
             [attr.x]="ctrl.x"
             [attr.y]="ctrl.y"
-            [attr.width]="ctrl.w"
-            [attr.height]="ctrl.h"
+            [attr.width]="renderRect(ctrl).w"
+            [attr.height]="renderRect(ctrl).h"
             class="control-body"
-            rx="0.08"
+            rx="0.14"
           ></rect>
           <text
             class="control-label"
-            [attr.x]="ctrl.x + ctrl.w / 2"
-            [attr.y]="ctrl.y + ctrl.h / 2"
+            [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+            [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2"
             dominant-baseline="middle"
             text-anchor="middle"
           >
             {{ controlLabel(ctrl) }}
           </text>
+          <title *ngIf="bindingIndicators[ctrl.elementId] as badge">{{ badge.label }}</title>
         </g>
       </ng-container>
     </g>
