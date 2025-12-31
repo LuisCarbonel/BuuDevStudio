@@ -1,4 +1,37 @@
-<div class="feature">
+<div class="feature" *ngIf="deviceInfo as d">
   <h1>Firmware</h1>
-  <p>QMK / firmware flashing and device status lives here.</p>
+  <p class="muted">Device snapshot from current session.</p>
+
+  <section class="card">
+    <h3>Device</h3>
+    <div class="grid">
+      <div><strong>ID</strong><div class="muted">{{ d.id || 'n/a' }}</div></div>
+      <div><strong>Name</strong><div class="muted">{{ d.name || 'n/a' }}</div></div>
+      <div><strong>Transport</strong><div class="muted">{{ d.transport }}</div></div>
+      <div><strong>Firmware</strong><div class="muted">{{ d.firmwareVersion || 'unknown' }}</div></div>
+      <div><strong>Session</strong><div class="muted">{{ d.sessionId || 'n/a' }}</div></div>
+      <div><strong>Active profile</strong><div class="muted">{{ activeProfile?.name || 'n/a' }}</div></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Capabilities</h3>
+    <ul class="caps">
+      <li>Layouts: {{ capabilities.layouts ? 'yes' : 'no' }}</li>
+      <li>Keymap: {{ capabilities.keymap ? 'yes' : 'no' }}</li>
+      <li>Sequances: {{ capabilities.sequances ? 'yes' : 'no' }}</li>
+      <li>Volatile apply: {{ capabilities.volatileApply ? 'yes' : 'no' }}</li>
+      <li>Commit: {{ capabilities.commit ? 'yes' : 'no' }}</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h3>State</h3>
+    <div class="grid">
+      <div><strong>Committed rev</strong><div class="muted">{{ d.committedState?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Applied rev</strong><div class="muted">{{ d.appliedState?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Staged rev</strong><div class="muted">{{ d.stagedState?.revision ?? 'n/a' }}</div></div>
+      <div><strong>Dirty</strong><div class="muted">{{ device.isDirty() ? 'yes' : 'no' }}</div></div>
+    </div>
+  </section>
 </div>
