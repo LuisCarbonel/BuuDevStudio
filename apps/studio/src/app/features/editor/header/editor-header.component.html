@@ -6,6 +6,14 @@
           <span class="dot" [class.off]="!connected"></span>
           <span class="status-label">{{ connected ? 'Connected' : 'Disconnected' }}</span>
           <span class="status-strong" *ngIf="deviceName">{{ deviceName }}</span>
+          <span
+            class="capability-badge"
+            *ngIf="capabilityLevel"
+            [ngClass]="capabilityBadgeClass()"
+            nz-tooltip
+            [nzTooltipTitle]="capabilityLevel"
+            >{{ capabilityLevel }}</span
+          >
         </div>
 
         <div class="toolbar__section toolbar__section--grow toolbar__meta">
@@ -42,11 +50,13 @@
         <select
           class="picker"
           [disabled]="busy"
-          [value]="selectedDeviceId || ''"
-          (change)="connectDevice.emit($any($event.target).value)"
+          [ngModel]="selectedDeviceId || ''"
+          (ngModelChange)="connectDevice.emit($event)"
         >
           <option value="" disabled>Select device</option>
-          <option *ngFor="let d of devices" [value]="d.id">{{ d.name || d.id }}</option>
+          <option *ngFor="let d of devices" [value]="d.id">
+            {{ d.name || d.id }}{{ d.capabilityLevel ? ' — ' + d.capabilityLevel : '' }}
+          </option>
         </select>
         <button
           nz-button

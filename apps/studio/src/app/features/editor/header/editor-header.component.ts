@@ -49,7 +49,8 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   @Input() layerOptions: number[] = [];
   @Input() activeLayer = 1;
   @Input() libraryOpen = true;
-  @Input() devices: { id: string; name: string }[] = [];
+  @Input() capabilityLevel: string | null = null;
+  @Input() devices: { id: string; name: string; capabilityLevel?: string | null }[] = [];
   @Input() selectedDeviceId: string | null = null;
 
   @Output() toggleLibrary = new EventEmitter<void>();
@@ -103,5 +104,13 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   private computeOverlayStyle(el?: ElementRef<HTMLElement>): NgStyleInterface {
     const width = el?.nativeElement?.offsetWidth;
     return width ? { width: `${width}px`, 'min-width': `${width}px` } : {};
+  }
+
+  capabilityBadgeClass(): string {
+    if (!this.capabilityLevel) return '';
+    const lvl = this.capabilityLevel.toLowerCase();
+    if (lvl.includes('studio')) return 'badge--studio';
+    if (lvl.includes('qmk')) return 'badge--qmk';
+    return 'badge--generic';
   }
 }
