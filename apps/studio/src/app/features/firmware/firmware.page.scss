@@ -8,3 +8,86 @@
 h1 {
   margin: 0 0 10px;
 }
+
+.actions {
+  margin: 0 0 12px;
+}
+
+.interfaces {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.iface-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.iface-label {
+  color: #111;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 12px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--ed-border-muted, #dcdcdc);
+  background: rgba(0, 0, 0, 0.04);
+  color: #333;
+
+  &.badge--raw {
+    background: rgba(0, 188, 212, 0.12);
+    border-color: rgba(0, 188, 212, 0.35);
+    color: #008c9e;
+  }
+}
+
+.via-layer {
+  margin-top: 12px;
+}
+
+.via-layer__title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.via-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.via-cell {
+  border: 1px solid #e5e5e5;
+  padding: 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.via-cell--header {
+  background: #fafafa;
+  font-weight: 700;
+}
+
+.via-cell__id {
+  font-size: 11px;
+  color: #666;
+}
+
+.via-cell__code {
+  font-size: 12px;
+}

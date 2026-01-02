@@ -1,6 +1,15 @@
 <div class="feature" *ngIf="deviceInfo as d">
   <h1>Firmware</h1>
   <p class="muted">Device snapshot from current session.</p>
+  <div class="actions">
+    <button class="btn ghost" type="button" (click)="copyDeviceReport()">Copy device report</button>
+    <label class="btn ghost" *ngIf="d.capabilityLevel !== 'Studio HID'">
+      Import definition
+      <input type="file" accept=".json" hidden (change)="importDefinition($event)" />
+    </label>
+    <button class="btn ghost" type="button" (click)="probeVia()">Probe VIA (read-only)</button>
+    <button class="btn ghost" type="button" (click)="rawHidProbe()">Send Raw HID probe</button>
+  </div>
 
   <section class="card">
     <h3>Device</h3>
@@ -8,8 +17,15 @@
       <div><strong>ID</strong><div class="muted">{{ d.id || 'n/a' }}</div></div>
       <div><strong>Name</strong><div class="muted">{{ d.name || 'n/a' }}</div></div>
       <div><strong>Transport</strong><div class="muted">{{ d.transport }}</div></div>
+      <div><strong>Capability</strong><div class="muted">{{ d.capabilityLevel || 'Generic HID' }}</div></div>
       <div><strong>Firmware</strong><div class="muted">{{ d.firmwareVersion || 'unknown' }}</div></div>
+      <div><strong>Unique ID</strong><div class="muted">{{ uniqueId }}</div></div>
+      <div><strong>Manufacturer</strong><div class="muted">{{ d.manufacturer || 'n/a' }}</div></div>
+      <div><strong>Product</strong><div class="muted">{{ d.product || 'n/a' }}</div></div>
+      <div><strong>Serial</strong><div class="muted">{{ d.serial || 'n/a' }}</div></div>
       <div><strong>Session</strong><div class="muted">{{ d.sessionId || 'n/a' }}</div></div>
+      <div><strong>Fingerprint</strong><div class="muted">{{ d.fingerprint || 'n/a' }}</div></div>
+      <div><strong>Definition</strong><div class="muted">{{ definitionLinked ? 'linked' : 'not linked' }}</div></div>
       <div><strong>Active profile</strong><div class="muted">{{ activeProfile?.name || 'n/a' }}</div></div>
     </div>
   </section>
@@ -19,7 +35,7 @@
     <ul class="caps">
       <li>Layouts: {{ capabilities.layouts ? 'yes' : 'no' }}</li>
       <li>Keymap: {{ capabilities.keymap ? 'yes' : 'no' }}</li>
-      <li>Sequances: {{ capabilities.sequances ? 'yes' : 'no' }}</li>
+      <li>Sequences: {{ capabilities.sequences ? 'yes' : 'no' }}</li>
       <li>Volatile apply: {{ capabilities.volatileApply ? 'yes' : 'no' }}</li>
       <li>Commit: {{ capabilities.commit ? 'yes' : 'no' }}</li>
     </ul>
@@ -32,6 +48,103 @@
       <div><strong>Applied rev</strong><div class="muted">{{ d.appliedState?.revision ?? 'n/a' }}</div></div>
       <div><strong>Staged rev</strong><div class="muted">{{ d.stagedState?.revision ?? 'n/a' }}</div></div>
       <div><strong>Dirty</strong><div class="muted">{{ device.isDirty() ? 'yes' : 'no' }}</div></div>
+      <div><strong>Definition FP</strong><div class="muted">{{ definitionFingerprint }}</div></div>
+    </div>
+    <button class="btn ghost" type="button" (click)="rebindDefinition()">Bind definition to this device</button>
+  </section>
+
+  <section class="card" *ngIf="(deviceInfo?.interfaces?.length ?? 0) > 0">
+    <h3>Interfaces</h3>
+    <p class="muted">Enumerated HID interfaces grouped into this device entry.</p>
+    <ul class="interfaces">
+      <li *ngFor="let iface of deviceInfo?.interfaces">
+        <div class="iface-line">
+          <span class="iface-label">{{ iface.label || 'HID' }}</span>
+          <span class="muted">
+            UP {{ iface.usagePage | number:'2.0' }} / U {{ iface.usage | number:'2.0' }}
+            <ng-container *ngIf="iface.interfaceNumber !== undefined && iface.interfaceNumber !== null">
+              — IF {{ iface.interfaceNumber }}
+            </ng-container>
+            <span class="badge badge--raw" *ngIf="iface.usagePage === 65376 && iface.usage === 97">
+              Raw HID
+            </span>
+          </span>
+        </div>
+        <div class="muted mono" *ngIf="iface.path">{{ iface.path }}</div>
+      </li>
+    </ul>
+  </section>
+  <section class="card" *ngIf="inspector$ | async as inspect">
+    <h3>Device Inspector (raw)</h3>
+    <p class="muted">Snapshot from backend inspect call.</p>
+    <div class="grid">
+      <div><strong>VID</strong><div class="muted">{{ inspect.vendorId || 'n/a' }}</div></div>
+      <div><strong>PID</strong><div class="muted">{{ inspect.productId || 'n/a' }}</div></div>
+      <div><strong>Manufacturer</strong><div class="muted">{{ inspect.manufacturer || 'n/a' }}</div></div>
+      <div><strong>Product</strong><div class="muted">{{ inspect.product || 'n/a' }}</div></div>
+      <div><strong>Serial</strong><div class="muted">{{ inspect.serial || 'n/a' }}</div></div>
+      <div><strong>Fingerprint</strong><div class="muted">{{ inspect.fingerprint || 'n/a' }}</div></div>
+      <div><strong>Capability</strong><div class="muted">{{ inspect.capabilityLevel || 'Generic HID' }}</div></div>
+    </div>
+    <ul class="interfaces" *ngIf="inspect.interfaces?.length">
+      <li *ngFor="let iface of inspect.interfaces">
+        <div class="iface-line">
+          <span class="iface-label">{{ iface.label || 'HID' }}</span>
+          <span class="muted">
+            UP {{ iface.usagePage | number:'2.0' }} / U {{ iface.usage | number:'2.0' }}
+            <ng-container *ngIf="iface.interfaceNumber !== undefined && iface.interfaceNumber !== null">
+              — IF {{ iface.interfaceNumber }}
+            </ng-container>
+          </span>
+        </div>
+        <div class="muted mono" *ngIf="iface.path">{{ iface.path }}</div>
+      </li>
+    </ul>
+  </section>
+  <section class="card" *ngIf="layoutMeta">
+    <h3>Definition</h3>
+    <div class="grid">
+      <div><strong>Keys</strong><div class="muted">{{ layoutMeta.keys }}</div></div>
+      <div><strong>Encoders</strong><div class="muted">{{ layoutMeta.encoders }}</div></div>
+      <div><strong>Linked</strong><div class="muted">{{ definitionLinked ? 'yes' : 'no' }}</div></div>
+    </div>
+  </section>
+  <section class="card" *ngIf="viaProbe$ | async as via">
+    <h3>VIA Probe</h3>
+    <div class="grid">
+      <div><strong>Status</strong><div class="muted">{{ via.viaDetected ? 'VIA detected' : 'VIA not detected' }}</div></div>
+      <div><strong>Protocol</strong><div class="muted">{{ via.viaProtocolVersion ?? 'n/a' }}</div></div>
+      <div><strong>Write len</strong><div class="muted">{{ via.writeLen ?? 'n/a' }}</div></div>
+      <div><strong>Read len</strong><div class="muted">{{ via.readLen ?? 'n/a' }}</div></div>
+      <div><strong>Timeout (ms)</strong><div class="muted">{{ via.timeoutMs ?? 'n/a' }}</div></div>
+      <div><strong>First bytes</strong><div class="muted mono">{{ via.firstBytes || 'n/a' }}</div></div>
+    </div>
+  </section>
+  <section class="card" *ngIf="device.viaState$ | async as viaState">
+    <h3>Keymap (raw, read-only)</h3>
+    <p class="muted" *ngIf="!viaState.viaDetected">No VIA data available.</p>
+    <div *ngIf="viaState.viaDetected">
+      <div class="grid">
+        <div><strong>Layers</strong><div class="muted">{{ viaState.layers || viaState.keymap.length }}</div></div>
+        <div><strong>Macros</strong><div class="muted">{{ viaState.macros?.length ?? 0 }}</div></div>
+      </div>
+      <div *ngIf="viaState.keymap?.length; else noKeymap">
+        <div class="via-layer" *ngFor="let layer of viaState.keymap; index as layerIdx">
+          <div class="via-layer__title">Layer {{ layerIdx }}</div>
+          <table class="via-table">
+            <tr *ngFor="let row of layer; index as rowIdx">
+              <td class="via-cell via-cell--header">R{{ rowIdx }}</td>
+              <td class="via-cell" *ngFor="let key of row; index as colIdx">
+                <div class="via-cell__id">C{{ colIdx }}</div>
+                <div class="via-cell__code mono">{{ key }}</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <ng-template #noKeymap>
+        <p class="muted">VIA detected; keymap not available yet.</p>
+      </ng-template>
     </div>
   </section>
 </div>
