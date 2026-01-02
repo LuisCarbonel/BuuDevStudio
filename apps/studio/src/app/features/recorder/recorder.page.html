@@ -1,21 +1,21 @@
 <div class="feature">
   <h1>Recorder</h1>
-  <p class="muted">Capture a quick macro, save it as a sequance, and optionally assign to a target.</p>
+  <p class="muted">Capture a quick macro, save it as a sequence, and optionally assign to a target.</p>
 
   <section class="card">
     <h3>Capture</h3>
     <div class="controls">
-      <button class="btn primary" type="button" (click)="start()" [disabled]="recording">Start</button>
-      <button class="btn ghost" type="button" (click)="stop()" [disabled]="!recording">Stop</button>
+      <button class="btn primary" type="button" (click)="start()" [disabled]="recording()">Start</button>
+      <button class="btn ghost" type="button" (click)="stop()" [disabled]="!recording()">Stop</button>
     </div>
     <div class="controls">
       <input class="input" type="text" placeholder="Op (e.g., TAP)" #op />
       <input class="input" type="text" placeholder="Arg (optional)" #arg />
-      <button class="btn" type="button" (click)="addStep(op.value, arg.value); op.value=''; arg.value=''">Add Step</button>
+      <button class="btn" type="button" (click)="addStep(op.value, arg.value); op.value=''; arg.value=''" [disabled]="!recording()">Add Step</button>
     </div>
-    <div class="muted">Steps recorded: {{ steps.length }}</div>
+    <div class="muted">Steps recorded: {{ steps().length }}</div>
     <ul class="steps">
-      <li *ngFor="let s of steps">#{{ s.id }} &mdash; {{ s.op }} {{ s.arg || '' }}</li>
+      <li *ngFor="let s of steps()">#{{ s.id }} &mdash; {{ s.op }} {{ s.arg || '' }}</li>
     </ul>
   </section>
 
@@ -23,15 +23,15 @@
     <h3>Save & Assign</h3>
     <label class="field">
       <span class="field-label">Name</span>
-      <input class="input" [(ngModel)]="name" />
+      <input class="input" [ngModel]="name()" (ngModelChange)="name.set($event)" />
     </label>
     <label class="field">
       <span class="field-label">Assign to target (optional)</span>
-      <select class="input" [(ngModel)]="selectedTargetId">
+      <select class="input" [ngModel]="selectedTargetId()" (ngModelChange)="selectedTargetId.set($event || null)">
         <option value="">Do not assign</option>
-        <option *ngFor="let t of targets" [value]="t">{{ t }}</option>
+        <option *ngFor="let t of targets()" [value]="t">{{ t }}</option>
       </select>
     </label>
-    <button class="btn primary" type="button" (click)="saveAndAssign()" [disabled]="!steps.length">Save</button>
+    <button class="btn primary" type="button" (click)="saveAndAssign()" [disabled]="!steps().length">Save</button>
   </section>
 </div>

@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { NzMessageService } from 'ng-zorro-antd/message';
 import { DeviceService } from '../../services/device.service';
-import { StudioStateService, Sequance, Step } from '../../services/studio-state.service';
+import { StudioStateService, Sequence, Step } from '../../services/studio-state.service';
 
 @Component({
   selector: 'app-recorder-page',
@@ -10,56 +12,83 @@ import { StudioStateService, Sequance, Step } from '../../services/studio-state.
   imports: [CommonModule, FormsModule],
   templateUrl: './recorder.page.html',
   styleUrl: './recorder.page.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecorderPage {
-  recording = false;
-  steps: Step[] = [];
-  name = 'Recorded macro';
-  selectedTargetId: string | null = null;
+  readonly studio = inject(StudioStateService);
+  readonly device = inject(DeviceService);
+  readonly message = inject(NzMessageService);
+
+  private store = toSignal(this.studio.state$, { initialValue: this.studio.snapshot });
+  readonly targets = computed(() => this.store().targets);
+  readonly recording = signal(false);
+  readonly steps = signal<Step[]>([]);
+  readonly name = signal('Recorded macro');
+  readonly selectedTargetId = signal<string | null>(null);
   lastId = 0;
 
-  constructor(public studio: StudioStateService, private device: DeviceService) {}
-
   start() {
-    this.recording = true;
-    this.steps = [];
+    this.recording.set(true);
+    this.steps.set([]);
     this.lastId = 0;
   }
 
   stop() {
-    this.recording = false;
+    this.recording.set(false);
   }
 
   addStep(op: string, arg?: string) {
-    this.steps = [...this.steps, { id: ++this.lastId, name: `${op}${arg ? ' ' + arg : ''}`, op: op.toUpperCase(), arg }];
+    if (!this.recording()) return;
+    const normalizedOp = op.trim().toUpperCase();
+    if (!normalizedOp) return;
+    const normalizedArg = arg?.trim();
+    this.steps.update(steps => [
+      ...steps,
+      {
+        id: ++this.lastId,
+        name: `${normalizedOp}${normalizedArg ? ' ' + normalizedArg : ''}`,
+        op: normalizedOp,
+        arg: normalizedArg || undefined,
+      },
+    ]);
   }
 
-  saveAndAssign() {
-    if (!this.steps.length) return;
+  async saveAndAssign() {
+    if (!this.steps().length) return;
     const profileId = this.studio.selectedProfileId || 'p-default';
-    const seq: Sequance = {
+    const targetId = this.selectedTargetId();
+    if (targetId && !this.targets().includes(targetId)) {
+      this.message.error('Selected target is no longer available.');
+      return;
+    }
+    const seq: Sequence = {
       id: `rec-${Date.now()}`,
       profileId,
-      name: this.name.trim() || 'Recorded macro',
-      steps: this.steps,
+      name: this.name().trim() || 'Recorded macro',
+      steps: this.steps(),
     };
-    this.studio.addSequance(seq);
-    if (this.selectedTargetId) {
-      this.studio.setTarget(this.selectedTargetId);
-      this.studio.assignSequanceToTarget(seq.id);
-      this.device.pushBinding(this.studio.activeLayer, this.selectedTargetId, { type: 'sequanceRef', sequanceId: seq.id });
+    this.studio.addSequence(seq);
+    if (targetId) {
+      this.studio.setTarget(targetId);
+      this.studio.assignSequenceToTarget(seq.id);
+      const pushed = await this.device.pushBinding(this.studio.activeLayer, targetId, {
+        type: 'sequenceRef',
+        sequenceId: seq.id,
+      });
+      if (!pushed) {
+        this.message.error('Failed to push binding to device.');
+        return;
+      }
+      this.message.success('Binding updated');
     }
     this.resetForm();
   }
 
   resetForm() {
-    this.name = 'Recorded macro';
-    this.steps = [];
+    this.name.set('Recorded macro');
+    this.steps.set([]);
+    this.selectedTargetId.set(null);
     this.lastId = 0;
-    this.recording = false;
-  }
-
-  get targets() {
-    return this.studio.targets;
+    this.recording.set(false);
   }
 }
