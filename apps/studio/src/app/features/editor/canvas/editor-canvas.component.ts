@@ -13,12 +13,13 @@ import { BindingIndicator, DeviceViewComponent } from '../../../shared/device-vi
 export class EditorCanvasComponent {
   @Input() normalizedLayout: any | null = null;
   @Input() layoutMode: 'view' | 'edit' = 'view';
+  @Input() layoutEditable = true;
   @Input() layoutUnitPx = 50;
   @Input() layoutSelectionId: string | null = null;
   @Input() hoveredElementId: string | null = null;
   @Input() bindingIndicators: Record<string, BindingIndicator> = {};
-  @Input() canvasView: 'device' | 'sequance' = 'device';
-  @Input() hasSequance = false;
+  @Input() canvasView: 'device' | 'sequence' = 'device';
+  @Input() hasSequence = false;
 
   @Output() toggleLayoutMode = new EventEmitter<void>();
   @Output() select = new EventEmitter<string>();
@@ -27,7 +28,7 @@ export class EditorCanvasComponent {
   @Output() moveDelta = new EventEmitter<{ id: string; dx: number; dy: number }>();
   @Output() moveEnd = new EventEmitter<{ id: string; x: number; y: number }>();
   @Output() assignDrop = new EventEmitter<{ targetId: string; payload: unknown }>();
-  @Output() canvasViewChange = new EventEmitter<'device' | 'sequance'>();
+  @Output() canvasViewChange = new EventEmitter<'device' | 'sequence'>();
 
   onAssignDrop(targetId: string, payload: unknown) {
     this.assignDrop.emit({ targetId, payload });
@@ -37,8 +38,8 @@ export class EditorCanvasComponent {
     this.moveEnd.emit(ev);
   }
 
-  setView(view: 'device' | 'sequance') {
-    if (view === 'sequance' && !this.hasSequance) return;
+  setView(view: 'device' | 'sequence') {
+    if (view === 'sequence' && !this.hasSequence) return;
     this.canvasViewChange.emit(view);
   }
 }

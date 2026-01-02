@@ -13,18 +13,24 @@
     <button
       class="tab"
       type="button"
-      [class.active]="canvasView === 'sequance'"
-      [disabled]="!hasSequance"
-      [attr.aria-disabled]="!hasSequance ? 'true' : null"
-      (click)="setView('sequance')"
+      [class.active]="canvasView === 'sequence'"
+      [disabled]="!hasSequence"
+      [attr.aria-disabled]="!hasSequence ? 'true' : null"
+      (click)="setView('sequence')"
     >
-      Sequance View
+      Sequence View
     </button>
   </div>
 
   <div class="layout-toolbar">
     <span class="muted">Layout provided by connected device.</span>
-    <button class="btn ghost" type="button" (click)="toggleLayoutMode.emit()">
+    <button
+      class="btn ghost"
+      type="button"
+      [disabled]="!layoutEditable"
+      [attr.aria-disabled]="!layoutEditable ? 'true' : null"
+      (click)="layoutEditable && toggleLayoutMode.emit()"
+    >
       {{ layoutMode === 'view' ? 'Edit layout' : 'View mode' }}
     </button>
   </div>
@@ -57,7 +63,7 @@
       </ng-template>
     </div>
 
-    <div class="device-view" *ngIf="canvasView === 'sequance'">
+    <div class="device-view" *ngIf="canvasView === 'sequence'">
       <div class="canvas-placeholder">
         Select a step to edit.
       </div>
