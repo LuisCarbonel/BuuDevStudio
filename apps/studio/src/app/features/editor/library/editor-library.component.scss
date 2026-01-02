@@ -1,4 +1,4 @@
-@import '../editor-shared';
+@use '../editor-shared' as *;
 
 .section {
   display: flex;
