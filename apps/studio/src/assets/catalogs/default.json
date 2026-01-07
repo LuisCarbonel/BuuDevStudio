@@ -1,0 +1,2966 @@
+{
+  "version": "1.0.3",
+  "keycodes": [
+    {
+      "id": "KC_NO",
+      "label": "No",
+      "short": "No",
+      "group": "special",
+      "type": "basic",
+      "code": 0,
+      "aliases": [
+        "NONE"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_TRNS",
+      "label": "Transparent",
+      "short": "Trns",
+      "group": "special",
+      "type": "basic",
+      "code": 1,
+      "aliases": [
+        "TRANS"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_A",
+      "label": "A",
+      "short": "A",
+      "group": "alpha",
+      "type": "basic",
+      "code": 4,
+      "level": "common"
+    },
+    {
+      "id": "KC_B",
+      "label": "B",
+      "short": "B",
+      "group": "alpha",
+      "type": "basic",
+      "code": 5,
+      "level": "common"
+    },
+    {
+      "id": "KC_C",
+      "label": "C",
+      "short": "C",
+      "group": "alpha",
+      "type": "basic",
+      "code": 6,
+      "level": "common"
+    },
+    {
+      "id": "KC_D",
+      "label": "D",
+      "short": "D",
+      "group": "alpha",
+      "type": "basic",
+      "code": 7,
+      "level": "common"
+    },
+    {
+      "id": "KC_E",
+      "label": "E",
+      "short": "E",
+      "group": "alpha",
+      "type": "basic",
+      "code": 8,
+      "level": "common"
+    },
+    {
+      "id": "KC_F",
+      "label": "F",
+      "short": "F",
+      "group": "alpha",
+      "type": "basic",
+      "code": 9,
+      "level": "common"
+    },
+    {
+      "id": "KC_G",
+      "label": "G",
+      "short": "G",
+      "group": "alpha",
+      "type": "basic",
+      "code": 10,
+      "level": "common"
+    },
+    {
+      "id": "KC_H",
+      "label": "H",
+      "short": "H",
+      "group": "alpha",
+      "type": "basic",
+      "code": 11,
+      "level": "common"
+    },
+    {
+      "id": "KC_I",
+      "label": "I",
+      "short": "I",
+      "group": "alpha",
+      "type": "basic",
+      "code": 12,
+      "level": "common"
+    },
+    {
+      "id": "KC_J",
+      "label": "J",
+      "short": "J",
+      "group": "alpha",
+      "type": "basic",
+      "code": 13,
+      "level": "common"
+    },
+    {
+      "id": "KC_K",
+      "label": "K",
+      "short": "K",
+      "group": "alpha",
+      "type": "basic",
+      "code": 14,
+      "level": "common"
+    },
+    {
+      "id": "KC_L",
+      "label": "L",
+      "short": "L",
+      "group": "alpha",
+      "type": "basic",
+      "code": 15,
+      "level": "common"
+    },
+    {
+      "id": "KC_M",
+      "label": "M",
+      "short": "M",
+      "group": "alpha",
+      "type": "basic",
+      "code": 16,
+      "level": "common"
+    },
+    {
+      "id": "KC_N",
+      "label": "N",
+      "short": "N",
+      "group": "alpha",
+      "type": "basic",
+      "code": 17,
+      "level": "common"
+    },
+    {
+      "id": "KC_O",
+      "label": "O",
+      "short": "O",
+      "group": "alpha",
+      "type": "basic",
+      "code": 18,
+      "level": "common"
+    },
+    {
+      "id": "KC_P",
+      "label": "P",
+      "short": "P",
+      "group": "alpha",
+      "type": "basic",
+      "code": 19,
+      "level": "common"
+    },
+    {
+      "id": "KC_Q",
+      "label": "Q",
+      "short": "Q",
+      "group": "alpha",
+      "type": "basic",
+      "code": 20,
+      "level": "common"
+    },
+    {
+      "id": "KC_R",
+      "label": "R",
+      "short": "R",
+      "group": "alpha",
+      "type": "basic",
+      "code": 21,
+      "level": "common"
+    },
+    {
+      "id": "KC_S",
+      "label": "S",
+      "short": "S",
+      "group": "alpha",
+      "type": "basic",
+      "code": 22,
+      "level": "common"
+    },
+    {
+      "id": "KC_T",
+      "label": "T",
+      "short": "T",
+      "group": "alpha",
+      "type": "basic",
+      "code": 23,
+      "level": "common"
+    },
+    {
+      "id": "KC_U",
+      "label": "U",
+      "short": "U",
+      "group": "alpha",
+      "type": "basic",
+      "code": 24,
+      "level": "common"
+    },
+    {
+      "id": "KC_V",
+      "label": "V",
+      "short": "V",
+      "group": "alpha",
+      "type": "basic",
+      "code": 25,
+      "level": "common"
+    },
+    {
+      "id": "KC_W",
+      "label": "W",
+      "short": "W",
+      "group": "alpha",
+      "type": "basic",
+      "code": 26,
+      "level": "common"
+    },
+    {
+      "id": "KC_X",
+      "label": "X",
+      "short": "X",
+      "group": "alpha",
+      "type": "basic",
+      "code": 27,
+      "level": "common"
+    },
+    {
+      "id": "KC_Y",
+      "label": "Y",
+      "short": "Y",
+      "group": "alpha",
+      "type": "basic",
+      "code": 28,
+      "level": "common"
+    },
+    {
+      "id": "KC_Z",
+      "label": "Z",
+      "short": "Z",
+      "group": "alpha",
+      "type": "basic",
+      "code": 29,
+      "level": "common"
+    },
+    {
+      "id": "KC_1",
+      "label": "1",
+      "short": "1",
+      "group": "number",
+      "type": "basic",
+      "code": 30,
+      "aliases": [
+        "DIGIT_1"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_2",
+      "label": "2",
+      "short": "2",
+      "group": "number",
+      "type": "basic",
+      "code": 31,
+      "aliases": [
+        "DIGIT_2"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_3",
+      "label": "3",
+      "short": "3",
+      "group": "number",
+      "type": "basic",
+      "code": 32,
+      "aliases": [
+        "DIGIT_3"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_4",
+      "label": "4",
+      "short": "4",
+      "group": "number",
+      "type": "basic",
+      "code": 33,
+      "aliases": [
+        "DIGIT_4"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_5",
+      "label": "5",
+      "short": "5",
+      "group": "number",
+      "type": "basic",
+      "code": 34,
+      "aliases": [
+        "DIGIT_5"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_6",
+      "label": "6",
+      "short": "6",
+      "group": "number",
+      "type": "basic",
+      "code": 35,
+      "aliases": [
+        "DIGIT_6"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_7",
+      "label": "7",
+      "short": "7",
+      "group": "number",
+      "type": "basic",
+      "code": 36,
+      "aliases": [
+        "DIGIT_7"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_8",
+      "label": "8",
+      "short": "8",
+      "group": "number",
+      "type": "basic",
+      "code": 37,
+      "aliases": [
+        "DIGIT_8"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_9",
+      "label": "9",
+      "short": "9",
+      "group": "number",
+      "type": "basic",
+      "code": 38,
+      "aliases": [
+        "DIGIT_9"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_0",
+      "label": "0",
+      "short": "0",
+      "group": "number",
+      "type": "basic",
+      "code": 39,
+      "aliases": [
+        "DIGIT_0"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_ENTER",
+      "label": "Enter",
+      "short": "Ent",
+      "group": "control",
+      "type": "basic",
+      "code": 40,
+      "aliases": [
+        "ENTER"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_ESC",
+      "label": "Esc",
+      "short": "Esc",
+      "group": "control",
+      "type": "basic",
+      "code": 41,
+      "aliases": [
+        "ESC"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_BSPC",
+      "label": "Backspace",
+      "short": "Bksp",
+      "group": "control",
+      "type": "basic",
+      "code": 42,
+      "aliases": [
+        "BACKSPACE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_TAB",
+      "label": "Tab",
+      "short": "Tab",
+      "group": "control",
+      "type": "basic",
+      "code": 43,
+      "aliases": [
+        "TAB"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_SPACE",
+      "label": "Space",
+      "short": "Spc",
+      "group": "control",
+      "type": "basic",
+      "code": 44,
+      "aliases": [
+        "SPACE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_CAPS",
+      "label": "Caps",
+      "short": "Caps",
+      "group": "control",
+      "type": "basic",
+      "code": 57,
+      "aliases": [
+        "CAPSLOCK"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_MINUS",
+      "label": "-",
+      "short": "-",
+      "group": "punc",
+      "type": "basic",
+      "code": 45,
+      "aliases": [
+        "MINUS"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_EQUAL",
+      "label": "=",
+      "short": "=",
+      "group": "punc",
+      "type": "basic",
+      "code": 46,
+      "aliases": [
+        "EQUALS"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_LBRC",
+      "label": "[",
+      "short": "[",
+      "group": "punc",
+      "type": "basic",
+      "code": 47,
+      "aliases": [
+        "LBRACKET"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_RBRC",
+      "label": "]",
+      "short": "]",
+      "group": "punc",
+      "type": "basic",
+      "code": 48,
+      "aliases": [
+        "RBRACKET"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_BSLS",
+      "label": "\\\\",
+      "short": "\\\\",
+      "group": "punc",
+      "type": "basic",
+      "code": 49,
+      "aliases": [
+        "BACKSLASH"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_SCLN",
+      "label": ";",
+      "short": ";",
+      "group": "punc",
+      "type": "basic",
+      "code": 51,
+      "aliases": [
+        "SEMICOLON"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_QUOT",
+      "label": "'",
+      "short": "'",
+      "group": "punc",
+      "type": "basic",
+      "code": 52,
+      "aliases": [
+        "QUOTE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_GRV",
+      "label": "`",
+      "short": "`",
+      "group": "punc",
+      "type": "basic",
+      "code": 53,
+      "aliases": [
+        "BACKTICK"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_COMM",
+      "label": ",",
+      "short": ",",
+      "group": "punc",
+      "type": "basic",
+      "code": 54,
+      "aliases": [
+        "COMMA"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_DOT",
+      "label": ".",
+      "short": ".",
+      "group": "punc",
+      "type": "basic",
+      "code": 55,
+      "aliases": [
+        "PERIOD"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_SLSH",
+      "label": "/",
+      "short": "/",
+      "group": "punc",
+      "type": "basic",
+      "code": 56,
+      "aliases": [
+        "SLASH"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_NONUS_HASH",
+      "label": "NonUS #",
+      "short": "N#",
+      "group": "punc",
+      "type": "basic",
+      "code": 50,
+      "aliases": [
+        "NONUS_HASH"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_NUBS",
+      "label": "NonUS \\\\",
+      "short": "N\\\\",
+      "group": "punc",
+      "type": "basic",
+      "code": 100,
+      "aliases": [
+        "NONUS_BSLASH"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_LCTL",
+      "label": "Left Ctrl",
+      "short": "LCtl",
+      "group": "mod",
+      "type": "basic",
+      "code": 224,
+      "aliases": [
+        "LCTRL"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_LSFT",
+      "label": "Left Shift",
+      "short": "LSft",
+      "group": "mod",
+      "type": "basic",
+      "code": 225,
+      "aliases": [
+        "LSHIFT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_LALT",
+      "label": "Left Alt",
+      "short": "LAlt",
+      "group": "mod",
+      "type": "basic",
+      "code": 226,
+      "aliases": [
+        "LALT",
+        "KC_LOPT"
+      ],
+      "display": {
+        "win": {
+          "label": "Left Alt",
+          "short": "LAlt"
+        },
+        "mac": {
+          "label": "Left Option",
+          "short": "LOpt",
+          "symbol": "⌥"
+        },
+        "linux": {
+          "label": "Left Alt",
+          "short": "LAlt"
+        }
+      },
+      "semanticId": "mod.alt.left",
+      "level": "common"
+    },
+    {
+      "id": "KC_LGUI",
+      "label": "Left Meta",
+      "short": "LGui",
+      "group": "mod",
+      "type": "basic",
+      "code": 227,
+      "aliases": [
+        "LGUI",
+        "LCMD",
+        "LWIN",
+        "KC_LCMD",
+        "KC_LWIN"
+      ],
+      "display": {
+        "win": {
+          "label": "Left Win",
+          "short": "LWin",
+          "symbol": "⊞"
+        },
+        "mac": {
+          "label": "Left Cmd",
+          "short": "LCmd",
+          "symbol": "⌘"
+        },
+        "linux": {
+          "label": "Left Super",
+          "short": "LSup",
+          "symbol": "⊞"
+        }
+      },
+      "semanticId": "mod.gui.left",
+      "level": "common"
+    },
+    {
+      "id": "KC_RCTL",
+      "label": "Right Ctrl",
+      "short": "RCtl",
+      "group": "mod",
+      "type": "basic",
+      "code": 228,
+      "aliases": [
+        "RCTRL"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_RSFT",
+      "label": "Right Shift",
+      "short": "RSft",
+      "group": "mod",
+      "type": "basic",
+      "code": 229,
+      "aliases": [
+        "RSHIFT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_RALT",
+      "label": "Right Alt",
+      "short": "RAlt",
+      "group": "mod",
+      "type": "basic",
+      "code": 230,
+      "aliases": [
+        "RALT",
+        "KC_ROPT",
+        "KC_ALGR"
+      ],
+      "display": {
+        "win": {
+          "label": "Right Alt",
+          "short": "RAlt"
+        },
+        "mac": {
+          "label": "Right Option",
+          "short": "ROpt",
+          "symbol": "⌥"
+        },
+        "linux": {
+          "label": "Right Alt",
+          "short": "RAlt"
+        }
+      },
+      "semanticId": "mod.alt.right",
+      "level": "common"
+    },
+    {
+      "id": "KC_RGUI",
+      "label": "Right Meta",
+      "short": "RGui",
+      "group": "mod",
+      "type": "basic",
+      "code": 231,
+      "aliases": [
+        "RGUI",
+        "RCMD",
+        "RWIN",
+        "KC_RCMD",
+        "KC_RWIN"
+      ],
+      "display": {
+        "win": {
+          "label": "Right Win",
+          "short": "RWin",
+          "symbol": "⊞"
+        },
+        "mac": {
+          "label": "Right Cmd",
+          "short": "RCmd",
+          "symbol": "⌘"
+        },
+        "linux": {
+          "label": "Right Super",
+          "short": "RSup",
+          "symbol": "⊞"
+        }
+      },
+      "semanticId": "mod.gui.right",
+      "level": "common"
+    },
+    {
+      "id": "KC_UP",
+      "label": "Up",
+      "short": "↑",
+      "group": "nav",
+      "type": "basic",
+      "code": 82,
+      "aliases": [
+        "ARROW_UP"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_DOWN",
+      "label": "Down",
+      "short": "↓",
+      "group": "nav",
+      "type": "basic",
+      "code": 81,
+      "aliases": [
+        "ARROW_DOWN"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_LEFT",
+      "label": "Left",
+      "short": "←",
+      "group": "nav",
+      "type": "basic",
+      "code": 80,
+      "aliases": [
+        "ARROW_LEFT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_RIGHT",
+      "label": "Right",
+      "short": "→",
+      "group": "nav",
+      "type": "basic",
+      "code": 79,
+      "aliases": [
+        "ARROW_RIGHT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_HOME",
+      "label": "Home",
+      "short": "Home",
+      "group": "nav",
+      "type": "basic",
+      "code": 74,
+      "aliases": [
+        "HOME"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_END",
+      "label": "End",
+      "short": "End",
+      "group": "nav",
+      "type": "basic",
+      "code": 77,
+      "aliases": [
+        "END"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PGUP",
+      "label": "PgUp",
+      "short": "PgUp",
+      "group": "nav",
+      "type": "basic",
+      "code": 75,
+      "aliases": [
+        "PGUP"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PGDN",
+      "label": "PgDn",
+      "short": "PgDn",
+      "group": "nav",
+      "type": "basic",
+      "code": 78,
+      "aliases": [
+        "PGDN"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_INS",
+      "label": "Insert",
+      "short": "Ins",
+      "group": "nav",
+      "type": "basic",
+      "code": 73,
+      "aliases": [
+        "INSERT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_DEL",
+      "label": "Delete",
+      "short": "Del",
+      "group": "nav",
+      "type": "basic",
+      "code": 76,
+      "aliases": [
+        "DELETE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_TO",
+      "label": "TO",
+      "short": "TO",
+      "group": "layer",
+      "type": "layer",
+      "base": 20992,
+      "params": [
+        "layer"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_MO",
+      "label": "MO",
+      "short": "MO",
+      "group": "layer",
+      "type": "layer",
+      "base": 21024,
+      "params": [
+        "layer"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_DF",
+      "label": "DF",
+      "short": "DF",
+      "group": "layer",
+      "type": "layer",
+      "base": 21056,
+      "params": [
+        "layer"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_TG",
+      "label": "TG",
+      "short": "TG",
+      "group": "layer",
+      "type": "layer",
+      "base": 21088,
+      "params": [
+        "layer"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_OSL",
+      "label": "OSL",
+      "short": "OSL",
+      "group": "layer",
+      "type": "layer",
+      "base": 20736,
+      "params": [
+        "layer"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_LT",
+      "label": "LT",
+      "short": "LT",
+      "group": "layerTap",
+      "type": "layerTap",
+      "base": 16384,
+      "params": [
+        "layer",
+        "tap"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_MT",
+      "label": "MT",
+      "short": "MT",
+      "group": "modTap",
+      "type": "modTap",
+      "base": 24576,
+      "params": [
+        "mod",
+        "tap"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_LCTL",
+      "label": "OSM Ctrl",
+      "short": "OMCtl",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21776,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_LSFT",
+      "label": "OSM Shift",
+      "short": "OMSft",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21777,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_LALT",
+      "label": "OSM Alt",
+      "short": "OMAlt",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21778,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_LGUI",
+      "label": "OSM Gui",
+      "short": "OMGui",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21779,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_RCTL",
+      "label": "OSM RCtrl",
+      "short": "OMRCt",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21780,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_RSFT",
+      "label": "OSM RShift",
+      "short": "OMRSf",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21781,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_RALT",
+      "label": "OSM RAlt",
+      "short": "OMRAl",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21782,
+      "level": "common"
+    },
+    {
+      "id": "QK_ONE_SHOT_MOD_RGUI",
+      "label": "OSM RGui",
+      "short": "OMRGu",
+      "group": "oneshot",
+      "type": "basic",
+      "code": 21783,
+      "level": "common"
+    },
+    {
+      "id": "QK_RGB_TOG",
+      "label": "RGB Toggle",
+      "short": "RGB",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32513,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_HUI",
+      "label": "RGB Hue+",
+      "short": "Hue+",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32514,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_HUD",
+      "label": "RGB Hue-",
+      "short": "Hue-",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32515,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_SAI",
+      "label": "RGB Sat+",
+      "short": "Sat+",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32516,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_SAD",
+      "label": "RGB Sat-",
+      "short": "Sat-",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32517,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_VAI",
+      "label": "RGB Val+",
+      "short": "Val+",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32518,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_VAD",
+      "label": "RGB Val-",
+      "short": "Val-",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32519,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_MOD",
+      "label": "RGB Mode+",
+      "short": "RMd+",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32520,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_RMOD",
+      "label": "RGB Mode-",
+      "short": "RMd-",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32521,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_SPI",
+      "label": "RGB Speed+",
+      "short": "RSp+",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32522,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_RGB_SPD",
+      "label": "RGB Speed-",
+      "short": "RSp-",
+      "group": "rgb",
+      "type": "basic",
+      "code": 32523,
+      "requires": [
+        "rgb"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_TOGG",
+      "label": "Backlight Toggle",
+      "short": "BL",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30720,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_ON",
+      "label": "Backlight On",
+      "short": "BLOn",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30721,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_OFF",
+      "label": "Backlight Off",
+      "short": "BLOf",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30722,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_UP",
+      "label": "Backlight+",
+      "short": "BL+",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30724,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_DOWN",
+      "label": "Backlight-",
+      "short": "BL-",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30725,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_BL_STEP",
+      "label": "Backlight Step",
+      "short": "BLSt",
+      "group": "backlight",
+      "type": "basic",
+      "code": 30726,
+      "requires": [
+        "backlight"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_F1",
+      "label": "F1",
+      "short": "F1",
+      "group": "function",
+      "type": "basic",
+      "code": 58,
+      "aliases": [
+        "F1"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F2",
+      "label": "F2",
+      "short": "F2",
+      "group": "function",
+      "type": "basic",
+      "code": 59,
+      "aliases": [
+        "F2"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F3",
+      "label": "F3",
+      "short": "F3",
+      "group": "function",
+      "type": "basic",
+      "code": 60,
+      "aliases": [
+        "F3"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F4",
+      "label": "F4",
+      "short": "F4",
+      "group": "function",
+      "type": "basic",
+      "code": 61,
+      "aliases": [
+        "F4"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F5",
+      "label": "F5",
+      "short": "F5",
+      "group": "function",
+      "type": "basic",
+      "code": 62,
+      "aliases": [
+        "F5"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F6",
+      "label": "F6",
+      "short": "F6",
+      "group": "function",
+      "type": "basic",
+      "code": 63,
+      "aliases": [
+        "F6"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F7",
+      "label": "F7",
+      "short": "F7",
+      "group": "function",
+      "type": "basic",
+      "code": 64,
+      "aliases": [
+        "F7"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F8",
+      "label": "F8",
+      "short": "F8",
+      "group": "function",
+      "type": "basic",
+      "code": 65,
+      "aliases": [
+        "F8"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F9",
+      "label": "F9",
+      "short": "F9",
+      "group": "function",
+      "type": "basic",
+      "code": 66,
+      "aliases": [
+        "F9"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F10",
+      "label": "F10",
+      "short": "F10",
+      "group": "function",
+      "type": "basic",
+      "code": 67,
+      "aliases": [
+        "F10"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F11",
+      "label": "F11",
+      "short": "F11",
+      "group": "function",
+      "type": "basic",
+      "code": 68,
+      "aliases": [
+        "F11"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F12",
+      "label": "F12",
+      "short": "F12",
+      "group": "function",
+      "type": "basic",
+      "code": 69,
+      "aliases": [
+        "F12"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F13",
+      "label": "F13",
+      "short": "F13",
+      "group": "function",
+      "type": "basic",
+      "code": 104,
+      "aliases": [
+        "F13"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F14",
+      "label": "F14",
+      "short": "F14",
+      "group": "function",
+      "type": "basic",
+      "code": 105,
+      "aliases": [
+        "F14"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F15",
+      "label": "F15",
+      "short": "F15",
+      "group": "function",
+      "type": "basic",
+      "code": 106,
+      "aliases": [
+        "F15"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F16",
+      "label": "F16",
+      "short": "F16",
+      "group": "function",
+      "type": "basic",
+      "code": 107,
+      "aliases": [
+        "F16"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F17",
+      "label": "F17",
+      "short": "F17",
+      "group": "function",
+      "type": "basic",
+      "code": 108,
+      "aliases": [
+        "F17"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F18",
+      "label": "F18",
+      "short": "F18",
+      "group": "function",
+      "type": "basic",
+      "code": 109,
+      "aliases": [
+        "F18"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F19",
+      "label": "F19",
+      "short": "F19",
+      "group": "function",
+      "type": "basic",
+      "code": 110,
+      "aliases": [
+        "F19"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F20",
+      "label": "F20",
+      "short": "F20",
+      "group": "function",
+      "type": "basic",
+      "code": 111,
+      "aliases": [
+        "F20"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F21",
+      "label": "F21",
+      "short": "F21",
+      "group": "function",
+      "type": "basic",
+      "code": 112,
+      "aliases": [
+        "F21"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F22",
+      "label": "F22",
+      "short": "F22",
+      "group": "function",
+      "type": "basic",
+      "code": 113,
+      "aliases": [
+        "F22"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F23",
+      "label": "F23",
+      "short": "F23",
+      "group": "function",
+      "type": "basic",
+      "code": 114,
+      "aliases": [
+        "F23"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_F24",
+      "label": "F24",
+      "short": "F24",
+      "group": "function",
+      "type": "basic",
+      "code": 115,
+      "aliases": [
+        "F24"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P1",
+      "label": "KP 1",
+      "short": "P1",
+      "group": "numpad",
+      "type": "basic",
+      "code": 89,
+      "aliases": [
+        "NUMPAD_1"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P2",
+      "label": "KP 2",
+      "short": "P2",
+      "group": "numpad",
+      "type": "basic",
+      "code": 90,
+      "aliases": [
+        "NUMPAD_2"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P3",
+      "label": "KP 3",
+      "short": "P3",
+      "group": "numpad",
+      "type": "basic",
+      "code": 91,
+      "aliases": [
+        "NUMPAD_3"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P4",
+      "label": "KP 4",
+      "short": "P4",
+      "group": "numpad",
+      "type": "basic",
+      "code": 92,
+      "aliases": [
+        "NUMPAD_4"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P5",
+      "label": "KP 5",
+      "short": "P5",
+      "group": "numpad",
+      "type": "basic",
+      "code": 93,
+      "aliases": [
+        "NUMPAD_5"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P6",
+      "label": "KP 6",
+      "short": "P6",
+      "group": "numpad",
+      "type": "basic",
+      "code": 94,
+      "aliases": [
+        "NUMPAD_6"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P7",
+      "label": "KP 7",
+      "short": "P7",
+      "group": "numpad",
+      "type": "basic",
+      "code": 95,
+      "aliases": [
+        "NUMPAD_7"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P8",
+      "label": "KP 8",
+      "short": "P8",
+      "group": "numpad",
+      "type": "basic",
+      "code": 96,
+      "aliases": [
+        "NUMPAD_8"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P9",
+      "label": "KP 9",
+      "short": "P9",
+      "group": "numpad",
+      "type": "basic",
+      "code": 97,
+      "aliases": [
+        "NUMPAD_9"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_P0",
+      "label": "KP 0",
+      "short": "P0",
+      "group": "numpad",
+      "type": "basic",
+      "code": 98,
+      "aliases": [
+        "NUMPAD_0"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PDOT",
+      "label": "KP .",
+      "short": "P.",
+      "group": "numpad",
+      "type": "basic",
+      "code": 99,
+      "aliases": [
+        "NUMPAD_DOT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PSLASH",
+      "label": "KP /",
+      "short": "P/",
+      "group": "numpad",
+      "type": "basic",
+      "code": 84,
+      "aliases": [
+        "NUMPAD_SLASH"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PAST",
+      "label": "KP *",
+      "short": "P*",
+      "group": "numpad",
+      "type": "basic",
+      "code": 85,
+      "aliases": [
+        "NUMPAD_STAR"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PMNS",
+      "label": "KP -",
+      "short": "P-",
+      "group": "numpad",
+      "type": "basic",
+      "code": 86,
+      "aliases": [
+        "NUMPAD_MINUS"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PPLS",
+      "label": "KP +",
+      "short": "P+",
+      "group": "numpad",
+      "type": "basic",
+      "code": 87,
+      "aliases": [
+        "NUMPAD_PLUS"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PENT",
+      "label": "KP Enter",
+      "short": "PEnt",
+      "group": "numpad",
+      "type": "basic",
+      "code": 88,
+      "aliases": [
+        "NUMPAD_ENTER"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_NLCK",
+      "label": "Num Lock",
+      "short": "Num",
+      "group": "numpad",
+      "type": "basic",
+      "code": 83,
+      "aliases": [
+        "NUMLOCK"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PEQL",
+      "label": "KP =",
+      "short": "P=",
+      "group": "numpad",
+      "type": "basic",
+      "code": 103,
+      "aliases": [
+        "NUMPAD_EQUAL"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_MUTE",
+      "label": "Mute",
+      "short": "Mut",
+      "group": "media",
+      "type": "basic",
+      "code": 168,
+      "aliases": [
+        "MUTE",
+        "VOLUME_MUTE",
+        "KC_AUDIO_MUTE"
+      ],
+      "semanticId": "media.volume.mute",
+      "level": "common"
+    },
+    {
+      "id": "KC_VOLU",
+      "label": "Vol+",
+      "short": "Vol+",
+      "group": "media",
+      "type": "basic",
+      "code": 169,
+      "aliases": [
+        "VOLUME_UP",
+        "KC_AUDIO_VOL_UP"
+      ],
+      "semanticId": "media.volume.up",
+      "level": "common"
+    },
+    {
+      "id": "KC_VOLD",
+      "label": "Vol-",
+      "short": "Vol-",
+      "group": "media",
+      "type": "basic",
+      "code": 170,
+      "aliases": [
+        "VOLUME_DOWN",
+        "KC_AUDIO_VOL_DOWN"
+      ],
+      "semanticId": "media.volume.down",
+      "level": "common"
+    },
+    {
+      "id": "KC_MNXT",
+      "label": "Next",
+      "short": "Nxt",
+      "group": "media",
+      "type": "basic",
+      "code": 171,
+      "aliases": [
+        "MEDIA_NEXT",
+        "KC_MEDIA_NEXT_TRACK"
+      ],
+      "semanticId": "media.track.next",
+      "level": "common"
+    },
+    {
+      "id": "KC_MPRV",
+      "label": "Prev",
+      "short": "Prv",
+      "group": "media",
+      "type": "basic",
+      "code": 172,
+      "aliases": [
+        "MEDIA_PREV",
+        "KC_MEDIA_PREV_TRACK"
+      ],
+      "semanticId": "media.track.prev",
+      "level": "common"
+    },
+    {
+      "id": "KC_MSTP",
+      "label": "Stop",
+      "short": "Stop",
+      "group": "media",
+      "type": "basic",
+      "code": 173,
+      "aliases": [
+        "MEDIA_STOP",
+        "KC_MEDIA_STOP"
+      ],
+      "semanticId": "media.track.stop",
+      "level": "common"
+    },
+    {
+      "id": "KC_MPLY",
+      "label": "Play/Pause",
+      "short": "Play",
+      "group": "media",
+      "type": "basic",
+      "code": 174,
+      "aliases": [
+        "MEDIA_PLAY_PAUSE",
+        "KC_MEDIA_PLAY_PAUSE"
+      ],
+      "semanticId": "media.track.playpause",
+      "level": "common"
+    },
+    {
+      "id": "KC_MSEL",
+      "label": "Media Select",
+      "short": "Sel",
+      "group": "media",
+      "type": "basic",
+      "code": 175,
+      "aliases": [
+        "MEDIA_SELECT",
+        "KC_MEDIA_SELECT"
+      ],
+      "semanticId": "media.select",
+      "level": "common"
+    },
+    {
+      "id": "KC_EJCT",
+      "label": "Eject",
+      "short": "Ejct",
+      "group": "media",
+      "type": "basic",
+      "code": 176,
+      "aliases": [
+        "EJECT",
+        "KC_MEDIA_EJECT"
+      ],
+      "semanticId": "media.eject",
+      "level": "common"
+    },
+    {
+      "id": "KC_MAIL",
+      "label": "Mail",
+      "short": "Mail",
+      "group": "media",
+      "type": "basic",
+      "code": 177,
+      "level": "common"
+    },
+    {
+      "id": "KC_CALC",
+      "label": "Calculator",
+      "short": "Calc",
+      "group": "media",
+      "type": "basic",
+      "code": 178,
+      "aliases": [
+        "KC_CALCULATOR"
+      ],
+      "semanticId": "system.calculator",
+      "level": "common"
+    },
+    {
+      "id": "KC_MYCM",
+      "label": "My Computer",
+      "short": "Comp",
+      "group": "media",
+      "type": "basic",
+      "code": 179,
+      "aliases": [
+        "KC_MY_COMPUTER"
+      ],
+      "semanticId": "system.mycomputer",
+      "level": "common"
+    },
+    {
+      "id": "KC_WSCH",
+      "label": "Browser Search",
+      "short": "WebS",
+      "group": "media",
+      "type": "basic",
+      "code": 180,
+      "aliases": [
+        "KC_WWW_SEARCH"
+      ],
+      "semanticId": "web.search",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WHOM",
+      "label": "Browser Home",
+      "short": "WebH",
+      "group": "media",
+      "type": "basic",
+      "code": 181,
+      "aliases": [
+        "KC_WWW_HOME"
+      ],
+      "semanticId": "web.home",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WBAK",
+      "label": "Browser Back",
+      "short": "Web←",
+      "group": "media",
+      "type": "basic",
+      "code": 182,
+      "aliases": [
+        "KC_WWW_BACK"
+      ],
+      "semanticId": "web.back",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WFWD",
+      "label": "Browser Forward",
+      "short": "Web→",
+      "group": "media",
+      "type": "basic",
+      "code": 183,
+      "aliases": [
+        "KC_WWW_FORWARD"
+      ],
+      "semanticId": "web.forward",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WSTP",
+      "label": "Browser Stop",
+      "short": "WebX",
+      "group": "media",
+      "type": "basic",
+      "code": 184,
+      "aliases": [
+        "KC_WWW_STOP"
+      ],
+      "semanticId": "web.stop",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WREF",
+      "label": "Browser Refresh",
+      "short": "WebR",
+      "group": "media",
+      "type": "basic",
+      "code": 185,
+      "aliases": [
+        "KC_WWW_REFRESH"
+      ],
+      "semanticId": "web.refresh",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_WFAV",
+      "label": "Browser Favorites",
+      "short": "Fav",
+      "group": "media",
+      "type": "basic",
+      "code": 186,
+      "aliases": [
+        "KC_WWW_FAVORITES"
+      ],
+      "semanticId": "web.favorites",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_MFFD",
+      "label": "Media FF",
+      "short": "FFwd",
+      "group": "media",
+      "type": "basic",
+      "code": 187,
+      "aliases": [
+        "MEDIA_FAST_FORWARD",
+        "KC_MEDIA_FAST_FORWARD"
+      ],
+      "semanticId": "media.track.fastforward",
+      "level": "common"
+    },
+    {
+      "id": "KC_MRWD",
+      "label": "Media RW",
+      "short": "Rwd",
+      "group": "media",
+      "type": "basic",
+      "code": 188,
+      "aliases": [
+        "MEDIA_REWIND",
+        "KC_MEDIA_REWIND"
+      ],
+      "semanticId": "media.track.rewind",
+      "level": "common"
+    },
+    {
+      "id": "KC_BRIU",
+      "label": "Bright+",
+      "short": "Bri+",
+      "group": "media",
+      "type": "basic",
+      "code": 189,
+      "aliases": [
+        "BRIGHTNESS_UP",
+        "KC_BRIGHTNESS_UP"
+      ],
+      "semanticId": "display.brightness.up",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_BRID",
+      "label": "Bright-",
+      "short": "Bri-",
+      "group": "media",
+      "type": "basic",
+      "code": 190,
+      "aliases": [
+        "BRIGHTNESS_DOWN",
+        "KC_BRIGHTNESS_DOWN"
+      ],
+      "semanticId": "display.brightness.down",
+      "level": "advanced"
+    },
+    {
+      "id": "KC_MS_U",
+      "label": "Mouse Up",
+      "short": "Ms↑",
+      "group": "mouse",
+      "type": "basic",
+      "code": 205,
+      "aliases": [
+        "MOUSE_UP"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_MS_D",
+      "label": "Mouse Down",
+      "short": "Ms↓",
+      "group": "mouse",
+      "type": "basic",
+      "code": 206,
+      "aliases": [
+        "MOUSE_DOWN"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_MS_L",
+      "label": "Mouse Left",
+      "short": "Ms←",
+      "group": "mouse",
+      "type": "basic",
+      "code": 207,
+      "aliases": [
+        "MOUSE_LEFT"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_MS_R",
+      "label": "Mouse Right",
+      "short": "Ms→",
+      "group": "mouse",
+      "type": "basic",
+      "code": 208,
+      "aliases": [
+        "MOUSE_RIGHT"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_BTN1",
+      "label": "Mouse Btn 1",
+      "short": "Btn1",
+      "group": "mouse",
+      "type": "basic",
+      "code": 209,
+      "aliases": [
+        "MOUSE_BTN1"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_BTN2",
+      "label": "Mouse Btn 2",
+      "short": "Btn2",
+      "group": "mouse",
+      "type": "basic",
+      "code": 210,
+      "aliases": [
+        "MOUSE_BTN2"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_BTN3",
+      "label": "Mouse Btn 3",
+      "short": "Btn3",
+      "group": "mouse",
+      "type": "basic",
+      "code": 211,
+      "aliases": [
+        "MOUSE_BTN3"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_BTN4",
+      "label": "Mouse Btn 4",
+      "short": "Btn4",
+      "group": "mouse",
+      "type": "basic",
+      "code": 212,
+      "aliases": [
+        "MOUSE_BTN4"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_BTN5",
+      "label": "Mouse Btn 5",
+      "short": "Btn5",
+      "group": "mouse",
+      "type": "basic",
+      "code": 213,
+      "aliases": [
+        "MOUSE_BTN5"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_WH_U",
+      "label": "Wheel Up",
+      "short": "Wh↑",
+      "group": "mouse",
+      "type": "basic",
+      "code": 217,
+      "aliases": [
+        "WHEEL_UP"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_WH_D",
+      "label": "Wheel Down",
+      "short": "Wh↓",
+      "group": "mouse",
+      "type": "basic",
+      "code": 218,
+      "aliases": [
+        "WHEEL_DOWN"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_WH_L",
+      "label": "Wheel Left",
+      "short": "Wh←",
+      "group": "mouse",
+      "type": "basic",
+      "code": 219,
+      "aliases": [
+        "WHEEL_LEFT"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_WH_R",
+      "label": "Wheel Right",
+      "short": "Wh→",
+      "group": "mouse",
+      "type": "basic",
+      "code": 220,
+      "aliases": [
+        "WHEEL_RIGHT"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_ACL0",
+      "label": "Mouse Accel 0",
+      "short": "Acl0",
+      "group": "mouse",
+      "type": "basic",
+      "code": 221,
+      "aliases": [
+        "MOUSE_ACCEL0"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_ACL1",
+      "label": "Mouse Accel 1",
+      "short": "Acl1",
+      "group": "mouse",
+      "type": "basic",
+      "code": 222,
+      "aliases": [
+        "MOUSE_ACCEL1"
+      ],
+      "level": null
+    },
+    {
+      "id": "KC_ACL2",
+      "label": "Mouse Accel 2",
+      "short": "Acl2",
+      "group": "mouse",
+      "type": "basic",
+      "code": 223,
+      "aliases": [
+        "MOUSE_ACCEL2"
+      ],
+      "level": null
+    },
+    {
+      "id": "QK_AUDIO_ON",
+      "label": "Audio On",
+      "short": "AudOn",
+      "group": "audio",
+      "type": "basic",
+      "code": 24320,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_AUDIO_OFF",
+      "label": "Audio Off",
+      "short": "AudOf",
+      "group": "audio",
+      "type": "basic",
+      "code": 24321,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_AUDIO_TOGGLE",
+      "label": "Audio Toggle",
+      "short": "Aud",
+      "group": "audio",
+      "type": "basic",
+      "code": 24322,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_MUSIC_ON",
+      "label": "Music On",
+      "short": "MusOn",
+      "group": "audio",
+      "type": "basic",
+      "code": 24336,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_MUSIC_OFF",
+      "label": "Music Off",
+      "short": "MusOf",
+      "group": "audio",
+      "type": "basic",
+      "code": 24337,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_MUSIC_TOGGLE",
+      "label": "Music Toggle",
+      "short": "Mus",
+      "group": "audio",
+      "type": "basic",
+      "code": 24338,
+      "requires": [
+        "audio"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_EXECUTE",
+      "label": "Execute",
+      "short": "Exec",
+      "group": "system",
+      "type": "basic",
+      "code": 116,
+      "aliases": [
+        "KC_EXECUTE",
+        "EXECUTE"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_HELP",
+      "label": "Help",
+      "short": "Hlp",
+      "group": "system",
+      "type": "basic",
+      "code": 117,
+      "aliases": [
+        "KC_HELP",
+        "HELP"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_MENU",
+      "label": "Menu",
+      "short": "Menu",
+      "group": "system",
+      "type": "basic",
+      "code": 118,
+      "aliases": [
+        "KC_MENU",
+        "MENU"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_SELECT",
+      "label": "Select",
+      "short": "Sel",
+      "group": "system",
+      "type": "basic",
+      "code": 119,
+      "aliases": [
+        "KC_SELECT",
+        "SELECT"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_STOP",
+      "label": "Stop",
+      "short": "Stop",
+      "group": "system",
+      "type": "basic",
+      "code": 120,
+      "aliases": [
+        "KC_STOP",
+        "STOP_APP"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_AGAIN",
+      "label": "Again",
+      "short": "Agn",
+      "group": "system",
+      "type": "basic",
+      "code": 121,
+      "aliases": [
+        "KC_AGAIN",
+        "AGAIN"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_UNDO",
+      "label": "Undo",
+      "short": "Undo",
+      "group": "system",
+      "type": "basic",
+      "code": 122,
+      "aliases": [
+        "KC_UNDO",
+        "UNDO"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_CUT",
+      "label": "Cut",
+      "short": "Cut",
+      "group": "system",
+      "type": "basic",
+      "code": 123,
+      "aliases": [
+        "KC_CUT",
+        "CUT"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_COPY",
+      "label": "Copy",
+      "short": "Copy",
+      "group": "system",
+      "type": "basic",
+      "code": 124,
+      "aliases": [
+        "KC_COPY",
+        "COPY"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_PASTE",
+      "label": "Paste",
+      "short": "Pst",
+      "group": "system",
+      "type": "basic",
+      "code": 125,
+      "aliases": [
+        "KC_PASTE",
+        "PASTE"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "QK_FIND",
+      "label": "Find",
+      "short": "Find",
+      "group": "system",
+      "type": "basic",
+      "code": 126,
+      "aliases": [
+        "KC_FIND",
+        "FIND"
+      ],
+      "level": "advanced"
+    },
+    {
+      "id": "KC_APP",
+      "label": "App",
+      "short": "App",
+      "group": "system",
+      "type": "basic",
+      "code": 101,
+      "level": "common"
+    },
+    {
+      "id": "KC_PWR",
+      "label": "Power",
+      "short": "Pwr",
+      "group": "system",
+      "type": "basic",
+      "code": 165,
+      "aliases": [
+        "SYSTEM_POWER"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_SLEP",
+      "label": "Sleep",
+      "short": "Slp",
+      "group": "system",
+      "type": "basic",
+      "code": 166,
+      "aliases": [
+        "SYSTEM_SLEEP"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_WAKE",
+      "label": "Wake",
+      "short": "Wake",
+      "group": "system",
+      "type": "basic",
+      "code": 167,
+      "aliases": [
+        "SYSTEM_WAKE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PSCR",
+      "label": "Print",
+      "short": "Prt",
+      "group": "system",
+      "type": "basic",
+      "code": 70,
+      "aliases": [
+        "PRINT"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_SLCK",
+      "label": "Scroll",
+      "short": "Scr",
+      "group": "system",
+      "type": "basic",
+      "code": 71,
+      "aliases": [
+        "SCROLL"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "KC_PAUS",
+      "label": "Pause",
+      "short": "Pus",
+      "group": "system",
+      "type": "basic",
+      "code": 72,
+      "aliases": [
+        "PAUSE"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_BOOT",
+      "label": "Bootloader",
+      "short": "Boot",
+      "group": "system",
+      "type": "basic",
+      "code": 23552,
+      "requires": [
+        "boot"
+      ],
+      "level": "danger"
+    },
+    {
+      "id": "QK_REBOOT",
+      "label": "Reboot",
+      "short": "Rboot",
+      "group": "system",
+      "type": "basic",
+      "code": 23554,
+      "requires": [
+        "boot"
+      ],
+      "level": "danger"
+    },
+    {
+      "id": "QK_EEPROM_RESET",
+      "label": "EEPROM Reset",
+      "short": "EERst",
+      "group": "system",
+      "type": "basic",
+      "code": 23553,
+      "requires": [
+        "boot"
+      ],
+      "level": "danger"
+    },
+    {
+      "id": "QK_DEBUG",
+      "label": "Debug",
+      "short": "Dbg",
+      "group": "system",
+      "type": "basic",
+      "code": 23568,
+      "requires": [
+        "debug"
+      ],
+      "level": "danger"
+    },
+    {
+      "id": "QK_CLEAR_EEPROM",
+      "label": "Clear EEPROM",
+      "short": "ClrEE",
+      "group": "system",
+      "type": "basic",
+      "code": 60928,
+      "requires": [
+        "boot"
+      ],
+      "level": "danger"
+    },
+    {
+      "id": "QK_MAKE",
+      "label": "Make",
+      "short": "Make",
+      "group": "system",
+      "type": "basic",
+      "code": 23569,
+      "requires": [
+        "debug"
+      ],
+      "level": "common"
+    },
+    {
+      "id": "QK_MACRO_0",
+      "label": "M0",
+      "short": "M0",
+      "group": "macro",
+      "type": "basic",
+      "code": 24448,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_1",
+      "label": "M1",
+      "short": "M1",
+      "group": "macro",
+      "type": "basic",
+      "code": 24449,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_2",
+      "label": "M2",
+      "short": "M2",
+      "group": "macro",
+      "type": "basic",
+      "code": 24450,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_3",
+      "label": "M3",
+      "short": "M3",
+      "group": "macro",
+      "type": "basic",
+      "code": 24451,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_4",
+      "label": "M4",
+      "short": "M4",
+      "group": "macro",
+      "type": "basic",
+      "code": 24452,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_5",
+      "label": "M5",
+      "short": "M5",
+      "group": "macro",
+      "type": "basic",
+      "code": 24453,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_6",
+      "label": "M6",
+      "short": "M6",
+      "group": "macro",
+      "type": "basic",
+      "code": 24454,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_7",
+      "label": "M7",
+      "short": "M7",
+      "group": "macro",
+      "type": "basic",
+      "code": 24455,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_8",
+      "label": "M8",
+      "short": "M8",
+      "group": "macro",
+      "type": "basic",
+      "code": 24456,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_9",
+      "label": "M9",
+      "short": "M9",
+      "group": "macro",
+      "type": "basic",
+      "code": 24457,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_10",
+      "label": "M10",
+      "short": "M10",
+      "group": "macro",
+      "type": "basic",
+      "code": 24458,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_11",
+      "label": "M11",
+      "short": "M11",
+      "group": "macro",
+      "type": "basic",
+      "code": 24459,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_12",
+      "label": "M12",
+      "short": "M12",
+      "group": "macro",
+      "type": "basic",
+      "code": 24460,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_13",
+      "label": "M13",
+      "short": "M13",
+      "group": "macro",
+      "type": "basic",
+      "code": 24461,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_14",
+      "label": "M14",
+      "short": "M14",
+      "group": "macro",
+      "type": "basic",
+      "code": 24462,
+      "level": null
+    },
+    {
+      "id": "QK_MACRO_15",
+      "label": "M15",
+      "short": "M15",
+      "group": "macro",
+      "type": "basic",
+      "code": 24463,
+      "level": null
+    },
+    {
+      "id": "KC_USER_A0",
+      "label": "User 0xA0",
+      "short": "uA0",
+      "group": "user",
+      "type": "basic",
+      "code": 160,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_A1",
+      "label": "User 0xA1",
+      "short": "uA1",
+      "group": "user",
+      "type": "basic",
+      "code": 161,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_A2",
+      "label": "User 0xA2",
+      "short": "uA2",
+      "group": "user",
+      "type": "basic",
+      "code": 162,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_A3",
+      "label": "User 0xA3",
+      "short": "uA3",
+      "group": "user",
+      "type": "basic",
+      "code": 163,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_A4",
+      "label": "User 0xA4",
+      "short": "uA4",
+      "group": "user",
+      "type": "basic",
+      "code": 164,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_BF",
+      "label": "User 0xBF",
+      "short": "uBF",
+      "group": "user",
+      "type": "basic",
+      "code": 191,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C0",
+      "label": "User 0xC0",
+      "short": "uC0",
+      "group": "user",
+      "type": "basic",
+      "code": 192,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C1",
+      "label": "User 0xC1",
+      "short": "uC1",
+      "group": "user",
+      "type": "basic",
+      "code": 193,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C2",
+      "label": "User 0xC2",
+      "short": "uC2",
+      "group": "user",
+      "type": "basic",
+      "code": 194,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C3",
+      "label": "User 0xC3",
+      "short": "uC3",
+      "group": "user",
+      "type": "basic",
+      "code": 195,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C4",
+      "label": "User 0xC4",
+      "short": "uC4",
+      "group": "user",
+      "type": "basic",
+      "code": 196,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C5",
+      "label": "User 0xC5",
+      "short": "uC5",
+      "group": "user",
+      "type": "basic",
+      "code": 197,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C6",
+      "label": "User 0xC6",
+      "short": "uC6",
+      "group": "user",
+      "type": "basic",
+      "code": 198,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C7",
+      "label": "User 0xC7",
+      "short": "uC7",
+      "group": "user",
+      "type": "basic",
+      "code": 199,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C8",
+      "label": "User 0xC8",
+      "short": "uC8",
+      "group": "user",
+      "type": "basic",
+      "code": 200,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_C9",
+      "label": "User 0xC9",
+      "short": "uC9",
+      "group": "user",
+      "type": "basic",
+      "code": 201,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_CA",
+      "label": "User 0xCA",
+      "short": "uCA",
+      "group": "user",
+      "type": "basic",
+      "code": 202,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_CB",
+      "label": "User 0xCB",
+      "short": "uCB",
+      "group": "user",
+      "type": "basic",
+      "code": 203,
+      "level": "advanced"
+    },
+    {
+      "id": "KC_USER_CC",
+      "label": "User 0xCC",
+      "short": "uCC",
+      "group": "user",
+      "type": "basic",
+      "code": 204,
+      "level": "advanced"
+    }
+  ],
+  "mods": {
+    "LCTL": 1,
+    "LSFT": 2,
+    "LALT": 4,
+    "LGUI": 8,
+    "RCTL": 16,
+    "RSFT": 32,
+    "RALT": 64,
+    "RGUI": 128
+  }
+}
