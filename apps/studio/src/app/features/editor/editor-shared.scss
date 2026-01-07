@@ -1,5 +1,5 @@
 :host {
-  --ed-panel-bg: var(--bg-panel);
+  --ed-panel-bg: var(--surface-panel);
   --ed-panel-radius: var(--radius-lg);
   --ed-panel-shadow: var(--shadow-md);
   --ed-border: var(--border-muted);
@@ -7,8 +7,8 @@
   --ed-border-soft: var(--border-subtle);
   --ed-border-strong: var(--border-strong);
   --ed-primary: var(--accent-primary);
-  --ed-surface-muted: var(--bg-elevated);
-  --ed-surface-strong: var(--bg-hover);
+  --ed-surface-muted: var(--surface-inset);
+  --ed-surface-strong: var(--surface-panel-2);
   --ed-text-muted: var(--text-tertiary);
   --ed-gap: var(--space-3);
   --ed-font-body: var(--font-size-base);
@@ -38,11 +38,14 @@
 
 .btn {
   border: 1px solid var(--ed-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--ctrl-radius, var(--radius-sm));
   background: var(--ed-panel-bg);
-  padding: var(--space-2) var(--space-3);
+  height: var(--ctrl-height-md);
+  padding: 0 var(--ctrl-pad-x);
   cursor: pointer;
   font-weight: 600;
+  font-size: var(--ctrl-font-size);
+  line-height: var(--ctrl-line-height);
   transition: border-color var(--transition-fast),
               box-shadow var(--transition-fast),
               background var(--transition-fast);

@@ -3,7 +3,7 @@ import { Component, signal, computed, inject } from '@angular/core';
 
 import type { Binding as StudioBinding } from '@shared/models/device';
 import { ControlElement, KeyElement } from '@shared/utils/layout/models';
-import { decodeKeycodeLabel, KeyOption, findKeyOption } from '@shared/utils/keycodes/catalog';
+import { decodeKeycodeLabel, KeyOption, findKeyOption, findKeycodeEntry } from '@shared/utils/keycodes/catalog';
 import { EditorHeaderComponent } from './header/editor-header.component';
 import { EditorLibraryComponent } from './library/editor-library.component';
 import { EditorCanvasComponent } from './canvas/editor-canvas.component';
@@ -410,6 +410,14 @@ export class EditorPage {
         if (!action) {
           console.warn('[editor] ❌ No action in block payload');
           return;
+        }
+        if (action.startsWith('KC:')) {
+          const keyId = action.slice(3);
+          const entry = findKeycodeEntry(keyId);
+          if (entry?.level === 'danger') {
+            const ok = window.confirm(`Assign dangerous key '${entry.label}'?`);
+            if (!ok) return;
+          }
         }
         console.log('[editor] Setting binding:', { action, arg });
         this.bindingType.set('simpleAction');

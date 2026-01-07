@@ -42,6 +42,8 @@
         [selectedSequenceId]="selectedSequence()?.id || null"
         [libraryMode]="libraryMode()"
         [librarySearch]="librarySearch()"
+        [capabilities]="capabilities()"
+        [libraryVariant]="'editor'"
         (selectProfile)="selectProfile($event)"
         (selectSequence)="selectSequence($event)"
         (modeChange)="onLibraryModeChange($event)"

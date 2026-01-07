@@ -15,7 +15,7 @@
 
       <!-- Compact metadata - Only show if important -->
       @if (connected && dirty) {
-        <span class="status-badge status-badge--warning" nz-tooltip nzTooltipTitle="You have unsaved changes" nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip">
+        <span class="status-badge status-badge--warning studio-chip studio-chip--warning" nz-tooltip nzTooltipTitle="You have unsaved changes" nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip">
           <span nz-icon nzType="edit" nzTheme="outline"></span>
           Changes pending
         </span>
@@ -35,7 +35,7 @@
           nz-dropdown
           [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
           [disabled]="busy || !devices.length"
-          class="device-selector-btn"
+          class="device-selector-btn studio-inline"
         >
           <span nz-icon nzType="laptop" nzTheme="outline"></span>
           {{ selectedDeviceId ? (getDeviceName(selectedDeviceId) || 'Select Device') : 'Select Device' }}
@@ -70,7 +70,7 @@
           (click)="triggerImport()"
           [nzLoading]="importBusy"
           [disabled]="importBusy"
-          class="icon-btn"
+          class="icon-btn studio-icon-btn"
           nz-tooltip
           nzTooltipTitle="Import Configuration"
           nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
@@ -86,7 +86,7 @@
           (click)="connect.emit()"
           [nzLoading]="busy"
           [disabled]="busy || !devices.length"
-          class="primary-action"
+          class="primary-action studio-inline"
         >
           <span nz-icon nzType="link" nzTheme="outline"></span>
           Connect
@@ -104,7 +104,7 @@
           nz-dropdown
           [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
           [disabled]="busy"
-          class="icon-btn"
+          class="icon-btn studio-icon-btn"
           nz-tooltip
           nzTooltipTitle="Switch Device"
           nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
@@ -136,7 +136,7 @@
           nz-dropdown
           [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
           [nzLoading]="busy"
-          class="primary-action"
+          class="primary-action studio-inline"
         >
           Actions
           <span nz-icon nzType="down"></span>

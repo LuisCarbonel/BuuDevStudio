@@ -10,6 +10,7 @@ import {
   keycodeEntries,
   KeycodeLabel,
   encodeKeycodeToCode,
+  resolveLegend,
 } from '@shared/utils/keycodes/catalog';
 import { ActionRegistry } from '@shared/utils/actions/action-registry';
 
@@ -225,9 +226,10 @@ export class EditorFacade {
     if (!decoded) return null;
     const entry = keycodeEntries.find(e => e.id === decoded.id);
     const group = (entry as any)?.group;
+    const legend = entry ? resolveLegend(entry) : null;
 
     if (group === 'number') {
-      const primary = decoded.label.primary || (entry as any)?.short || '';
+      const primary = decoded.label.primary || legend?.short || '';
       const secondary = decoded.label.secondary;
       if (!primary) return null;
       return primary === secondary ? { primary } : { primary, secondary };
@@ -235,13 +237,13 @@ export class EditorFacade {
 
     // For layer-style keys, surface the target layer/tap info.
     if (group === 'layer' || group === 'layerTap' || group === 'modTap' || group === 'oneshot') {
-      const primary = (entry as any)?.short ?? decoded.label.primary;
+      const primary = legend?.short ?? decoded.label.primary;
       const secondary = decoded.label.primary ?? decoded.label.secondary;
       if (!primary) return null;
       return primary === secondary ? { primary } : { primary, secondary };
     }
 
-    const primary = (entry as any)?.short ?? decoded.label.primary;
+    const primary = legend?.short ?? decoded.label.primary;
     const secondary = decoded.label.secondary;
     if (!primary) return null;
     return { primary, secondary };

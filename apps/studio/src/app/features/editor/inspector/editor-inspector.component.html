@@ -1,245 +1,247 @@
 <div class="pane pane--inspector">
   <div class="pane-title">Inspector</div>
 
-  <div class="inspector-section">
-    @if (selectedTargetId) {
-      @if (selectedLayoutElement; as el) {
-        <div class="inspector-card card--summary">
-          <div class="summary-line">
-            <span class="summary-strong">Key {{ selectedTargetId }}</span>
-            <span class="summary-divider">&middot;</span>
-            <span>Layer {{ activeLayer }}</span>
-            <span class="summary-divider">&middot;</span>
-            <span>Type: {{ isControlElement(el) ? el.kind : 'Key' }}</span>
-          </div>
-        </div>
-      }
-
-      <div class="inspector-card card--binding">
-        <div class="card-heading">
-          <div>
-            <div class="card-label">Binding</div>
-            <div class="card-title">{{ selectedSequenceName || 'None' }}</div>
-          </div>
-        </div>
-
-        @if (readOnly) {
-          <div class="notice muted">
-            Preview mode: connect with Studio firmware to edit bindings.
+  <div class="inspector-body studio-scroll--y">
+    <div class="inspector-section">
+      @if (selectedTargetId) {
+        @if (selectedLayoutElement; as el) {
+          <div class="inspector-card card--summary">
+            <div class="summary-line">
+              <span class="summary-strong">Key {{ selectedTargetId }}</span>
+              <span class="summary-divider">&middot;</span>
+              <span>Layer {{ activeLayer }}</span>
+              <span class="summary-divider">&middot;</span>
+              <span>Type: {{ isControlElement(el) ? el.kind : 'Key' }}</span>
+            </div>
           </div>
         }
 
-        <div class="binding-status">
-          <div class="binding-block">
-            <div class="field-label">Current:</div>
-            <div class="binding-pill binding-pill--current">{{ bindingLabel(currentBinding) }}</div>
+        <div class="inspector-card card--binding">
+          <div class="card-heading">
+            <div>
+              <div class="card-label">Binding</div>
+              <div class="card-title">{{ selectedSequenceName || 'None' }}</div>
+            </div>
           </div>
-          <div class="binding-block">
-            <div class="field-label">Pending:</div>
-            <div class="binding-pill binding-pill--pending">{{ pendingBindingLabel() }}</div>
-          </div>
-        </div>
 
-        <div class="field">
+          @if (readOnly) {
+            <div class="notice muted">
+              Preview mode: connect with Studio firmware to edit bindings.
+            </div>
+          }
+
+          <div class="binding-status">
+            <div class="binding-block">
+              <div class="field-label">Current:</div>
+              <div class="binding-pill binding-pill--current">{{ bindingLabel(currentBinding) }}</div>
+            </div>
+            <div class="binding-block">
+              <div class="field-label">Pending:</div>
+              <div class="binding-pill binding-pill--pending">{{ pendingBindingLabel() }}</div>
+            </div>
+          </div>
+
+        <div class="field studio-field">
           <label class="field-label">Binding Type</label>
-          <select
-            class="full"
-            aria-label="Binding type"
-            [value]="bindingType"
-            (change)="bindingTypeChange.emit($any($event.target).value)"
-            [disabled]="readOnly"
-          >
-            @for (opt of bindingOptions; track opt.value) {
-              <option [value]="opt.value">{{ opt.label }}</option>
-            }
-          </select>
-        </div>
-
-        @if (bindingType === 'sequenceRef') {
-          <div class="field">
-            <label class="field-label" for="binding-sequence">Sequence</label>
             <select
               class="full"
-              id="binding-sequence"
-              [value]="bindingSequenceId || ''"
-              (change)="bindingSequenceChange.emit($any($event.target).value)"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+              aria-label="Binding type"
+              [value]="bindingType"
+              (change)="bindingTypeChange.emit($any($event.target).value)"
               [disabled]="readOnly"
             >
-              <option value="" disabled>Select sequence</option>
-              @for (s of sequencesForProfile; track s.id) {
-                <option [value]="s.id">{{ s.name }}</option>
+              @for (opt of bindingOptions; track opt.value) {
+                <option [value]="opt.value">{{ opt.label }}</option>
               }
             </select>
           </div>
-        }
 
-        @if (bindingType === 'simpleAction') {
-          <div class="field">
+          @if (bindingType === 'sequenceRef') {
+            <div class="field studio-field">
+              <label class="field-label" for="binding-sequence">Sequence</label>
+              <select
+                class="full"
+                id="binding-sequence"
+                [value]="bindingSequenceId || ''"
+                (change)="bindingSequenceChange.emit($any($event.target).value)"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                [disabled]="readOnly"
+              >
+                <option value="" disabled>Select sequence</option>
+                @for (s of sequencesForProfile; track s.id) {
+                  <option [value]="s.id">{{ s.name }}</option>
+                }
+              </select>
+            </div>
+          }
+
+          @if (bindingType === 'simpleAction') {
+          <div class="field studio-field">
             <label class="field-label">Action</label>
-            <input
-              class="full"
-              type="text"
-              list="action-suggestions"
-              [value]="bindingAction"
-              (input)="bindingActionChange.emit($any($event.target).value)"
-              placeholder="e.g., TAP KC_SPACE"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="simple-action-hint"
-              [disabled]="readOnly"
-            />
-            <datalist id="action-suggestions">
-              @for (a of actions; track a) {
-                <option [value]="a"></option>
-              }
-            </datalist>
-            <input
-              class="full"
-              type="text"
-              [value]="bindingActionArg"
-              (input)="bindingActionArgChange.emit($any($event.target).value)"
-              placeholder="Optional arg"
-              [disabled]="readOnly"
-            />
-            <div class="hint" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
+              <input
+                class="full"
+                type="text"
+                list="action-suggestions"
+                [value]="bindingAction"
+                (input)="bindingActionChange.emit($any($event.target).value)"
+                placeholder="e.g., TAP KC_SPACE"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="simple-action-hint"
+                [disabled]="readOnly"
+              />
+              <datalist id="action-suggestions">
+                @for (a of actions; track a) {
+                  <option [value]="a"></option>
+                }
+              </datalist>
+              <input
+                class="full"
+                type="text"
+                [value]="bindingActionArg"
+                (input)="bindingActionArgChange.emit($any($event.target).value)"
+                placeholder="Optional arg"
+                [disabled]="readOnly"
+              />
+            <div class="hint studio-help" id="simple-action-hint">Simple, single action (tap key, click, wait).</div>
           </div>
         }
 
         @if (bindingType === 'program') {
-          <div class="field">
+          <div class="field studio-field">
             <label class="field-label">Program path</label>
             <input
-              class="full"
-              type="text"
-              [value]="bindingProgramPath"
-              (input)="bindingProgramPathChange.emit($any($event.target).value)"
-              placeholder="C:\\Path\\to\\app.exe"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="program-path-hint"
-              [disabled]="readOnly"
-            />
-            <div class="hint" id="program-path-hint">Use an executable path that the OS can open.</div>
+                class="full"
+                type="text"
+                [value]="bindingProgramPath"
+                (input)="bindingProgramPathChange.emit($any($event.target).value)"
+                placeholder="C:\\Path\\to\\app.exe"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="program-path-hint"
+                [disabled]="readOnly"
+              />
+            <div class="hint studio-help" id="program-path-hint">Use an executable path that the OS can open.</div>
           </div>
         }
 
         @if (bindingType === 'inlineSequence') {
-          <div class="field">
+          <div class="field studio-field">
             <label class="field-label">Text macro</label>
-            <textarea
-              class="full"
-              rows="4"
-              [value]="bindingInlineText"
-              (input)="bindingInlineTextChange.emit($any($event.target).value)"
-              placeholder="Text to type when pressed"
-              [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
-              aria-describedby="inline-sequence-hint"
-              [disabled]="readOnly"
-            ></textarea>
-            <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
-          </div>
-        }
+              <textarea
+                class="full"
+                rows="4"
+                [value]="bindingInlineText"
+                (input)="bindingInlineTextChange.emit($any($event.target).value)"
+                placeholder="Text to type when pressed"
+                [attr.aria-invalid]="bindingErrors.length ? 'true' : null"
+                aria-describedby="inline-sequence-hint"
+                [disabled]="readOnly"
+              ></textarea>
+              <div class="hint" id="inline-sequence-hint">Plain text that will be typed when triggered.</div>
+            </div>
+          }
 
-        @if (bindingErrors.length) {
-          <div class="field errors" role="alert" aria-live="polite">
-            @for (err of bindingErrors; track $index) {
-              <div class="error">{{ err }}</div>
-            }
-          </div>
-        }
-
-        <div class="binding-actions stack">
-          <button
-            class="btn primary full"
-            type="button"
-            (click)="assign.emit()"
-            [disabled]="readOnly || (!!selectedTargetId && !!bindingErrors.length) || (!selectedTargetId && !pendingChanges)"
-          >
-            {{ selectedTargetId ? 'Apply' : 'Apply all pending' }}
-          </button>
-          <button
-            class="btn ghost full"
-            type="button"
-            (click)="clear.emit()"
-            [disabled]="readOnly || !selectedTargetId"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-
-      <div class="inspector-card card--context">
-        <div class="context-header" (click)="contextOpen = !contextOpen">
-          <span class="card-label">Context</span>
-          <span class="chevron" [class.open]="contextOpen">?,</span>
-        </div>
-        @if (contextOpen) {
-          @if (selectedLayoutElement; as el) {
-            <div class="context-body">
-              @if (!isControlElement(el)) {
-                <div class="context-pill">Key options: Macro, Tap, Hold</div>
-              }
-              @if (isControlElement(el) && isEncoderTarget && supportsEncoderActions) {
-                <div class="context-pill">Encoder: CW/CCW bindings available</div>
-              }
-              @if (isControlElement(el) && isEncoderTarget) {
-                @if (encoderDescriptor; as desc) {
-                  <div class="context-pill">
-                    Modes: {{ desc.detent ? 'detent' : 'free' }}{{ desc.velocity ? ' / velocity' : '' }}{{ desc.analog ? ' / analog' : '' }}
-                  </div>
-                }
-              }
-              @if (isControlElement(el) && isEncoderTarget && !supportsEncoderActions) {
-                <div class="context-pill">This device does not advertise encoder actions.</div>
+          @if (bindingErrors.length) {
+            <div class="field errors" role="alert" aria-live="polite">
+              @for (err of bindingErrors; track $index) {
+                <div class="error">{{ err }}</div>
               }
             </div>
           }
-        }
-      </div>
-    } @else {
+
+          <div class="binding-actions stack">
+            <button
+              class="btn primary full"
+              type="button"
+              (click)="assign.emit()"
+              [disabled]="readOnly || (!!selectedTargetId && !!bindingErrors.length) || (!selectedTargetId && !pendingChanges)"
+            >
+              {{ selectedTargetId ? 'Apply' : 'Apply all pending' }}
+            </button>
+            <button
+              class="btn ghost full"
+              type="button"
+              (click)="clear.emit()"
+              [disabled]="readOnly || !selectedTargetId"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
+
+        <div class="inspector-card card--context">
+          <div class="context-header" (click)="contextOpen = !contextOpen">
+            <span class="card-label">Context</span>
+            <span class="chevron" [class.open]="contextOpen">?,</span>
+          </div>
+          @if (contextOpen) {
+            @if (selectedLayoutElement; as el) {
+              <div class="context-body">
+                @if (!isControlElement(el)) {
+                  <div class="context-pill">Key options: Macro, Tap, Hold</div>
+                }
+                @if (isControlElement(el) && isEncoderTarget && supportsEncoderActions) {
+                  <div class="context-pill">Encoder: CW/CCW bindings available</div>
+                }
+                @if (isControlElement(el) && isEncoderTarget) {
+                  @if (encoderDescriptor; as desc) {
+                    <div class="context-pill">
+                      Modes: {{ desc.detent ? 'detent' : 'free' }}{{ desc.velocity ? ' / velocity' : '' }}{{ desc.analog ? ' / analog' : '' }}
+                    </div>
+                  }
+                }
+                @if (isControlElement(el) && isEncoderTarget && !supportsEncoderActions) {
+                  <div class="context-pill">This device does not advertise encoder actions.</div>
+                }
+              </div>
+            }
+          }
+        </div>
+      } @else {
       <div class="inspector-card empty-target ghost-card">
-        <div class="ghost-icon">dYZ_</div>
+        <span nz-icon nzType="edit" nzTheme="outline" class="ghost-icon"></span>
         <div class="ghost-title">Pick something to edit</div>
         <div class="ghost-text">Click a key or encoder block on the canvas to start.</div>
       </div>
-    }
-  </div>
-
-  @if (showSelectionSection) {
-    <div class="inspector-section">
-      <div class="inspector-label">Selection</div>
-
-      @if (!selectedStep) {
-        <div class="inspector-empty">Select a step to edit.</div>
       }
+    </div>
 
-      @if (selectedStep; as step) {
-        <div class="inspector-card">
-          <div class="row">
-            <div class="k">Step</div>
-            <div class="v">#{{ step.id }}</div>
+    @if (showSelectionSection) {
+      <div class="inspector-section">
+        <div class="inspector-label">Selection</div>
+
+        @if (!selectedStep) {
+          <div class="inspector-empty">Select a step to edit.</div>
+        }
+
+        @if (selectedStep; as step) {
+          <div class="inspector-card">
+          <div class="row studio-kv">
+            <div class="k studio-kv__label">Step</div>
+            <div class="v studio-kv__value">#{{ step.id }}</div>
           </div>
-          <div class="row">
-            <div class="k">Name</div>
-            <div class="v">{{ step.name }}</div>
+          <div class="row studio-kv">
+            <div class="k studio-kv__label">Name</div>
+            <div class="v studio-kv__value">{{ step.name }}</div>
           </div>
-          <div class="row">
-            <div class="k">Op</div>
-            <div class="v">{{ step.op }}</div>
+          <div class="row studio-kv">
+            <div class="k studio-kv__label">Op</div>
+            <div class="v studio-kv__value">{{ step.op }}</div>
           </div>
           @if (step.arg) {
-            <div class="row">
-              <div class="k">Arg</div>
-              <div class="v">{{ step.arg }}</div>
+            <div class="row studio-kv">
+              <div class="k studio-kv__label">Arg</div>
+              <div class="v studio-kv__value">{{ step.arg }}</div>
             </div>
           }
           @if (step.class) {
-            <div class="row">
-              <div class="k">Delay Class</div>
-              <div class="v">C{{ step.class }}</div>
+            <div class="row studio-kv">
+              <div class="k studio-kv__label">Delay Class</div>
+              <div class="v studio-kv__value">C{{ step.class }}</div>
             </div>
           }
-        </div>
-      }
-    </div>
-  }
+          </div>
+        }
+      </div>
+    }
+  </div>
 </div>

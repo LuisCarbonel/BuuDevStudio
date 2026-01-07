@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
@@ -12,7 +12,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 
 import { DragSourceDirective } from '@shared/directives/drag-source.directive';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
-import { buildKeycodeBlockCategories, BuildKeycodeBlockCategoriesOptions, LibraryBlockCategory } from '@shared/utils/keycodes/library-catalog';
+import { buildKeycodeBlockCategories, BuildKeycodeBlockCategoriesOptions, LibraryBlockCategory, isMacroSafeEntry } from '@shared/utils/keycodes/library-catalog';
+import type { Capabilities as DeviceCapabilities } from '@shared/models/device';
 
 export type LibraryMode = 'blocks' | 'sequences';
 
@@ -47,7 +48,7 @@ import type { LibraryBlockItem as BlockItem, LibraryBlockCategory as BlockCatego
   templateUrl: './editor-library.component.html',
   styleUrl: './editor-library.component.scss',
 })
-export class EditorLibraryComponent implements OnChanges {
+export class EditorLibraryComponent implements OnChanges, OnInit {
   @Input() profiles: ProfileItem[] = [];
   @Input() selectedProfileId: string | null = null;
   @Input() sequencesForProfile: SequenceItem[] = [];
@@ -57,6 +58,8 @@ export class EditorLibraryComponent implements OnChanges {
   @Input() librarySearch = '';
   @Input() enableBlockClick = false;
   @Input() blockPreset: 'default' | 'recorder' = 'default';
+  @Input() capabilities: DeviceCapabilities | null = null;
+  @Input() libraryVariant: 'editor' | 'recorder' = 'editor';
 
   @Output() selectProfile = new EventEmitter<string>();
   @Output() selectSequence = new EventEmitter<string>();
@@ -64,6 +67,22 @@ export class EditorLibraryComponent implements OnChanges {
   @Output() searchChange = new EventEmitter<string>();
   @Output() createSequence = new EventEmitter<void>();
   @Output() blockClick = new EventEmitter<BlockItem>();
+
+  showAdvanced = false;
+  showDanger = false;
+  showUnsupported = false;
+  showKeyboardActions = false;
+  showUserKeys = false;
+  showExperimentalMouse = false;
+
+  private readonly storageKeys = {
+    showAdvanced: 'studio.library.showAdvanced',
+    showDanger: 'studio.library.showDanger',
+    showUnsupported: 'studio.library.showUnsupported',
+    showKeyboardActions: 'studio.recorder.showKeyboardActions',
+    showUserKeys: 'studio.recorder.showUserKeys',
+    showExperimentalMouse: 'studio.recorder.showExperimentalMouse',
+  };
 
   readonly blockListEnterPredicate: (drag: CdkDrag, drop: CdkDropList) => boolean = () => false;
 
@@ -100,9 +119,8 @@ export class EditorLibraryComponent implements OnChanges {
     this._cachedBlockCategories = this._blockCategories
       .map(cat => {
         const items = cat.items.filter(item => {
-          const label = item.label.toLowerCase();
-          const hint = item.hint?.toLowerCase() ?? '';
-          return label.includes(term) || hint.includes(term);
+          const searchText = item.searchText ?? `${item.id} ${item.label} ${item.hint ?? ''}`.toLowerCase();
+          return searchText.includes(term);
         });
         return { ...cat, items };
       })
@@ -136,6 +154,56 @@ export class EditorLibraryComponent implements OnChanges {
       this._cachedSequences = [];
     }
     this.searchChange.emit(this.librarySearch);
+  }
+
+  ngOnInit(): void {
+    if (this.libraryVariant === 'recorder') {
+      this.showAdvanced = this.readToggle(this.storageKeys.showAdvanced, false);
+      this.showDanger = this.readToggle(this.storageKeys.showDanger, false);
+      this.showKeyboardActions = this.readToggle(this.storageKeys.showKeyboardActions, false);
+      this.showUserKeys = this.readToggle(this.storageKeys.showUserKeys, false);
+      this.showExperimentalMouse = this.readToggle(this.storageKeys.showExperimentalMouse, false);
+    } else {
+      this.showAdvanced = this.readToggle(this.storageKeys.showAdvanced, false);
+      this.showDanger = this.readToggle(this.storageKeys.showDanger, false);
+      this.showUnsupported = this.readToggle(this.storageKeys.showUnsupported, false);
+    }
+    this.refreshBlockCategories();
+  }
+
+  toggleAdvanced() {
+    this.showAdvanced = !this.showAdvanced;
+    this.writeToggle(this.storageKeys.showAdvanced, this.showAdvanced);
+    this.refreshBlockCategories();
+  }
+
+  toggleDanger() {
+    this.showDanger = !this.showDanger;
+    this.writeToggle(this.storageKeys.showDanger, this.showDanger);
+    this.refreshBlockCategories();
+  }
+
+  toggleUnsupported() {
+    this.showUnsupported = !this.showUnsupported;
+    this.writeToggle(this.storageKeys.showUnsupported, this.showUnsupported);
+    this.refreshBlockCategories();
+  }
+  toggleKeyboardActions() {
+    this.showKeyboardActions = !this.showKeyboardActions;
+    this.writeToggle(this.storageKeys.showKeyboardActions, this.showKeyboardActions);
+    this.refreshBlockCategories();
+  }
+
+  toggleUserKeys() {
+    this.showUserKeys = !this.showUserKeys;
+    this.writeToggle(this.storageKeys.showUserKeys, this.showUserKeys);
+    this.refreshBlockCategories();
+  }
+
+  toggleExperimentalMouse() {
+    this.showExperimentalMouse = !this.showExperimentalMouse;
+    this.writeToggle(this.storageKeys.showExperimentalMouse, this.showExperimentalMouse);
+    this.refreshBlockCategories();
   }
 
   blockPayload(item: BlockItem) {
@@ -192,11 +260,16 @@ export class EditorLibraryComponent implements OnChanges {
       'lighting',
       'function',
       'numpad',
-      'media',
+      'media-volume',
+      'media-track',
+      'media-web',
+      'media-display',
+      'media-other',
       'mouse',
       'system',
       'macros',
       'special',
+      'other',
     ];
 
     const ordered = order
@@ -207,7 +280,20 @@ export class EditorLibraryComponent implements OnChanges {
   }
 
   private buildCategoryOptions(): BuildKeycodeBlockCategoriesOptions | undefined {
-    if (this.blockPreset !== 'recorder') return undefined;
+    const isRecorder = this.libraryVariant === 'recorder' || this.blockPreset === 'recorder';
+    const levelFilter = (entry: any) => {
+      const level = entry.level ?? 'common';
+      if (!this.showAdvanced && level === 'advanced') return false;
+      if (!this.showDanger && level === 'danger') return false;
+      if (!isRecorder && !this.showUnsupported && this.isUnsupported(entry) === true) return false;
+      return true;
+    };
+
+    if (!isRecorder) {
+      return {
+        itemFilter: levelFilter,
+      };
+    }
 
     const allowedCategoryKeys = [
       'alphanumeric',
@@ -215,9 +301,17 @@ export class EditorLibraryComponent implements OnChanges {
       'navigation',
       'function',
       'numpad',
-      'media',
-      'mouse',
+      'media-volume',
+      'media-track',
+      'media-web',
+      'media-display',
+      'media-other',
+      'system',
     ];
+
+    if (this.showExperimentalMouse) {
+      allowedCategoryKeys.push('mouse');
+    }
 
     const mouseButtons = new Set(['KC_BTN1', 'KC_BTN2', 'KC_BTN3', 'KC_BTN4', 'KC_BTN5']);
 
@@ -225,7 +319,17 @@ export class EditorLibraryComponent implements OnChanges {
       allowedCategoryKeys,
       excludeKeyIds: ['KC_NO', 'KC_TRNS'],
       itemFilter: entry => {
-        if ((entry as any).group === 'mouse') {
+        if (!levelFilter(entry)) return false;
+        if (!isMacroSafeEntry(entry, {
+          includeKeyboardActions: this.showKeyboardActions,
+          includeUserKeys: this.showUserKeys,
+          includeDanger: this.showDanger,
+          includeAdvanced: this.showAdvanced,
+          includeMouse: this.showExperimentalMouse,
+        })) {
+          return false;
+        }
+        if (entry.group === 'mouse') {
           return mouseButtons.has(entry.id);
         }
         return true;
@@ -234,7 +338,7 @@ export class EditorLibraryComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['blockPreset']) {
+    if (changes['blockPreset'] || changes['capabilities'] || changes['libraryVariant']) {
       this.refreshBlockCategories();
     }
   }
@@ -244,5 +348,35 @@ export class EditorLibraryComponent implements OnChanges {
     this._cachedBlockCategories = [];
     this._cachedSequences = [];
     this._blockCategories = this.buildCategories();
+  }
+
+  private readToggle(key: string, fallback: boolean): boolean {
+    if (typeof window === 'undefined') return fallback;
+    const raw = window.localStorage.getItem(key);
+    if (raw === null) return fallback;
+    return raw === 'true';
+  }
+
+  private writeToggle(key: string, value: boolean) {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(key, value ? 'true' : 'false');
+  }
+
+  isUnsupported(item: { requires?: string[] }): boolean | null {
+    if (!item.requires?.length) return false;
+    if (!this.capabilities) return null;
+    for (const req of item.requires) {
+      if (Object.prototype.hasOwnProperty.call(this.capabilities, req)) {
+        if (!(this.capabilities as any)[req]) return true;
+      } else {
+        return null;
+      }
+    }
+    return false;
+  }
+
+  requiresLabel(item: { requires?: string[] }): string | null {
+    if (!item.requires?.length) return null;
+    return `Requires ${item.requires.join(', ')}`;
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ControlElement, KeyElement } from '@shared/utils/layout/models';
 import type { Binding, Capabilities as DeviceCapabilities } from '@shared/models/device';
-import { KeyOption, encodeKeycodeToCode, keycodeEntries, decodeKeycodeLabel } from '@shared/utils/keycodes/catalog';
+import { KeyOption, encodeKeycodeToCode, keycodeEntries, decodeKeycodeLabel, resolveLegend } from '@shared/utils/keycodes/catalog';
 
 @Component({
   selector: 'app-editor-inspector',
@@ -138,7 +138,8 @@ export class EditorInspectorComponent {
     const label = decodeKeycodeLabel(code);
     const entry = keycodeEntries.find(e => e.id === keycodeId);
     const group = (entry as any)?.group;
-    const primary = group === 'number' ? label.primary : ((entry as any)?.short ?? label.primary);
+    const legend = entry ? resolveLegend(entry) : null;
+    const primary = group === 'number' ? label.primary : (legend?.short ?? label.primary);
     if (!primary) return null;
     const secondary = label.secondary;
     if (!secondary || secondary === primary) return primary;

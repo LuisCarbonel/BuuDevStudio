@@ -1,5 +1,16 @@
 @use '../editor-shared' as *;
 
+.pane--inspector {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.inspector-body {
+  flex: 1;
+  min-height: 0;
+}
+
 .inspector-section {
   display: flex;
   flex-direction: column;
@@ -75,18 +86,15 @@
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-
   select,
   input,
   textarea {
     border: 1px solid var(--ed-border);
     border-radius: 8px;
-    padding: 10px;
     background: var(--ed-panel-bg);
     font-family: inherit;
+    font-size: var(--ctrl-font-size);
+    line-height: var(--ctrl-line-height);
     transition: border-color var(--transition-fast),
                 box-shadow var(--transition-fast);
 
@@ -96,17 +104,28 @@
       box-shadow: 0 0 0 3px var(--accent-soft);
     }
   }
+
+  select,
+  input {
+    height: var(--ctrl-height-md);
+    padding: 0 var(--ctrl-pad-x);
+  }
+
+  textarea {
+    padding: var(--space-2) var(--ctrl-pad-x);
+    line-height: 1.4;
+  }
 }
 
 .field-label {
   font-weight: 600;
-  font-size: 12px;
+  font-size: var(--ctrl-font-size);
   opacity: 0.8;
+  line-height: var(--ctrl-line-height);
 }
 
 .hint {
-  font-size: 12px;
-  opacity: 0.7;
+  margin-top: var(--space-1);
 }
 
 .binding-actions {
@@ -157,7 +176,7 @@
 }
 
 .k {
-  opacity: 0.7;
+  font-weight: 600;
 }
 
 .v {
@@ -172,6 +191,7 @@
 
 .ghost-icon {
   font-size: 28px;
+  color: var(--text-muted);
 }
 
 .ghost-title {

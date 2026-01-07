@@ -26,7 +26,7 @@
     @if (layerOptions.length) {
       <div class="layer-switch">
         <span class="label">Layer:</span>
-        <div class="pill-group">
+        <div class="pill-group studio-layer-toggle">
           @for (layer of layerOptions; track layer) {
             <button
               type="button"
@@ -53,9 +53,9 @@
     </div>
   </div>
 
-  <div class="pane-body pane-body--canvas">
+  <div class="pane-body pane-body--canvas" #canvasViewport>
     @if (canvasView === 'device') {
-      <div class="device-view">
+      <div class="device-view" [class.device-view--fit]="fitToCanvas">
         @if (normalizedLayout) {
           <div
             cdkDropList
@@ -68,7 +68,7 @@
               [layout]="normalizedLayout"
               [selection]="layoutSelectionId"
               [hoverId]="hoveredElementId"
-              [unitPx]="layoutUnitPx"
+              [unitPx]="effectiveUnitPx"
               [bindingIndicators]="bindingIndicators"
               [keycodeLabels]="keycodeLabels"
               [encoderLabels]="encoderLabels"

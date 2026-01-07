@@ -24,9 +24,51 @@
         (ngModelChange)="onSearchChange($event)"
       />
     </div>
+
+    @if (libraryMode === 'blocks' && libraryVariant === 'editor') {
+      <div class="library-filters">
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showAdvanced" (change)="toggleAdvanced()" />
+          <span>Show Advanced</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showDanger" (change)="toggleDanger()" />
+          <span>Show Danger</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showUnsupported" (change)="toggleUnsupported()" />
+          <span>Show Unsupported</span>
+        </label>
+      </div>
+    }
+
+    @if (libraryMode === 'blocks' && libraryVariant === 'recorder') {
+      <div class="library-filters">
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showAdvanced" (change)="toggleAdvanced()" />
+          <span>Show Advanced</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showKeyboardActions" (change)="toggleKeyboardActions()" />
+          <span>Show Keyboard Actions</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showUserKeys" (change)="toggleUserKeys()" />
+          <span>Show User/Custom Keys</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showExperimentalMouse" (change)="toggleExperimentalMouse()" />
+          <span>Experimental Mouse</span>
+        </label>
+        <label class="filter-toggle">
+          <input type="checkbox" [checked]="showDanger" (change)="toggleDanger()" />
+          <span>Show Danger</span>
+        </label>
+      </div>
+    }
   </div>
 
-  <div class="library-content">
+  <div class="library-content studio-scroll--y">
     @switch (libraryMode) {
       @case ('blocks') {
         <div class="blocks-container">
@@ -76,6 +118,24 @@
                     </span>
                     @if (item.hint) {
                       <span class="block-hint">{{ item.hint }}</span>
+                    }
+                    @if (item.level === 'danger' || item.level === 'advanced' || item.requires?.length) {
+                      <span class="block-badges">
+                        @if (item.level === 'danger') {
+                          <span class="badge badge--danger">Danger</span>
+                        }
+                        @if (item.level === 'advanced') {
+                          <span class="badge badge--advanced">Advanced</span>
+                        }
+                        @if (isUnsupported(item) === true) {
+                          <span class="badge badge--unsupported">Unsupported</span>
+                        }
+                        @if (item.requires?.length) {
+                          @if (requiresLabel(item); as label) {
+                            <span class="badge badge--requires">{{ label }}</span>
+                          }
+                        }
+                      </span>
                     }
                   </button>
                 }
