@@ -1,50 +1,170 @@
-<div class="pane pane--library">
-  <div class="pane-title">Library</div>
-
-  <div class="section">
-    <div class="section-title">Profiles</div>
-    <ul class="list">
-      <li
-        *ngFor="let p of profiles"
-        [class.active]="p.id === selectedProfileId"
-        (click)="selectProfile.emit(p.id)"
-      >
-        <div class="item-name">{{ p.name }}</div>
-        <span class="pill" *ngIf="p.id === selectedProfileId">Active</span>
-      </li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Sequances</div>
-    <ul class="list" cdkDropList id="sequancesList" [cdkDropListSortingDisabled]="true">
-      <li
-        *ngFor="let s of sequancesForProfile"
-        [class.selected]="s.id === selectedSequanceId"
-        (click)="selectSequance.emit(s.id)"
-        appDragSource
-        [appDragSource]="s.id"
-        [appDragSourceDisabled]="focusMode"
-      >
-        <div class="drag-item" cdkDragHandle>
-          <div class="item-name">{{ s.name }}</div>
-          <div class="item-meta">Profile: {{ selectedProfileName }}</div>
+<div class="library">
+  <div class="library-header">
+    <div class="library-header-top">
+      <h2 class="library-title">Library</h2>
+      @if (profiles.length) {
+        <div class="profile-badge">
+          <span class="profile-name">{{ selectedProfileName }}</span>
         </div>
-      </li>
-    </ul>
-  </div>
+      }
+    </div>
 
-  <div class="section">
-    <div class="section-title">Actions / Blocks</div>
-    <div class="tags">
-      <span class="tag" *ngFor="let a of actions">{{ a }}</span>
+    <nz-segmented
+      class="library-tabs"
+      [nzOptions]="modeOptions"
+      [ngModel]="libraryMode"
+      (ngModelChange)="modeChange.emit($event)"
+    ></nz-segmented>
+
+    <div class="library-search">
+      <input
+        nz-input
+        [placeholder]="searchPlaceholder"
+        [ngModel]="librarySearch"
+        (ngModelChange)="onSearchChange($event)"
+      />
     </div>
   </div>
 
-  <div class="section">
-    <div class="section-title">Presets</div>
-    <div class="tags">
-      <span class="tag" *ngFor="let p of presets">{{ p }}</span>
-    </div>
+  <div class="library-content">
+    @switch (libraryMode) {
+      @case ('blocks') {
+        <div class="blocks-container">
+          @for (cat of filteredBlockCategories; track cat.key) {
+            <div class="category">
+              <div class="category-label">{{ cat.label }}</div>
+              <div
+                class="block-grid"
+                [class.block-grid--dense]="cat.density === 'dense'"
+                cdkDropList
+                [cdkDropListSortingDisabled]="true"
+                [cdkDropListConnectedTo]="['canvasDrop']"
+                [cdkDropListEnterPredicate]="blockListEnterPredicate"
+              >
+                @for (item of cat.items; track item.id) {
+                  <button
+                    class="block-item"
+                    type="button"
+                    (click)="onBlockClick(item, $event)"
+                    appDragSource
+                    cdkDragPreviewContainer="global"
+                    [appDragSource]="blockPayload(item)"
+                    [appDragSourceDisabled]="focusMode"
+                    [title]="enableBlockClick ? 'Click to add to sequence' : null"
+                  >
+                    <ng-template cdkDragPreview>
+                      <div class="block-item block-item--preview">
+                        <span class="block-label">
+                          @if (item.symbol) {
+                            <span class="block-symbol">{{ item.symbol }}</span>
+                          }
+                          <span>{{ item.label }}</span>
+                        </span>
+                        @if (item.hint) {
+                          <span class="block-hint">{{ item.hint }}</span>
+                        }
+                      </div>
+                    </ng-template>
+                    <ng-template cdkDragPlaceholder>
+                      <div class="block-item block-item--placeholder"></div>
+                    </ng-template>
+                    <span class="block-label">
+                      @if (item.symbol) {
+                        <span class="block-symbol">{{ item.symbol }}</span>
+                      }
+                      <span>{{ item.label }}</span>
+                    </span>
+                    @if (item.hint) {
+                      <span class="block-hint">{{ item.hint }}</span>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          @if (filteredSequences.length) {
+            <div class="category category--sequences">
+              <div class="category-label">My Sequences</div>
+              <div class="sequence-list">
+                @for (s of filteredSequences; track s.id) {
+                  <button
+                    class="sequence-item"
+                    [class.sequence-item--selected]="s.id === selectedSequenceId"
+                    type="button"
+                    (click)="selectSequence.emit(s.id)"
+                    appDragSource
+                    cdkDragPreviewContainer="global"
+                    [appDragSource]="sequencePayload(s)"
+                    [appDragSourceDisabled]="focusMode"
+                  >
+                    <ng-template cdkDragPreview>
+                      <div class="sequence-item sequence-item--preview">
+                        <span class="sequence-name">{{ s.name }}</span>
+                      </div>
+                    </ng-template>
+                    <ng-template cdkDragPlaceholder>
+                      <div class="sequence-item sequence-item--placeholder"></div>
+                    </ng-template>
+                    <span class="sequence-name">{{ s.name }}</span>
+                  </button>
+                }
+              </div>
+            </div>
+          }
+
+          @if (!filteredBlockCategories.length && !filteredSequences.length) {
+            <div class="empty-state">
+              <span class="empty-text">No results found</span>
+            </div>
+          }
+        </div>
+      }
+
+      @case ('sequences') {
+        <div class="sequences-container">
+          @if (sequencesForProfile.length) {
+            @if (filteredSequences.length) {
+              <div class="sequence-list">
+                @for (s of filteredSequences; track s.id) {
+                  <button
+                    class="sequence-item sequence-item--large"
+                    [class.sequence-item--selected]="s.id === selectedSequenceId"
+                    type="button"
+                    (click)="selectSequence.emit(s.id)"
+                    appDragSource
+                    cdkDragPreviewContainer="global"
+                    [appDragSource]="sequencePayload(s)"
+                    [appDragSourceDisabled]="focusMode"
+                  >
+                    <ng-template cdkDragPreview>
+                      <div class="sequence-item sequence-item--preview">
+                        <span class="sequence-name">{{ s.name }}</span>
+                      </div>
+                    </ng-template>
+                    <ng-template cdkDragPlaceholder>
+                      <div class="sequence-item sequence-item--placeholder"></div>
+                    </ng-template>
+                    <span class="sequence-name">{{ s.name }}</span>
+                    <span class="sequence-hint">Drag to bind or click to edit</span>
+                  </button>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <span class="empty-text">No sequences match</span>
+              </div>
+            }
+          } @else {
+            <div class="empty-state empty-state--centered">
+              <span class="empty-text">No sequences yet</span>
+              <button nz-button nzType="primary" nzSize="small" (click)="createSequence.emit()">
+                Create Sequence
+              </button>
+            </div>
+          }
+        </div>
+      }
+    }
   </div>
 </div>
