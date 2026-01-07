@@ -1,0 +1,165 @@
+:root,
+:root .theme-light,
+.theme-light,
+.theme-dark {
+  --drag-preview-bg: var(--surface-panel);
+  --drag-preview-border: var(--border-strong);
+  --drag-preview-shadow: var(--drag-shadow-active);
+  --drag-placeholder-bg: var(--surface-muted);
+  --drag-placeholder-border: var(--border-strong);
+}
+
+.studio-drag-preview {
+  box-shadow: var(--drag-preview-shadow);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--drag-preview-border);
+  background: var(--drag-preview-bg);
+  color: var(--text-strong);
+  padding: 6px 10px;
+  font-weight: 600;
+  opacity: 0.95;
+  cursor: grabbing;
+  outline: none;
+  overflow: hidden;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 220px;
+  width: 240px;
+  box-sizing: border-box;
+  z-index: calc(var(--z-index-toast) + 100);
+  pointer-events: none;
+  transition: transform var(--drag-transition-smooth),
+              box-shadow var(--drag-transition-smooth);
+}
+
+.studio-drag-preview * {
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.cdk-drag-preview {
+  pointer-events: none;
+}
+
+.studio-drag-placeholder {
+  opacity: 0.35;
+  border: 1px dashed var(--drag-placeholder-border);
+  border-radius: var(--radius-lg);
+  background: var(--drag-placeholder-bg);
+  min-height: 48px;
+  box-sizing: border-box;
+  transition: opacity var(--drag-transition-fast);
+}
+
+.library .block-grid .studio-drag-placeholder,
+.library .sequence-list .studio-drag-placeholder,
+#canvasDrop > .studio-drag-placeholder {
+  display: none;
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cdk-drop-list-dragging .cdk-drag:not(.studio-drag-placeholder) {
+  transition: transform var(--drag-transition-fast),
+              box-shadow var(--drag-transition-fast);
+  opacity: 0.7;
+}
+
+.cdk-drag-animating {
+  transition: transform 200ms var(--ease-smooth);
+}
+
+.block-key--preview.studio-drag-preview {
+  width: 240px;
+}
+
+.block-key--placeholder.studio-drag-placeholder,
+.sequence-item--placeholder.studio-drag-placeholder {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.block-item--preview.studio-drag-preview {
+  background: linear-gradient(135deg,
+    rgba(124, 150, 255, 0.15) 0%,
+    rgba(124, 150, 255, 0.08) 100%);
+  border-color: var(--accent-primary);
+  box-shadow: 0 12px 32px rgba(124, 150, 255, 0.4),
+              0 6px 16px rgba(0, 0, 0, 0.6),
+              inset 0 0 0 1px rgba(124, 150, 255, 0.5);
+}
+
+.block-item--preview.studio-drag-preview::before,
+.block-item--preview.studio-drag-preview .block-hint {
+  opacity: 1;
+}
+
+.sequence-item--preview.studio-drag-preview {
+  min-width: 220px;
+  background: linear-gradient(90deg,
+    rgba(124, 150, 255, 0.15) 0%,
+    rgba(124, 150, 255, 0.08) 100%);
+  border-color: var(--accent-primary);
+  box-shadow: 0 12px 32px rgba(124, 150, 255, 0.4),
+              0 6px 16px rgba(0, 0, 0, 0.6);
+}
+
+.drag-preview.studio-drag-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cdk-drag.cdk-drag-dragging {
+  cursor: grabbing !important;
+  user-select: none;
+  z-index: 1000 !important;
+}
+
+.cdk-drag-dragging *,
+.cdk-drag-dragging {
+  cursor: grabbing !important;
+}
+
+/* Make any drag handle/dragged item show grab on hover by default */
+.cdk-drag {
+  cursor: grab;
+}
+
+.cdk-drag:active {
+  cursor: grabbing;
+}
+
+.cdk-drag-handle {
+  cursor: grab;
+}
+
+.cdk-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* Root override for Tauri/WebView to force grabbing during drag */
+html.dragging {
+  user-select: none;
+}
+
+html.dragging,
+html.dragging * {
+  cursor: grabbing !important;
+}
+
+html.dragging .studio-drag-preview {
+  z-index: 1500 !important;
+  pointer-events: none;
+}

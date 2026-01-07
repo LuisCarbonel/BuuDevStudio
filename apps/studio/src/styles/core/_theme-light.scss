@@ -1,18 +1,68 @@
 :root,
-:root .theme-light,
+:root .theme-dark,
+.theme-dark {
+  color-scheme: dark;
+
+  --surface-shell: var(--bg-base);
+  --surface-panel: var(--bg-panel);
+  --surface-muted: var(--bg-elevated);
+  --surface-strong: var(--bg-active);
+  --surface-0: var(--surface-shell);
+  --surface-1: var(--surface-panel);
+  --surface-2: var(--surface-muted);
+  --surface-3: var(--surface-strong);
+
+  --border-soft: var(--border-subtle);
+  --border-strong: var(--border-strong);
+  --border-muted: var(--border-soft);
+
+  --text-strong: var(--text-primary);
+  --text-subtle: var(--text-secondary);
+  --text-muted: var(--text-tertiary);
+  --text: var(--text-subtle);
+  --text-on-accent: var(--text-primary);
+
+  --accent: var(--accent-primary);
+  --accent-success: var(--success);
+  --accent-danger: var(--danger);
+  --accent-warning: var(--warning);
+  --accent-soft: var(--accent-subtle);
+  --accent-border: var(--accent-border);
+  --accent-500: var(--accent);
+  --accent-600: var(--accent);
+  --accent-500-soft: var(--accent-soft);
+  --focus-ring: var(--accent-border);
+
+  --success-500: var(--accent-success);
+  --success-soft: color-mix(in srgb, var(--accent-success) 16%, transparent);
+  --warning-500: var(--accent-warning);
+  --warning-soft: color-mix(in srgb, var(--accent-warning) 16%, transparent);
+  --danger-500: var(--accent-danger);
+  --danger-soft: color-mix(in srgb, var(--accent-danger) 16%, transparent);
+
+  --shadow-elevated: var(--shadow-lg);
+  --shadow-rail: var(--shadow-md);
+}
+
 .theme-light {
   color-scheme: light;
 
   --surface-shell: var(--color-gray-50);
   --surface-panel: var(--color-white);
   --surface-muted: color-mix(in srgb, var(--color-gray-50) 60%, var(--color-white));
+  --surface-0: var(--surface-shell);
+  --surface-1: var(--surface-panel);
+  --surface-2: var(--surface-muted);
+  --surface-3: var(--surface-panel);
 
   --border-soft: var(--color-gray-200);
   --border-strong: color-mix(in srgb, var(--color-gray-200) 70%, var(--color-white) 30%);
+  --border-muted: var(--border-soft);
 
   --text-strong: var(--color-gray-900);
   --text-subtle: color-mix(in srgb, var(--color-gray-900) 60%, transparent);
   --text-muted: 0.7;
+  --text: var(--text-subtle);
   --text-on-accent: var(--color-white);
 
   --accent: var(--color-blue-500);
@@ -21,6 +71,17 @@
   --accent-warning: var(--color-orange-500);
   --accent-soft: color-mix(in srgb, var(--color-blue-500) 14%, var(--color-white));
   --accent-border: color-mix(in srgb, var(--color-blue-500) 26%, var(--color-white));
+  --accent-500: var(--accent);
+  --accent-600: var(--accent);
+  --accent-500-soft: var(--accent-soft);
+  --focus-ring: var(--accent-border);
+
+  --success-500: var(--accent-success);
+  --success-soft: color-mix(in srgb, var(--accent-success) 16%, transparent);
+  --warning-500: var(--accent-warning);
+  --warning-soft: color-mix(in srgb, var(--accent-warning) 16%, transparent);
+  --danger-500: var(--accent-danger);
+  --danger-soft: color-mix(in srgb, var(--accent-danger) 16%, transparent);
 
   --shadow-elevated: var(--shadow-raise-md);
   --shadow-rail: var(--shadow-border);

@@ -3,12 +3,12 @@
   --color-gray-50: #f4f6fb;
   --color-gray-100: #eef1f7;
   --color-gray-200: #e5e7eb;
-  --color-gray-500: #666666;
-  --color-gray-900: #111111;
-  --color-blue-500: #1677ff;
-  --color-green-500: #0f9d58;
-  --color-red-500: #b42318;
-  --color-orange-500: #faad14;
+  --color-gray-500: #5d6675;
+  --color-gray-900: #0f1419;
+  --color-blue-500: #6ba5f7;
+  --color-green-500: #5eb88a;
+  --color-red-500: #e8786d;
+  --color-orange-500: #f5b763;
 
   --space-1: 4px;
   --space-2: 8px;
@@ -16,15 +16,64 @@
   --space-4: 16px;
   --space-5: 20px;
   --space-6: 24px;
+  --space-8: 32px;
 
   --radius-sm: 8px;
   --radius-md: 10px;
   --radius-lg: 12px;
 
-  --shadow-raise-sm: 0 1px 6px rgba(0, 0, 0, 0.06);
-  --shadow-raise-md: 0 6px 20px rgba(0, 0, 0, 0.03);
-  --shadow-border: 1px 0 6px rgba(0, 0, 0, 0.05);
-
   --font-family-base: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-base: 14px;
+
+  --bg-base: #0d0e12;
+  --bg-elevated: #16171d;
+  --bg-panel: #1a1b23;
+  --bg-hover: #1f2028;
+  --bg-active: #24252e;
+  
+  --border-subtle: #2a2b35;
+  --border-muted: #33343f;
+  --border-strong: #3d3e4a;
+  
+  --text-primary: #e6e7eb;
+  --text-secondary: #a8aab5;
+  --text-tertiary: #6e7181;
+  --text-placeholder: #52545f;
+  
+  --accent-primary: #7c96ff;
+  --accent-hover: #8fa6ff;
+  --accent-active: #6784ff;
+  --accent-subtle: rgba(124, 150, 255, 0.12);
+  --accent-border: rgba(124, 150, 255, 0.24);
+  
+  --success: #5dd9a1;
+  --success-subtle: rgba(93, 217, 161, 0.12);
+  --warning: #ffbd5c;
+  --warning-subtle: rgba(255, 189, 92, 0.12);
+  --danger: #ff7b7b;
+  --danger-subtle: rgba(255, 123, 123, 0.12);
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4);
+  
+  --shadow-raise-sm: var(--shadow-sm);
+  --shadow-raise-md: var(--shadow-md);
+  --shadow-border: 1px 0 6px rgba(0, 0, 0, 0.3);
+  --shadow-elevated: var(--shadow-lg);
+
+  /* Semantic aliases (use for new work) */
+  --space-xs: var(--space-1);
+  --space-sm: var(--space-2);
+  --space-md: var(--space-3);
+  --space-lg: var(--space-4);
+
+  --radius-1: var(--radius-sm);
+  --radius-2: var(--radius-md);
+  --radius-3: var(--radius-lg);
+
+  --shadow-1: var(--shadow-sm);
+  --shadow-2: var(--shadow-md);
+  --shadow-3: var(--shadow-lg);
 }

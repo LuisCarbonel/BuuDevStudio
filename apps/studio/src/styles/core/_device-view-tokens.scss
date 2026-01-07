@@ -1,0 +1,76 @@
+:root,
+:root .theme-dark,
+.theme-dark {
+  --dv-plate-bg: radial-gradient(120% 140% at 50% 10%, #1a1b23 0%, #16171d 40%, #0d0e12 100%);
+  --dv-plate-ring: rgba(124, 150, 255, 0.08);
+  --dv-plate-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.4);
+  --dv-plate-ambient: inset 0 20px 40px rgba(0, 0, 0, 0.3);
+  --dv-plate-border: rgba(124, 150, 255, 0.12);
+  --dv-plate-glow: rgba(124, 150, 255, 0.04);
+
+  --dv-key-fill: #24252e;
+  --dv-key-stroke: #3d3e4a;
+  --dv-key-fill-bound: #2a2f3e;
+  --dv-key-stroke-bound: #7c96ff;
+  --dv-key-stroke-hover: #8fa6ff;
+  --dv-key-fill-selected: #2e3546;
+  --dv-key-stroke-selected: #3f6fc3;
+
+  --dv-key-shadow: drop-shadow(0.08px 0.12px 0.18px rgba(0, 0, 0, 0.4));
+  --dv-key-shadow-hover: drop-shadow(0.1px 0.16px 0.22px rgba(124, 150, 255, 0.5));
+  --dv-key-shadow-selected: drop-shadow(0.14px 0.22px 0.32px rgba(63, 111, 195, 0.32));
+
+  --dv-control-fill: var(--dv-key-fill);
+  --dv-control-stroke: var(--dv-key-stroke);
+  --dv-control-fill-bound: var(--dv-key-fill-bound);
+  --dv-control-stroke-bound: var(--dv-key-stroke-bound);
+  --dv-control-stroke-hover: var(--dv-key-stroke-hover);
+  --dv-control-fill-selected: var(--dv-key-fill-selected);
+  --dv-control-stroke-selected: var(--dv-key-stroke-selected);
+
+  --dv-control-shadow: var(--dv-key-shadow);
+  --dv-control-shadow-hover: var(--dv-key-shadow-hover);
+  --dv-control-shadow-selected: var(--dv-key-shadow-selected);
+
+  --dv-label-shadow: 0 0.04px 0.12px rgba(0, 0, 0, 0.45);
+  --dv-drop-label-bg: rgba(12, 14, 18, 0.75);
+  --dv-drop-label-border: rgba(124, 150, 255, 0.35);
+}
+
+:root .theme-light,
+.theme-light {
+  --dv-plate-bg: radial-gradient(120% 140% at 50% 10%, var(--surface-1) 0%, var(--surface-2) 45%, var(--surface-shell) 100%);
+  --dv-plate-ring: color-mix(in srgb, var(--accent) 10%, transparent);
+  --dv-plate-shadow: var(--shadow-raise-sm);
+  --dv-plate-ambient: inset 0 12px 20px rgba(0, 0, 0, 0.08);
+  --dv-plate-border: color-mix(in srgb, var(--accent) 10%, var(--border-soft));
+  --dv-plate-glow: color-mix(in srgb, var(--accent) 8%, transparent);
+
+  --dv-key-fill: var(--surface-2);
+  --dv-key-stroke: var(--border-strong);
+  --dv-key-fill-bound: color-mix(in srgb, var(--accent) 8%, var(--surface-2));
+  --dv-key-stroke-bound: var(--accent);
+  --dv-key-stroke-hover: var(--accent);
+  --dv-key-fill-selected: color-mix(in srgb, var(--accent) 14%, var(--surface-2));
+  --dv-key-stroke-selected: var(--accent);
+
+  --dv-key-shadow: drop-shadow(0.08px 0.12px 0.18px rgba(0, 0, 0, 0.2));
+  --dv-key-shadow-hover: drop-shadow(0.1px 0.16px 0.22px color-mix(in srgb, var(--accent) 35%, transparent));
+  --dv-key-shadow-selected: drop-shadow(0.14px 0.22px 0.32px color-mix(in srgb, var(--accent) 25%, transparent));
+
+  --dv-control-fill: var(--dv-key-fill);
+  --dv-control-stroke: var(--dv-key-stroke);
+  --dv-control-fill-bound: var(--dv-key-fill-bound);
+  --dv-control-stroke-bound: var(--dv-key-stroke-bound);
+  --dv-control-stroke-hover: var(--dv-key-stroke-hover);
+  --dv-control-fill-selected: var(--dv-key-fill-selected);
+  --dv-control-stroke-selected: var(--dv-key-stroke-selected);
+
+  --dv-control-shadow: var(--dv-key-shadow);
+  --dv-control-shadow-hover: var(--dv-key-shadow-hover);
+  --dv-control-shadow-selected: var(--dv-key-shadow-selected);
+
+  --dv-label-shadow: 0 0.04px 0.12px rgba(0, 0, 0, 0.25);
+  --dv-drop-label-bg: color-mix(in srgb, var(--surface-1) 80%, transparent);
+  --dv-drop-label-border: color-mix(in srgb, var(--accent) 28%, transparent);
+}

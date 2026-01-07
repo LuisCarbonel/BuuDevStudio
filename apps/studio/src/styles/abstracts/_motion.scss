@@ -1,14 +1,43 @@
 :root {
-  --rail-speed: 800ms;
-  --rail-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  /* Timing Scale */
+  --timing-instant: 0ms;
+  --timing-fast: 120ms;
+  --timing-base: 180ms;
+  --timing-moderate: 300ms;
+  --timing-slow: 450ms;
+  --timing-slower: 600ms;
+  --timing-slowest: 800ms;
 
+  /* Easing Curves */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.6, 1);
+
+  /* Common Transition Patterns */
+  --transition-fast: var(--timing-fast) var(--ease-soft);
+  --transition-base: var(--timing-base) var(--ease-soft);
+  --transition-moderate: var(--timing-moderate) var(--ease-smooth);
+  --transition-slow: var(--timing-slow) var(--ease-smooth);
+
+  /* Legacy/Specific Use Cases */
+  --rail-speed: var(--timing-slowest);
+  --rail-ease: var(--ease-smooth);
   --rail-transition: width var(--rail-speed) var(--rail-ease),
     max-width var(--rail-speed) var(--rail-ease),
     min-width var(--rail-speed) var(--rail-ease),
     flex-basis var(--rail-speed) var(--rail-ease),
     box-shadow var(--rail-speed) var(--rail-ease);
-
   --rail-transition-menu: padding var(--rail-speed) var(--rail-ease), width var(--rail-speed) var(--rail-ease);
   --rail-transition-item: padding var(--rail-speed) var(--rail-ease), gap var(--rail-speed) var(--rail-ease);
   --rail-transition-text: opacity var(--rail-speed) ease, max-width var(--rail-speed) ease;
+
+  --drag-speed-fast: var(--timing-fast);
+  --drag-speed-smooth: var(--timing-base);
+  --drag-ease-soft: var(--ease-soft);
+  --drag-transition-fast: var(--transition-fast);
+  --drag-transition-smooth: var(--transition-base);
+  --drag-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --drag-shadow-active: 0 8px 24px rgba(0, 0, 0, 0.18);
 }
