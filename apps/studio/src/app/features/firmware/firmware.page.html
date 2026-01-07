@@ -1,5 +1,6 @@
 @if (deviceInfo; as d) {
-  <div class="firmware-page">
+  <div class="firmware-scroll studio-scroll--y">
+    <div class="firmware-page">
     <header class="page-header">
       <div class="page-header__content">
         <h1 class="page-title">Device Firmware</h1>
@@ -29,7 +30,7 @@
         <div class="card-header">
           <h2 class="card-title">Device Information</h2>
           @if (d.connected) {
-            <span class="status-badge status-badge--connected">Connected</span>
+            <span class="status-badge status-badge--connected studio-chip studio-chip--success">Connected</span>
           }
         </div>
         <div class="info-grid">
@@ -124,7 +125,7 @@
         <div class="card-header">
           <h2 class="card-title">Device State</h2>
           @if (device.isDirty()) {
-            <span class="status-badge status-badge--warning">Modified</span>
+          <span class="status-badge status-badge--warning studio-chip studio-chip--warning">Modified</span>
           }
         </div>
         <div class="info-grid">
@@ -271,7 +272,7 @@
       <section class="info-card">
         <div class="card-header">
           <h2 class="card-title">VIA Protocol</h2>
-          <span class="status-badge" [class.status-badge--success]="via.viaDetected" [class.status-badge--muted]="!via.viaDetected">
+          <span class="status-badge studio-chip" [class.status-badge--success]="via.viaDetected" [class.status-badge--muted]="!via.viaDetected" [class.studio-chip--success]="via.viaDetected" [class.studio-chip--muted]="!via.viaDetected">
             {{ via.viaDetected ? 'Detected' : 'Not Detected' }}
           </span>
         </div>
@@ -326,7 +327,7 @@
                   <div class="via-layer-header">
                     <span class="via-layer-title">Layer {{ $index }}</span>
                   </div>
-                  <div class="via-table-wrapper">
+                  <div class="via-table-wrapper studio-scroll--x">
                     <table class="via-table">
                       @for (row of layer; track $index) {
                         <tr>
@@ -352,5 +353,6 @@
         }
       </section>
     }
+    </div>
   </div>
 }

@@ -1,3 +1,15 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.firmware-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
 .firmware-page {
   display: flex;
   flex-direction: column;
@@ -44,13 +56,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2) var(--space-4);
+  height: var(--ctrl-height-md);
+  padding: 0 var(--ctrl-pad-x);
   border-radius: var(--radius-md);
-  font-size: 14px;
+  font-size: var(--ctrl-font-size);
   font-weight: 600;
   cursor: pointer;
   border: 1px solid;
   transition: all var(--transition-fast);
+  line-height: var(--ctrl-line-height);
   white-space: nowrap;
 
   &--primary {
@@ -139,32 +153,23 @@
 }
 
 .status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px var(--space-2);
-  border-radius: var(--radius-md);
-  font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 
   &--connected {
-    background: color-mix(in srgb, var(--accent-success) 15%, transparent);
     color: var(--accent-success);
   }
 
   &--success {
-    background: color-mix(in srgb, var(--accent-success) 15%, transparent);
     color: var(--accent-success);
   }
 
   &--warning {
-    background: color-mix(in srgb, var(--color-orange-500) 15%, transparent);
-    color: var(--color-orange-500);
+    color: var(--warning-500);
   }
 
   &--muted {
-    background: var(--surface-muted);
     color: var(--text-subtle);
   }
 }
@@ -447,7 +452,6 @@
 }
 
 .via-table-wrapper {
-  overflow-x: auto;
   border: 1px solid var(--border-soft);
   border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
