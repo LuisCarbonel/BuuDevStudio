@@ -1,4 +1,4 @@
-import { keycodeEntries, KeycodeEntry } from './catalog';
+import { keycodeEntries, KeycodeEntry, resolveLegend } from './catalog';
 
 /**
  * Represents a single keycode entry in the library UI.
@@ -8,7 +8,9 @@ import { keycodeEntries, KeycodeEntry } from './catalog';
  * @property {string} hint - Secondary text shown as a tooltip (optional).
  * @property {string} action - Drag action string, e.g., "KC:KC_A".
  * @property {boolean} [compact] - Flag indicating compact rendering mode.
- * @property {string} [symbol] - Unicode symbol for modifier keys (e.g., ⌃).
+ * @property {string} [symbol] - Optional display symbol for the legend.
+ * @property {'common' | 'advanced' | 'danger'} [level] - Optional visibility level.
+ * @property {string[]} [requires] - Optional capabilities required to support the key.
  */
 export interface LibraryBlockItem {
   id: string;
@@ -18,6 +20,9 @@ export interface LibraryBlockItem {
   arg?: string;
   compact?: boolean;
   symbol?: string;
+  level?: 'common' | 'advanced' | 'danger';
+  requires?: string[];
+  searchText?: string;
 }
 
 /**
@@ -42,6 +47,7 @@ type CategoryDef = {
   label: string;
   groups: string[];
   density?: 'dense' | 'normal';
+  predicate?: (entry: KeycodeEntry) => boolean;
 };
 
 export const CATEGORY_DEFS: CategoryDef[] = [
@@ -52,23 +58,29 @@ export const CATEGORY_DEFS: CategoryDef[] = [
   { key: 'lighting', label: 'Lighting', groups: ['rgb', 'backlight'], density: 'dense' },
   { key: 'function', label: 'Function Keys', groups: ['function'], density: 'dense' },
   { key: 'numpad', label: 'Numpad', groups: ['numpad'], density: 'dense' },
-  { key: 'media', label: 'Media', groups: ['media', 'audio'] },
+  { key: 'media-volume', label: 'Media: Volume', groups: ['media', 'audio'], predicate: entry => (entry.semanticId ?? entry.id).startsWith('media.volume') },
+  { key: 'media-track', label: 'Media: Playback', groups: ['media', 'audio'], predicate: entry => (entry.semanticId ?? entry.id).startsWith('media.track') },
+  { key: 'media-web', label: 'Media: Browser', groups: ['media', 'audio'], predicate: entry => (entry.semanticId ?? entry.id).startsWith('web.') },
+  { key: 'media-display', label: 'Media: Display', groups: ['media', 'audio'], predicate: entry => (entry.semanticId ?? entry.id).startsWith('display.') },
+  { key: 'media-other', label: 'Media: Other', groups: ['media', 'audio'], predicate: entry => {
+      const key = entry.semanticId ?? entry.id;
+      return !(
+        key.startsWith('media.volume') ||
+        key.startsWith('media.track') ||
+        key.startsWith('web.') ||
+        key.startsWith('display.')
+      );
+    } },
   { key: 'mouse', label: 'Mouse', groups: ['mouse'] },
   { key: 'system', label: 'System', groups: ['system'] },
   { key: 'macros', label: 'Macros & User', groups: ['macro', 'user'] },
   { key: 'special', label: 'Special', groups: ['special'] },
 ];
 
-const MODIFIER_SYMBOLS: Record<string, string> = {
-  'KC_LCTL': '⌃',
-  'KC_RCTL': '⌃',
-  'KC_LSFT': '⇧',
-  'KC_RSFT': '⇧',
-  'KC_LALT': '⌥',
-  'KC_RALT': '⌥',
-  'KC_LGUI': '⌘',
-  'KC_RGUI': '⌘',
-};
+function semanticKey(entry: KeycodeEntry): string {
+  return entry.semanticId ?? entry.id;
+}
+
 
 /**
  * Determines whether a keycode entry has an associated numeric `code` property,
@@ -88,10 +100,11 @@ function isBasic(entry: KeycodeEntry): entry is KeycodeEntry & { code: number } 
  * @param {KeycodeEntry} entry - The raw keycode entry from the catalog.
  * @returns {LibraryBlockItem} A formatted block item with id, label, action, etc.
  */
-function toBlockItem(entry: KeycodeEntry): LibraryBlockItem {
+function toBlockItem(entry: KeycodeEntry, aliases: string[], tags: string[]): LibraryBlockItem {
+  const legend = resolveLegend(entry);
   const label = {
-    primary: entry.label,
-    secondary: (entry as any).short,
+    primary: legend.label,
+    secondary: legend.short,
   };
 
   const isCompact =
@@ -103,7 +116,11 @@ function toBlockItem(entry: KeycodeEntry): LibraryBlockItem {
       entry.group === 'numpad'
     ));
 
-  const symbol = isBasic(entry) ? MODIFIER_SYMBOLS[entry.id] : undefined;
+  const symbol = legend.symbol;
+  const searchText = [entry.id, label.primary, label.secondary, entry.group, ...aliases, ...tags]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
 
   return {
     id: entry.id.toLowerCase(),
@@ -112,6 +129,9 @@ function toBlockItem(entry: KeycodeEntry): LibraryBlockItem {
     action: `KC:${entry.id}`,
     compact: isCompact,
     symbol,
+    level: entry.level,
+    requires: entry.requires,
+    searchText,
   };
 }
 
@@ -127,22 +147,104 @@ export interface BuildKeycodeBlockCategoriesOptions {
   itemFilter?: (entry: KeycodeEntry) => boolean;
 }
 
+export interface MacroSafeOptions {
+  includeKeyboardActions?: boolean;
+  includeUserKeys?: boolean;
+  includeDanger?: boolean;
+  includeAdvanced?: boolean;
+  includeMouse?: boolean;
+}
+
+export function isMacroSafeEntry(entry: KeycodeEntry, options: MacroSafeOptions = {}): boolean {
+  const {
+    includeKeyboardActions = false,
+    includeUserKeys = false,
+    includeDanger = false,
+    includeAdvanced = false,
+    includeMouse = false,
+  } = options;
+
+  if (entry.id === 'KC_NO' || entry.id === 'KC_TRNS') return false;
+  if (entry.group === 'special' || entry.group === 'macro') return false;
+  if (entry.level === 'danger' && !includeDanger) return false;
+  if (entry.level === 'advanced' && !includeAdvanced) return false;
+  if (entry.group === 'user' && !includeUserKeys) return false;
+  if (entry.group === 'mouse' && !includeMouse) return false;
+
+  if (entry.group === 'layer' || entry.group === 'layerTap' || entry.group === 'modTap' || entry.group === 'oneshot') {
+    return includeKeyboardActions;
+  }
+
+  if (entry.type !== 'basic') {
+    return includeKeyboardActions;
+  }
+
+  const code = (entry as any).code;
+  if (typeof code !== 'number') return false;
+  if (code <= 0x00ff) return true;
+
+  return includeAdvanced || includeDanger || includeUserKeys;
+}
+
 export function buildKeycodeBlockCategories(options?: BuildKeycodeBlockCategoriesOptions): LibraryBlockCategory[] {
   const allowedCategories = options?.allowedCategoryKeys
     ? new Set(options.allowedCategoryKeys)
     : null;
   const excludedIds = options?.excludeKeyIds?.map(id => id.toUpperCase()) ?? [];
   const entryFilter = options?.itemFilter;
+  const knownGroups = new Set(CATEGORY_DEFS.flatMap(def => def.groups));
+  const includeOther = !allowedCategories || allowedCategories.has('other');
 
-  return CATEGORY_DEFS
+  const sortItems = (items: LibraryBlockItem[]) => {
+    items.sort((a, b) => {
+      const labelA = a.label.toLowerCase();
+      const labelB = b.label.toLowerCase();
+      if (labelA < labelB) return -1;
+      if (labelA > labelB) return 1;
+      return a.id.localeCompare(b.id);
+    });
+  };
+
+  const groups = new Map<string, KeycodeEntry[]>();
+  keycodeEntries.forEach(entry => {
+    const key = semanticKey(entry);
+    const list = groups.get(key) ?? [];
+    list.push(entry);
+    groups.set(key, list);
+  });
+
+  const pickPrimary = (list: KeycodeEntry[], key: string): KeycodeEntry => {
+    const exact = list.find(entry => entry.id === key);
+    return exact ?? list[0];
+  };
+
+  const allEntries: Array<{ entry: KeycodeEntry; aliases: string[]; tags: string[] }> = [];
+  groups.forEach((list, key) => {
+    const primary = pickPrimary(list, key);
+    const aliases = new Set<string>();
+    const tags = new Set<string>();
+    aliases.add(key);
+    list.forEach(entry => {
+      (entry.aliases ?? []).forEach(alias => aliases.add(alias));
+      (entry.tags ?? []).forEach((tag: string) => tags.add(tag));
+      if (entry.id !== primary.id) {
+        aliases.add(entry.id);
+      }
+    });
+    allEntries.push({ entry: primary, aliases: Array.from(aliases), tags: Array.from(tags) });
+  });
+
+  const categories = CATEGORY_DEFS
     .filter(def => !allowedCategories || allowedCategories.has(def.key))
     .map(def => {
-      const items: LibraryBlockItem[] = keycodeEntries
-        .filter(entry => def.groups.includes((entry as any).group))
-        .filter(entry => !excludedIds.includes(entry.id.toUpperCase()))
-        .filter(entry => (entryFilter ? entryFilter(entry) : true))
-        .map(entry => toBlockItem(entry));
+      const items: LibraryBlockItem[] = allEntries
+        .filter(({ entry }) => def.groups.includes(entry.group))
+        .filter(({ entry }) => (def.predicate ? def.predicate(entry) : true))
+        .filter(({ entry }) => !excludedIds.includes(entry.id.toUpperCase()))
+        .filter(({ entry }) => (entryFilter ? entryFilter(entry) : true))
+        .map(({ entry, aliases, tags }) => toBlockItem(entry, aliases, tags));
 
+      sortItems(items);
       return items.length
         ? {
             key: def.key,
@@ -152,4 +254,23 @@ export function buildKeycodeBlockCategories(options?: BuildKeycodeBlockCategorie
           }
         : null;
     }).filter((cat): cat is LibraryBlockCategory => cat !== null);
+
+  if (includeOther) {
+    const otherItems = allEntries
+      .filter(({ entry }) => !knownGroups.has(entry.group))
+      .filter(({ entry }) => !excludedIds.includes(entry.id.toUpperCase()))
+      .filter(({ entry }) => (entryFilter ? entryFilter(entry) : true))
+      .map(({ entry, aliases, tags }) => toBlockItem(entry, aliases, tags));
+    sortItems(otherItems);
+    if (otherItems.length) {
+      categories.push({
+        key: 'other',
+        label: 'Other / Uncategorized',
+        items: otherItems,
+        density: 'normal',
+      });
+    }
+  }
+
+  return categories;
 }

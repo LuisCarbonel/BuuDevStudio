@@ -1,4 +1,5 @@
-import catalogData from './catalog.json';
+import { getOsProfile, OsProfile } from './os-profile';
+import { getActiveCatalog } from './catalog-loader';
 
 export interface KeycodeLabel {
   primary: string;
@@ -11,13 +12,22 @@ export type KeycodeEntryType =
   | 'layerTap'
   | 'modTap';
 
+/**
+ * semanticId: optional canonical id used for deduping aliases/synonyms in the library.
+ * display: optional OS-specific legend overrides (presentation only; encoding unchanged).
+ */
 interface BaseEntry {
   id: string;
+  semanticId?: string;
   label: string;
+  short?: string;
   group: string;
+  level?: 'common' | 'advanced' | 'danger';
   aliases?: string[];
   requires?: string[];
   type: KeycodeEntryType;
+  display?: DisplayOverrides;
+  tags?: string[];
 }
 
 interface BasicEntry extends BaseEntry {
@@ -58,6 +68,20 @@ export interface DecodedKeycode {
   requires?: string[];
 }
 
+export interface DisplayLegend {
+  label: string;
+  short?: string;
+  symbol?: string;
+}
+
+export interface DisplayOverrides {
+  default?: DisplayLegend;
+  mac?: DisplayLegend;
+  win?: DisplayLegend;
+  linux?: DisplayLegend;
+}
+
+const catalogData = getActiveCatalog();
 const entries: KeycodeEntry[] = catalogData.keycodes as KeycodeEntry[];
 export const keycodeEntries: ReadonlyArray<KeycodeEntry> = entries;
 const modMap: Record<string, number> = (catalogData as any).mods ?? {};
@@ -109,11 +133,26 @@ function findEntry(action: string): KeycodeEntry | undefined {
   return entriesById.get(action) ?? entriesByAlias.get(action);
 }
 
+export function findKeycodeEntry(idOrAlias: string): KeycodeEntry | undefined {
+  return findEntry(idOrAlias);
+}
+
+export function resolveLegend(entry: KeycodeEntry, osProfile: OsProfile = getOsProfile()): DisplayLegend {
+  const display = entry.display;
+  const specific = (display && (display as any)[osProfile]) as DisplayLegend | undefined;
+  const fallback = display?.default;
+  const label = specific?.label ?? fallback?.label ?? entry.label;
+  const short = specific?.short ?? fallback?.short ?? entry.short;
+  const symbol = specific?.symbol ?? fallback?.symbol;
+  return { label, short, symbol };
+}
+
 function makeLabel(entry: KeycodeEntry, params?: KeycodeParams): KeycodeLabel {
+  const legend = resolveLegend(entry);
   if (entry.type === 'basic' && entry.group === 'number') {
     const shifted = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
     const idx = (entry as BasicEntry).code - 0x1e;
-    const primary = shifted[idx] ?? entry.label;
+    const primary = shifted[idx] ?? legend.label;
     const secondary = `${(idx + 1) % 10}`;
     return { primary, secondary };
   }
@@ -122,7 +161,7 @@ function makeLabel(entry: KeycodeEntry, params?: KeycodeParams): KeycodeLabel {
       const layerNum = params?.layer ?? 0;
       return {
         primary: `Layer ${layerNum}`,
-        secondary: entry.label
+        secondary: legend.label
       };
     }
     case 'layerTap': {
@@ -133,9 +172,9 @@ function makeLabel(entry: KeycodeEntry, params?: KeycodeParams): KeycodeLabel {
       };
     }
     case 'modTap':
-      return { primary: `${entry.label}(${params?.mod ?? ''})`, secondary: params?.tap };
+      return { primary: `${legend.label}(${params?.mod ?? ''})`, secondary: params?.tap };
     default:
-      return { primary: entry.label };
+      return { primary: legend.label };
   }
 }
 
@@ -234,7 +273,7 @@ export function decodeKeycode(code: number): DecodedKeycode | null {
   if (modTap) {
     const modValue = (code >> 8) & 0xff;
     const tapCode = code & 0xff;
-    const modId = Object.entries(catalogData.mods).find(([_id, bits]) => bits === modValue)?.[0];
+    const modId = Object.entries(catalogData.mods ?? {}).find(([_id, bits]) => bits === modValue)?.[0];
     const tapEntry = entries.find(e => e.type === 'basic' && (e as BasicEntry).code === tapCode);
     return {
       id: modTap.id,
