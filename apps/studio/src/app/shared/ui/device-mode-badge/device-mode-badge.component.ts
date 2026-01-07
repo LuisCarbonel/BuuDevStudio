@@ -6,57 +6,45 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="mode-badge" [ngClass]="'mode-' + mode">
+    <span class="studio-chip mode-badge" [ngClass]="'mode-' + mode">
       <span class="mode-icon">{{ icon }}</span>
       <span class="mode-label">{{ label }}</span>
-    </div>
+    </span>
   `,
   styles: [`
     .mode-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: var(--space-2) var(--space-3);
-      border-radius: var(--radius-md);
-      font-size: var(--text-xs);
+      height: var(--chip-height);
+      padding: 0 var(--chip-padding-x);
+      gap: var(--chip-gap);
+      font-size: var(--ctrl-font-size);
       font-weight: 600;
-      letter-spacing: 0.025em;
-      text-transform: uppercase;
+      letter-spacing: 0.02em;
       transition: all 0.2s ease;
     }
 
     .mode-studio-hid {
-      background: linear-gradient(135deg, 
-        color-mix(in srgb, var(--accent) 20%, transparent),
-        color-mix(in srgb, var(--accent) 10%, transparent)
-      );
+      background: color-mix(in srgb, var(--accent) 15%, transparent);
       color: var(--accent);
       border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
-      box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 15%, transparent);
     }
 
     .mode-via-direct {
-      background: linear-gradient(135deg,
-        color-mix(in srgb, var(--accent-success) 20%, transparent),
-        color-mix(in srgb, var(--accent-success) 10%, transparent)
-      );
+      background: color-mix(in srgb, var(--accent-success) 15%, transparent);
       color: var(--accent-success);
       border: 1px solid color-mix(in srgb, var(--accent-success) 30%, transparent);
-      box-shadow: 0 0 12px color-mix(in srgb, var(--accent-success) 15%, transparent);
     }
 
     .mode-read-only {
-      background: linear-gradient(135deg,
-        color-mix(in srgb, var(--text-muted) 20%, transparent),
-        color-mix(in srgb, var(--text-muted) 10%, transparent)
-      );
+      background: color-mix(in srgb, var(--text-muted) 12%, transparent);
       color: var(--text-muted);
       border: 1px solid color-mix(in srgb, var(--text-muted) 30%, transparent);
     }
 
     .mode-icon {
-      font-size: 1.1em;
+      font-size: 1em;
       line-height: 1;
+      display: inline-flex;
+      align-items: center;
     }
 
     .mode-label {
