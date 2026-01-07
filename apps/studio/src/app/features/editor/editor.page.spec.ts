@@ -2,28 +2,32 @@ import { of } from 'rxjs';
 import { EditorPage } from './editor.page';
 
 class MockStudioStateService {
-  selectedSequance = { id: 's-1', name: 'Sequance 1' };
-  selectedSequanceId: string | null = 's-1';
+  selectedSequence = { id: 's-1', name: 'Sequence 1' };
+  selectedSequenceId: string | null = 's-1';
   selectedProfileId = 'p-1';
   selectedTargetId: string | null = null;
   selectedProfile = { id: 'p-1', name: 'Default' } as unknown;
   activeLayer = 1;
   selectedBinding = null;
-  sequancesForProfile = [this.selectedSequance];
+  libraryMode: 'blocks' | 'sequences' = 'blocks';
+  librarySearch = '';
+  sequencesForProfile = [this.selectedSequence];
   assignedTargetIds: string[] = [];
   currentSteps = [];
   profiles = [this.selectedProfile] as unknown[];
-  sequances = [this.selectedSequance];
+  sequences = [this.selectedSequence];
   targets = [];
 
   setTarget = jasmine.createSpy('setTarget').and.callFake((id: string) => {
     this.selectedTargetId = id;
   });
-  selectSequance = jasmine.createSpy('selectSequance');
+  selectSequence = jasmine.createSpy('selectSequence');
   selectProfile = jasmine.createSpy('selectProfile');
   selectStep = jasmine.createSpy('selectStep');
+  setLibraryMode = jasmine.createSpy('setLibraryMode');
+  setLibrarySearch = jasmine.createSpy('setLibrarySearch');
 
-  assignSequanceToTarget = jasmine.createSpy('assignSequanceToTarget');
+  assignSequenceToTarget = jasmine.createSpy('assignSequenceToTarget');
   assignSimpleAction = jasmine.createSpy('assignSimpleAction');
   assignInlineSequence = jasmine.createSpy('assignInlineSequence');
   assignProgram = jasmine.createSpy('assignProgram');
@@ -57,14 +61,14 @@ describe('EditorPage (logic only)', () => {
     ]);
   });
 
-  it('assigns sequance references when a sequance is selected', () => {
-    component.bindingType = 'sequanceRef';
-    component.bindingSequanceId = 's-custom';
+  it('assigns sequence references when a sequence is selected', () => {
+    component.bindingType = 'sequenceRef';
+    component.bindingSequenceId = 's-custom';
     studio.selectedTargetId = 'key-01';
 
-    component.assignSelectedSequanceToTarget();
+    component.assignSelectedSequenceToTarget();
 
-    expect(studio.assignSequanceToTarget).toHaveBeenCalledWith('s-custom');
+    expect(studio.assignSequenceToTarget).toHaveBeenCalledWith('s-custom');
   });
 
   it('requires simple actions to have a command before assigning', () => {
@@ -73,11 +77,11 @@ describe('EditorPage (logic only)', () => {
     component.bindingAction = '';
     component.bindingActionArg = 'KC_A';
 
-    component.assignSelectedSequanceToTarget();
+    component.assignSelectedSequenceToTarget();
     expect(studio.assignSimpleAction).not.toHaveBeenCalled();
 
     component.bindingAction = '  tap KC_B  ';
-    component.assignSelectedSequanceToTarget();
+    component.assignSelectedSequenceToTarget();
 
     expect(studio.assignSimpleAction).toHaveBeenCalledWith('tap KC_B', 'KC_A');
   });
@@ -87,11 +91,11 @@ describe('EditorPage (logic only)', () => {
     studio.selectedTargetId = 'key-03';
     component.bindingInlineText = '';
 
-    component.assignSelectedSequanceToTarget();
+    component.assignSelectedSequenceToTarget();
     expect(studio.assignInlineSequence).not.toHaveBeenCalled();
 
     component.bindingInlineText = 'tap KC_C\nwait 40';
-    component.assignSelectedSequanceToTarget();
+    component.assignSelectedSequenceToTarget();
 
     expect(studio.assignInlineSequence).toHaveBeenCalledWith([
       { id: 1, name: 'tap KC_C', op: 'TAP', arg: 'KC_C' },
