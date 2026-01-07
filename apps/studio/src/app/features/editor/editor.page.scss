@@ -15,7 +15,7 @@
 
 .wb-body {
   display: grid;
-  grid-template-columns: 480px 1fr 380px;
+  grid-template-columns: var(--editor-library-width) 1fr var(--editor-inspector-width);
   gap: 14px;
   flex: 1;
   min-height: 0;
@@ -23,7 +23,7 @@
 }
 
 .wb-body.library-closed {
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr var(--editor-inspector-width);
 }
 
 .wb-body > * {
