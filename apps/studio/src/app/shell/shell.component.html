@@ -1,0 +1,89 @@
+<nz-layout class="shell">
+  <nz-sider
+    nzTheme="light"
+    [nzWidth]="collapsed() ? 72 : 220"
+    [nzCollapsed]="collapsed()"
+    [nzCollapsible]="false"
+    [ngClass]="{ collapsed: collapsed() }"
+    class="shell__sider"
+    (mouseenter)="handleHover(true)"
+    (mouseleave)="handleHover(false)"
+  >
+    <div class="sider-inner">
+      <div class="brand">
+        <div class="brand-mark">{{ collapsed() ? 'BD' : 'BuuDevStudio' }}</div>
+        <button
+          nz-button
+          nzType="text"
+          nzShape="circle"
+          nzSize="small"
+          class="pin-btn"
+          [nz-tooltip]="pinned() ? 'Collapse to rail' : 'Pin open'"
+          nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
+          (click)="togglePinned()"
+        >
+          <span nz-icon nzType="pushpin" [nzTheme]="pinned() ? 'fill' : 'outline'"></span>
+        </button>
+      </div>
+
+      <ul nz-menu nzMode="inline" [nzInlineCollapsed]="collapsed()" class="nav-main">
+        @for (item of navMain; track item.key) {
+          <li
+            nz-menu-item
+            [nzDisabled]="item.disabled"
+            [nzSelected]="activeKey() === item.key"
+            [routerLink]="item.path"
+            nz-tooltip
+            [nzTooltipTitle]="collapsed() ? item.label : null"
+            [nzTooltipPlacement]="'right'"
+            nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
+          >
+            <span nz-icon [nzType]="item.icon" nzTheme="outline"></span>
+            @if (!collapsed()) {
+              <div class="nav-label">{{ item.label }}</div>
+              <div class="nav-desc">{{ item.description }}</div>
+            }
+          </li>
+        }
+      </ul>
+
+      <div class="sider-footer">
+        <ul nz-menu nzMode="inline" [nzInlineCollapsed]="collapsed()">
+          @for (item of navSettings; track item.key) {
+            <li
+              nz-menu-item
+              [nzDisabled]="item.disabled"
+              [nzSelected]="activeKey() === item.key"
+              [routerLink]="item.path"
+              nz-tooltip
+              [nzTooltipTitle]="collapsed() ? item.label : null"
+              [nzTooltipPlacement]="'right'"
+              nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
+            >
+              <span nz-icon [nzType]="item.icon" nzTheme="outline"></span>
+              @if (!collapsed()) {
+                <div class="nav-label">{{ item.label }}</div>
+                <div class="nav-desc">{{ item.description }}</div>
+              }
+            </li>
+          }
+        </ul>
+      </div>
+    </div>
+  </nz-sider>
+
+  <nz-layout>
+    <!-- <nz-header class="shell__topbar">
+      <div class="topbar-left">
+        <div class="brand brand--inline">Studio</div>
+      </div>
+      <div class="topbar-actions"></div>
+    </nz-header> -->
+
+    <nz-content class="shell__content">
+      <div class="shell__page">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
