@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeviceService } from '../../services/device.service';
+import { DeviceService } from '@core/services/device.service';
 
 @Component({
   selector: 'app-settings-page',
@@ -14,7 +14,7 @@ export class SettingsPage {
 
   get sync() {
     const stats = this.device.getSyncStats();
-    return { ...stats, deviceId: this.device['deviceId'] ?? null };
+    return { ...stats, deviceId: this.device.currentDeviceId ?? null };
   }
 
   refresh() {
