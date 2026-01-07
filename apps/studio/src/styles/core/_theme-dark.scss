@@ -1,9 +1,22 @@
 .theme-dark {
   color-scheme: dark;
 
-  --surface-shell: color-mix(in srgb, var(--color-gray-900) 85%, #000000);
-  --surface-panel: color-mix(in srgb, var(--color-gray-900) 70%, #000000);
-  --surface-muted: color-mix(in srgb, var(--color-gray-900) 55%, #000000);
+  --surface-shell: color-mix(in srgb, var(--color-gray-900) 60%, #000000);
+  --surface-panel: color-mix(in srgb, var(--color-gray-900) 78%, #000000);
+  --surface-muted: color-mix(in srgb, var(--color-gray-900) 66%, #000000);
+  --surface-topbar: color-mix(in srgb, var(--surface-panel) 78%, var(--surface-shell));
+  --surface-panel-2: color-mix(in srgb, var(--surface-panel) 68%, var(--surface-muted));
+  --surface-inset: color-mix(in srgb, var(--surface-shell) 82%, var(--surface-panel));
+  --surface-canvas: color-mix(in srgb, var(--surface-shell) 68%, var(--surface-panel));
+  --surface-canvas-inset: color-mix(in srgb, var(--surface-panel) 62%, var(--surface-muted));
+  --surface-canvas-border: color-mix(in srgb, var(--accent) 12%, var(--border-muted));
+  --surface-canvas-glow: color-mix(in srgb, var(--accent) 10%, transparent);
+  --surface-canvas-gradient: radial-gradient(140% 140% at 50% 30%, var(--surface-canvas-glow) 0%, transparent 45%),
+                             linear-gradient(180deg, color-mix(in srgb, var(--surface-canvas) 92%, var(--surface-shell)) 0%, var(--surface-shell) 100%);
+  --surface-canvas-shadow: 0 4px 24px color-mix(in srgb, var(--surface-shell) 60%, transparent);
+  --surface-canvas-inset-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface-canvas-glow) 60%, transparent);
+  --surface-canvas-placeholder: color-mix(in srgb, var(--surface-panel) 60%, transparent);
+  --surface-canvas-placeholder-border: color-mix(in srgb, var(--border-muted) 60%, transparent);
   --surface-0: var(--surface-shell);
   --surface-1: var(--surface-panel);
   --surface-2: var(--surface-muted);

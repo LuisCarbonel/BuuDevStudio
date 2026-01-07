@@ -1,0 +1,32 @@
+.studio-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.studio-field + .studio-field {
+  margin-top: var(--space-4);
+}
+
+.studio-kv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.studio-kv__label {
+  color: var(--text-subtle);
+}
+
+.studio-kv__value {
+  color: var(--text-strong);
+  text-align: right;
+}
+
+.studio-help {
+  margin: 0;
+  font-size: var(--ctrl-font-size);
+  color: var(--text-subtle);
+  line-height: 1.4;
+}

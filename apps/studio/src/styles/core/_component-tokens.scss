@@ -15,7 +15,7 @@
 
   --editor-library-width: 480px;
   --editor-inspector-width: 380px;
-  --recorder-side-width: 320px;
+  --recorder-side-width: 480px;
 
   --editor-library-min-width: 320px;
   --editor-inspector-min-width: 320px;
@@ -36,6 +36,14 @@
   --overlay-menu-min-width: 280px;
   --overlay-menu-max-height: 420px;
   --overlay-menu-padding-y: var(--space-2);
+
+  //Device layout scale
+  --device-fit-padding: 24px;
+  --device-unitpx-min: 20;
+  --device-unitpx-max: 60;
+
+  --scroll-gutter-mode: stable;
+  --scroll-overscroll: contain;
 }
 
 .theme-dark {

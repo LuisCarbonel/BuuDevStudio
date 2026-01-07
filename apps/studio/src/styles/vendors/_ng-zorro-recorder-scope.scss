@@ -1,24 +1,4 @@
 .studio-scope--recorder {
-  app-editor-library {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    overflow: hidden;
-
-    .library {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    .library-content {
-      flex: 1;
-      overflow-y: auto;
-      min-height: 0;
-    }
-  }
-
   app-recorder-sequence-list {
     display: flex;
     flex-direction: column;

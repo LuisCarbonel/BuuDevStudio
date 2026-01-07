@@ -7,6 +7,19 @@
   --surface-panel: var(--bg-panel);
   --surface-muted: var(--bg-elevated);
   --surface-strong: var(--bg-active);
+  --surface-topbar: color-mix(in srgb, var(--surface-panel) 80%, var(--surface-shell));
+  --surface-panel-2: color-mix(in srgb, var(--surface-panel) 88%, var(--surface-muted));
+  --surface-inset: color-mix(in srgb, var(--surface-panel) 74%, var(--surface-muted));
+  --surface-canvas: color-mix(in srgb, var(--surface-shell) 88%, var(--surface-panel));
+  --surface-canvas-inset: color-mix(in srgb, var(--surface-panel) 82%, var(--surface-muted));
+  --surface-canvas-border: color-mix(in srgb, var(--accent) 12%, var(--border-muted));
+  --surface-canvas-glow: color-mix(in srgb, var(--accent) 8%, transparent);
+  --surface-canvas-gradient: radial-gradient(140% 140% at 50% 30%, var(--surface-canvas-glow) 0%, transparent 45%),
+                             linear-gradient(180deg, var(--surface-canvas) 0%, var(--surface-shell) 100%);
+  --surface-canvas-shadow: 0 4px 24px color-mix(in srgb, var(--surface-shell) 55%, transparent);
+  --surface-canvas-inset-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface-canvas-glow) 45%, transparent);
+  --surface-canvas-placeholder: color-mix(in srgb, var(--surface-panel) 55%, transparent);
+  --surface-canvas-placeholder-border: color-mix(in srgb, var(--border-muted) 60%, transparent);
   --surface-0: var(--surface-shell);
   --surface-1: var(--surface-panel);
   --surface-2: var(--surface-muted);
@@ -50,6 +63,19 @@
   --surface-shell: var(--color-gray-50);
   --surface-panel: var(--color-white);
   --surface-muted: color-mix(in srgb, var(--color-gray-50) 60%, var(--color-white));
+  --surface-topbar: color-mix(in srgb, var(--surface-panel) 85%, var(--surface-muted));
+  --surface-panel-2: color-mix(in srgb, var(--surface-panel) 88%, var(--surface-muted));
+  --surface-inset: color-mix(in srgb, var(--surface-panel) 72%, var(--surface-muted));
+  --surface-canvas: color-mix(in srgb, var(--surface-shell) 88%, var(--surface-panel));
+  --surface-canvas-inset: color-mix(in srgb, var(--surface-panel) 82%, var(--surface-muted));
+  --surface-canvas-border: color-mix(in srgb, var(--accent) 12%, var(--border-muted));
+  --surface-canvas-glow: color-mix(in srgb, var(--accent) 8%, transparent);
+  --surface-canvas-gradient: radial-gradient(140% 140% at 50% 30%, var(--surface-canvas-glow) 0%, transparent 45%),
+                             linear-gradient(180deg, var(--surface-canvas) 0%, var(--surface-shell) 100%);
+  --surface-canvas-shadow: 0 4px 24px color-mix(in srgb, var(--surface-shell) 45%, transparent);
+  --surface-canvas-inset-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface-canvas-glow) 40%, transparent);
+  --surface-canvas-placeholder: color-mix(in srgb, var(--surface-panel) 55%, transparent);
+  --surface-canvas-placeholder-border: color-mix(in srgb, var(--border-muted) 60%, transparent);
   --surface-0: var(--surface-shell);
   --surface-1: var(--surface-panel);
   --surface-2: var(--surface-muted);

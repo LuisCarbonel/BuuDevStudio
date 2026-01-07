@@ -2,9 +2,9 @@
 :root .theme-light,
 .theme-light,
 .theme-dark {
-  --overlay-bg: var(--surface-3);
-  --overlay-border: var(--border-strong);
-  --overlay-shadow: var(--shadow-2);
+  --overlay-bg: var(--surface-panel-2);
+  --overlay-border: var(--border-muted);
+  --overlay-shadow: var(--shadow-elevated);
   --overlay-text: var(--text-strong);
 }
 
@@ -30,6 +30,19 @@
   margin: 2px 0;
   padding: var(--space-2) var(--space-3);
   transition: background var(--transition-fast);
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  min-height: var(--ctrl-height-md);
+  line-height: var(--ctrl-line-height);
+}
+
+.studio-overlay--menu .ant-dropdown-menu-submenu-title {
+  color: var(--text-strong);
+  display: flex;
+  align-items: center;
+  min-height: var(--ctrl-height-md);
+  line-height: var(--ctrl-line-height);
 }
 
 .studio-overlay--menu li {
@@ -43,6 +56,12 @@
 
 .studio-overlay--menu .ant-dropdown-menu-item:hover {
   background: color-mix(in srgb, var(--overlay-border) 18%, transparent);
+}
+
+.studio-overlay--menu .ant-dropdown-menu-item-disabled,
+.studio-overlay--menu .ant-dropdown-menu-item-disabled:hover {
+  color: var(--text-muted);
+  background: transparent;
 }
 
 .studio-overlay .ant-tooltip-inner,

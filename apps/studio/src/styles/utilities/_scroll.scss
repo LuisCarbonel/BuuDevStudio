@@ -1,0 +1,33 @@
+.studio-scroll {
+  overflow: auto;
+  min-height: 0;
+  min-width: 0;
+  overscroll-behavior: var(--scroll-overscroll);
+}
+
+.studio-scroll--y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+  min-width: 0;
+  overscroll-behavior: var(--scroll-overscroll);
+}
+
+.studio-scroll--x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 0;
+  min-width: 0;
+  overscroll-behavior: var(--scroll-overscroll);
+}
+
+@supports (scrollbar-gutter: stable) {
+  .studio-scroll {
+    scrollbar-gutter: var(--scroll-gutter-mode);
+  }
+
+  .studio-scroll--y,
+  .studio-scroll--x {
+    scrollbar-gutter: var(--scroll-gutter-mode);
+  }
+}

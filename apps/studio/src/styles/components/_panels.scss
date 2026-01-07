@@ -8,6 +8,7 @@
 }
 
 .studio-panel__header {
+  background: var(--panel-header-bg);
   min-height: var(--panel-header-height);
   padding: var(--space-3) var(--panel-header-padding-x);
   display: flex;
