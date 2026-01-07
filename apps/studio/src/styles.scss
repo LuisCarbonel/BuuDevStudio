@@ -1,9 +1,61 @@
-@import "ng-zorro-antd/ng-zorro-antd.min.css";
+@use "styles/abstracts/primitives" as *;
+@use "styles/abstracts/motion" as *;
+@use "styles/abstracts/z-index" as *;
+@use "styles/core/theme-light" as *;
+@use "styles/core/theme-dark" as *;
+@use "styles/core/component-tokens" as *;
+@use "styles/core/device-view-tokens" as *;
+@use "styles/vendors/ng-zorro-bridge" as *;
+@use "styles/vendors/ng-zorro-overrides" as *;
+@use "styles/vendors/ng-zorro-recorder-scope" as *;
+@use "styles/overrides/overlays" as *;
+@use "styles/overrides/cdk-dragdrop" as *;
+@use "styles/components/controls" as *;
+@use "styles/components/pages" as *;
+@use "styles/library-items";
 
-/* app fill the Tauri window */
-html, body {
+/* App fill the Tauri window */
+html,
+body {
   height: 100%;
   margin: 0;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  background: var(--bg-base);
+  color: var(--text-primary);
+}
+
+/* Dark mode scrollbars */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-base);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 6px;
+  border: 2px solid var(--bg-base);
+  transition: background var(--transition-fast);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--bg-base);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) var(--bg-base);
 }
 
 app-root {
@@ -11,34 +63,7 @@ app-root {
   height: 100%;
 }
 
-/* Toast styling */
-.ant-message {
-  top: auto !important;
-  bottom: 16px !important;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.ant-message-notice {
-  padding: 0;
-}
-
-.ant-message-notice-content {
-  width: 100%;
-  min-height: 65px;
-  margin: 0 auto;
-  border-radius: 6px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
-  pointer-events: auto;
-}
-
-.ant-message-custom-content > .anticon {
-  display: none;
-}
-
+/* App-specific snackbar patterns */
 .app-snackbar {
   display: flex;
   justify-content: center;
@@ -48,7 +73,7 @@ app-root {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: var(--text-on-accent);
   font-weight: 700;
   text-align: center;
   cursor: pointer;
@@ -63,82 +88,9 @@ app-root {
 }
 
 .app-snackbar-error .ant-message-notice-content {
-  background: #b42318;
+  background: var(--accent-danger);
 }
 
 .app-snackbar-success .ant-message-notice-content {
-  background: #0f9d58;
-}
-
-/* CDK drag/drop visuals */
-.cdk-drag-preview {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  border-radius: 10px;
-  border: 1px solid #e0e7ff;
-  background: #fff;
-  color: #111;
-  padding: 6px 10px;
-  font-weight: 600;
-  opacity: 0.95;
-  cursor: grabbing;
-  outline: none;
-  overflow: hidden;
-  user-select: none;
-  -webkit-appearance: none;
-  appearance: none;
-  min-width: 220px;
-  width: 240px;
-  box-sizing: border-box;
-}
-
-.cdk-drag-placeholder {
-  opacity: 0.35;
-  border: 1px dashed #c6d4f5;
-  border-radius: 10px;
-  background: #e8f1ff;
-  box-sizing: border-box;
-}
-
-.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
-  transition: transform 120ms ease, box-shadow 120ms ease;
-  opacity: 0.7;
-}
-
-.cdk-drag.cdk-drag-dragging {
-  cursor: grabbing !important;
-  user-select: none;
-}
-
-.cdk-drag-preview * {
-  pointer-events: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.cdk-drag-dragging *,
-.cdk-drag-dragging {
-  cursor: grabbing !important;
-}
-
-/* Make any drag handle/dragged item show grab on hover by default */
-.cdk-drag {
-  cursor: grab;
-}
-
-.cdk-drag:active {
-  cursor: grabbing;
-}
-
-.cdk-drag-handle {
-  cursor: grab;
-}
-
-.cdk-drag-handle:active {
-  cursor: grabbing;
-}
-
-/* Root override for Tauri/WebView to force grabbing during drag */
-html.dragging,
-html.dragging * {
-  cursor: grabbing !important;
+  background: var(--accent-success);
 }
