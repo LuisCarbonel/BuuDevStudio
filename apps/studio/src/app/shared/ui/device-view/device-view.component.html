@@ -1,0 +1,288 @@
+<div
+  class="device-view-shell"
+  [ngStyle]="boundsStyle(layout?.bounds)"
+  (pointerdown)="onBackgroundClick($event)"
+  (pointerup)="$event.stopPropagation()"
+>
+  <svg
+    class="device-view-svg"
+    #svgRoot
+    [attr.viewBox]="viewBox"
+    role="img"
+    aria-label="Device layout"
+    (mouseleave)="onHover(null)"
+    (pointerdown)="$event.stopPropagation()"
+  >
+    @if (layout; as l) {
+      <rect
+        class="svg-bg-hit"
+        [attr.x]="l.bounds.minX - padding"
+        [attr.y]="l.bounds.minY - padding"
+        [attr.width]="l.bounds.width + padding * 2"
+        [attr.height]="l.bounds.height + padding * 2"
+        fill="transparent"
+        pointer-events="all"
+        (pointerdown)="onBackgroundClick($event)"
+      ></rect>
+    }
+
+    <g class="keys">
+      @if (layout) {
+        @for (key of layout.keys; track key.elementId) {
+          <g
+            class="key"
+            [ngClass]="keyClasses(key)"
+            (pointerdown)="onSelect(key.elementId); $event.stopPropagation()"
+            (mouseenter)="onHover(key.elementId)"
+          >
+            @if (topLabelForKey(key); as topLabel) {
+              <text
+                class="key-top-label"
+                [attr.x]="renderRect(key).x + renderRect(key).w / 2"
+                [attr.y]="renderRect(key).y - 0.18"
+                dominant-baseline="baseline"
+                text-anchor="middle"
+              >
+                {{ topLabel }}
+              </text>
+            }
+            <rect
+              class="key-cap"
+              [attr.x]="renderRect(key).x"
+              [attr.y]="renderRect(key).y"
+              [attr.width]="renderRect(key).w"
+              [attr.height]="renderRect(key).h"
+              [attr.rx]="0.22"
+            ></rect>
+            @if (keycodeLabels[key.elementId]; as kc) {
+              <text
+                class="key-label-primary"
+                [attr.x]="renderRect(key).x + renderRect(key).w / 2"
+                [attr.y]="renderRect(key).y + renderRect(key).h / 2 - (kc.secondary ? 0.08 : 0)"
+                dominant-baseline="middle"
+                text-anchor="middle"
+              >
+                {{ kc.primary }}
+              </text>
+            } @else {
+              <text
+                class="key-label-primary"
+                [attr.x]="renderRect(key).x + renderRect(key).w / 2"
+                [attr.y]="renderRect(key).y + renderRect(key).h / 2"
+                dominant-baseline="middle"
+                text-anchor="middle"
+              >
+                {{ key.rawLabel || key.elementId }}
+              </text>
+            }
+            @if (keycodeLabels[key.elementId]?.secondary; as secondary) {
+              <text
+                class="key-label-secondary"
+                [attr.x]="renderRect(key).x + renderRect(key).w / 2"
+                [attr.y]="renderRect(key).y + renderRect(key).h / 2 + 0.22"
+                dominant-baseline="middle"
+                text-anchor="middle"
+              >
+                {{ secondary }}
+              </text>
+            }
+            @if (showDebugLabels) {
+              <text
+                class="key-label-debug"
+                [attr.x]="renderRect(key).x + 0.08"
+                [attr.y]="renderRect(key).y + 0.14"
+                dominant-baseline="hanging"
+                text-anchor="start"
+              >
+                {{ key.matrixId || key.elementId }}
+              </text>
+            }
+            @if (bindingIndicators[key.elementId]; as badge) {
+              <title>{{ badge.label }}</title>
+            }
+          </g>
+        }
+      }
+    </g>
+
+    <!-- Controls -->
+    <g class="controls">
+      @if (layout) {
+        @for (ctrl of layout.controls; track ctrl.elementId) {
+          <g
+            class="control"
+            [ngClass]="controlClasses(ctrl)"
+            [attr.data-id]="ctrl.elementId"
+            (pointerdown)="onSelectControl($event, ctrl); $event.stopPropagation()"
+            (mouseenter)="onHover(ctrl.elementId)"
+          >
+            @if (topLabelForControl(ctrl); as topLabel) {
+              <text
+                class="control-top-label"
+                [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                [attr.y]="renderRect(ctrl).y - 0.18"
+                dominant-baseline="baseline"
+                text-anchor="middle"
+              >
+                {{ topLabel }}
+              </text>
+            }
+            <rect
+              [attr.x]="renderRect(ctrl).x"
+              [attr.y]="renderRect(ctrl).y"
+              [attr.width]="renderRect(ctrl).w"
+              [attr.height]="renderRect(ctrl).h"
+              class="control-body"
+              rx="0.14"
+            ></rect>
+            @if (encoderLabels[ctrl.elementId]; as enc) {
+              @if (encoderRole(ctrl)) {
+                <text
+                  class="control-label-encoder control-label-encoder--single"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ encoderRoleLabel(ctrl, enc) }}
+                </text>
+              } @else {
+                <text
+                  class="control-label-encoder"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2 - 0.22"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ encoderLabelText(enc.ccw) }}
+                </text>
+                <text
+                  class="control-label-encoder control-label-encoder--press"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ encoderLabelText(enc.press) }}
+                </text>
+                <text
+                  class="control-label-encoder"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2 + 0.22"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ encoderLabelText(enc.cw) }}
+                </text>
+              }
+            } @else {
+              @if (keycodeLabels[ctrl.elementId]; as kc) {
+                <text
+                  class="control-label-primary"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2 - (kc.secondary ? 0.08 : 0)"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ kc.primary }}
+                </text>
+              } @else {
+                <text
+                  class="control-label-primary"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ controlLabel(ctrl) }}
+                </text>
+              }
+              @if (keycodeLabels[ctrl.elementId]?.secondary; as secondary) {
+                <text
+                  class="control-label-secondary"
+                  [attr.x]="renderRect(ctrl).x + renderRect(ctrl).w / 2"
+                  [attr.y]="renderRect(ctrl).y + renderRect(ctrl).h / 2 + 0.22"
+                  dominant-baseline="middle"
+                  text-anchor="middle"
+                >
+                  {{ secondary }}
+                </text>
+              }
+            }
+            @if (showDebugLabels) {
+              <text
+                class="control-label-debug"
+                [attr.x]="renderRect(ctrl).x + 0.08"
+                [attr.y]="renderRect(ctrl).y + 0.14"
+                dominant-baseline="hanging"
+                text-anchor="start"
+              >
+                {{ ctrl.elementId }}
+              </text>
+            }
+            @if (bindingIndicators[ctrl.elementId]; as badge) {
+              <title>{{ badge.label }}</title>
+            }
+          </g>
+        }
+      }
+    </g>
+  </svg>
+
+  @if (layout && dropEnabled && dropConnectedTo.length) {
+    <div
+      class="drop-overlay"
+      aria-hidden="true"
+    >
+      @for (key of layout.keys; track key.elementId) {
+        <div
+          class="drop-hit"
+          [ngStyle]="dropStyle(key)"
+          appDropTarget
+          [appDropTarget]="key.elementId"
+          [appDropTargetConnectedTo]="dropConnectedTo"
+          [appDropTargetSortingDisabled]="true"
+          (click)="onSelect(key.elementId)"
+          (mouseenter)="onHover(key.elementId)"
+          (appDropTargetAssign)="onAssign(key.elementId, $event)"
+        ></div>
+      }
+      @for (ctrl of layout.controls; track ctrl.elementId) {
+        @if (encoderDropTargets(ctrl).length) {
+          @for (target of encoderDropTargets(ctrl); track target.id) {
+            <div
+              class="drop-hit"
+              [ngClass]="{ 'drop-hit--active': hoverTargetId === target.id }"
+              [ngStyle]="target.style"
+              appDropTarget
+              [appDropTarget]="target.id"
+              [appDropTargetConnectedTo]="dropConnectedTo"
+              [appDropTargetSortingDisabled]="true"
+              (click)="onSelect(target.id)"
+              (mouseenter)="onHover(target.id)"
+              (appDropTargetAssign)="onAssign(target.id, $event)"
+            >
+              @if (hoverTargetId === target.id) {
+                @if (encoderHoverLabel(target.id); as label) {
+                  <div class="drop-hit-label">{{ label }}</div>
+                }
+              }
+            </div>
+          }
+        } @else {
+          <div
+            class="drop-hit"
+            [ngStyle]="dropStyle(ctrl)"
+            appDropTarget
+            [appDropTarget]="ctrl.elementId"
+            [appDropTargetConnectedTo]="dropConnectedTo"
+            [appDropTargetSortingDisabled]="true"
+            (click)="onSelect(ctrl.elementId)"
+            (mouseenter)="onHover(ctrl.elementId)"
+            (appDropTargetAssign)="onAssign(ctrl.elementId, $event)"
+          ></div>
+        }
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,303 @@
+/* Canvas / device plate styling */
+.device-view-shell {
+  --dv-label-size: 0.34px;
+  --dv-label-weight: 600;
+  --dv-label-secondary-size: 0.20px;
+  --dv-label-secondary-weight: 600;
+  --dv-label-color: var(--text-strong);
+  --dv-label-secondary-color: var(--text-subtle);
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-sizing: border-box;
+  padding: 14px;
+  background: var(--dv-plate-bg);
+  border-radius: 18px;
+  box-shadow: var(--dv-plate-shadow), var(--dv-plate-ambient);
+  border: 1px solid var(--dv-plate-border);
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 14px;
+    background: radial-gradient(circle at 50% 30%, var(--dv-plate-ring), transparent 55%);
+    pointer-events: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 80% at 50% 110%, var(--dv-plate-glow), transparent 60%);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+}
+
+.device-view-svg {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: visible;
+}
+
+.key,
+.control {
+  transition: transform var(--transition-base);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.key {
+  .key-cap {
+    fill: var(--dv-key-fill);
+    stroke: var(--dv-key-stroke);
+    stroke-width: 0.05;
+    paint-order: stroke fill;
+    filter: var(--dv-key-shadow);
+    transition: fill var(--transition-base),
+                stroke var(--transition-base),
+                stroke-width var(--transition-base),
+                filter var(--transition-base),
+                transform var(--transition-base);
+  }
+
+  &.bound .key-cap {
+    fill: var(--dv-key-fill-bound);
+    stroke: var(--dv-key-stroke-bound);
+  }
+
+  &.hovered {
+    transform: translateY(-0.04px) scale(1.01);
+    will-change: transform;
+
+    .key-cap {
+      stroke: var(--dv-key-stroke-hover);
+      stroke-width: 0.08;
+      filter: var(--dv-key-shadow-hover);
+    }
+  }
+
+  &.selected {
+    transform: translateY(-0.06px) scale(1.015);
+    will-change: transform;
+
+    .key-cap {
+      fill: var(--dv-key-fill-selected);
+      stroke: var(--dv-key-stroke-selected);
+      stroke-width: 0.09;
+      filter: var(--dv-key-shadow-selected);
+      will-change: fill, stroke, filter;
+    }
+  }
+
+  .key-label-primary {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: var(--dv-label-size);
+    font-weight: var(--dv-label-weight);
+    font-variation-settings: "wght" var(--dv-label-weight);
+    font-synthesis: none;
+    fill: var(--dv-label-color);
+    pointer-events: none;
+    letter-spacing: -0.01em;
+  }
+
+  .key-label-secondary {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: var(--dv-label-secondary-size);
+    font-weight: var(--dv-label-secondary-weight);
+    font-variation-settings: "wght" var(--dv-label-secondary-weight);
+    font-synthesis: none;
+    fill: var(--dv-label-secondary-color);
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  .key-label-debug {
+    font-family: ui-monospace, "SF Mono", Monaco, "Cascadia Mono", monospace;
+    font-size: 0.16px;
+    font-weight: 500;
+    fill: var(--text-subtle);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .key-top-label {
+    font-family: ui-monospace, "SF Mono", Monaco, "Cascadia Mono", monospace;
+    font-size: 0.18px;
+    font-weight: 600;
+    fill: color-mix(in srgb, var(--text-subtle) 92%, transparent);
+    pointer-events: none;
+    opacity: 0.9;
+    text-shadow: var(--dv-label-shadow);
+  }
+}
+
+.control {
+  .control-body {
+    fill: var(--dv-control-fill);
+    stroke: var(--dv-control-stroke);
+    stroke-width: 0.05;
+    paint-order: stroke fill;
+    filter: var(--dv-control-shadow);
+    transition: fill var(--transition-base),
+                stroke var(--transition-base),
+                stroke-width var(--transition-base),
+                filter var(--transition-base),
+                transform var(--transition-base);
+  }
+
+  &.bound .control-body {
+    fill: var(--dv-control-fill-bound);
+    stroke: var(--dv-control-stroke-bound);
+  }
+
+  &.hovered .control-body {
+    stroke: var(--dv-control-stroke-hover);
+    stroke-width: 0.08;
+    filter: var(--dv-control-shadow-hover);
+  }
+
+  &.selected .control-body {
+    fill: var(--dv-control-fill-selected);
+    stroke: var(--dv-control-stroke-selected);
+    stroke-width: 0.09;
+    filter: var(--dv-control-shadow-selected);
+  }
+
+  .control-label-primary {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: var(--dv-label-size);
+    font-weight: var(--dv-label-weight);
+    font-variation-settings: "wght" var(--dv-label-weight);
+    font-synthesis: none;
+    fill: var(--dv-label-color);
+    pointer-events: none;
+    letter-spacing: -0.01em;
+  }
+
+  .control-label-secondary {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: var(--dv-label-secondary-size);
+    font-weight: var(--dv-label-secondary-weight);
+    font-variation-settings: "wght" var(--dv-label-secondary-weight);
+    font-synthesis: none;
+    fill: var(--dv-label-secondary-color);
+    pointer-events: none;
+    opacity: 0.85;
+  }
+
+  .control-label-encoder {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+    font-size: var(--dv-label-size);
+    font-weight: var(--dv-label-weight);
+    font-variation-settings: "wght" var(--dv-label-weight);
+    font-synthesis: none;
+    fill: var(--dv-label-color);
+    pointer-events: none;
+    letter-spacing: -0.01em;
+    opacity: 0.9;
+  }
+
+  .control-label-encoder--press {
+    font-weight: var(--dv-label-weight);
+    fill: var(--text-strong);
+  }
+
+  .control-label-encoder--single {
+    font-size: var(--dv-label-size);
+    font-weight: var(--dv-label-weight);
+    fill: var(--text-strong);
+  }
+
+  .control-label-debug {
+    font-family: ui-monospace, "SF Mono", Monaco, "Cascadia Mono", monospace;
+    font-size: 0.14px;
+    font-weight: 500;
+    fill: var(--text-subtle);
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .control-top-label {
+    font-family: ui-monospace, "SF Mono", Monaco, "Cascadia Mono", monospace;
+    font-size: 0.16px;
+    font-weight: 700;
+    fill: color-mix(in srgb, var(--text-strong) 92%, transparent);
+    pointer-events: none;
+    opacity: 0.9;
+    text-shadow: var(--dv-label-shadow);
+  }
+}
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.drop-hit {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 1px dashed transparent;
+  border-radius: 8px;
+  transition: border-color var(--drag-transition-fast),
+              background var(--drag-transition-fast);
+  will-change: border-color, background;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  &.cdk-drop-list-dragging {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+  }
+
+  &.drop-hit--active {
+    border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+    background: color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--accent-border);
+    outline-offset: 1px;
+  }
+}
+
+.drop-hit-label {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-strong);
+  background: var(--dv-drop-label-bg);
+  border: 1px solid var(--dv-drop-label-border);
+  padding: 4px 8px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .key,
+  .control,
+  .key .key-cap,
+  .control .control-body,
+  .drop-hit {
+    transition: none !important;
+  }
+}
