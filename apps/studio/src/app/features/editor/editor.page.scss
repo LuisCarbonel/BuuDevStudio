@@ -7,7 +7,7 @@
 .workbench {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: var(--workbench-gap);
   flex: 1;
   min-height: 0;
   height: 100%;
@@ -15,7 +15,7 @@
 
 .wb-body {
   display: grid;
-  grid-template-columns: var(--editor-library-width) 1fr var(--editor-inspector-width);
+  grid-template-columns: minmax(var(--editor-library-min-width), var(--editor-library-width)) minmax(0, 1fr) minmax(var(--editor-inspector-min-width), var(--editor-inspector-width));
   gap: 14px;
   flex: 1;
   min-height: 0;
@@ -23,11 +23,12 @@
 }
 
 .wb-body.library-closed {
-  grid-template-columns: 1fr var(--editor-inspector-width);
+  grid-template-columns: minmax(0, 1fr) minmax(var(--editor-inspector-min-width), var(--editor-inspector-width));
 }
 
 .wb-body > * {
   height: 100%;
+  min-width: 0;
 }
 
 .wb-body > app-editor-library {

@@ -17,10 +17,11 @@
 }
 
 .pane {
-  background: var(--ed-panel-bg);
-  border-radius: var(--ed-panel-radius);
-  padding: var(--space-3);
-  box-shadow: var(--ed-panel-shadow);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: var(--panel-body-padding);
+  box-shadow: var(--panel-shadow);
   display: flex;
   flex-direction: column;
   gap: var(--ed-gap);
@@ -29,7 +30,9 @@
 }
 
 .pane-title {
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--text-strong);
   text-align: center;
 }
 

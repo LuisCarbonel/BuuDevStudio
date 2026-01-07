@@ -16,6 +16,26 @@
   --editor-library-width: 480px;
   --editor-inspector-width: 380px;
   --recorder-side-width: 320px;
+
+  --editor-library-min-width: 320px;
+  --editor-inspector-min-width: 320px;
+  --recorder-side-min-width: 280px;
+
+  --panel-radius: var(--radius-lg);
+  --panel-border: var(--border-muted);
+  --panel-bg: var(--surface-panel);
+  --panel-shadow: var(--shadow-md);
+  --panel-header-height: 44px;
+  --panel-header-padding-x: var(--space-5);
+  --panel-header-gap: var(--space-3);
+  --panel-body-padding: var(--space-4);
+
+  --workbench-gap: 14px;
+  --workbench-padding: var(--space-4);
+
+  --overlay-menu-min-width: 280px;
+  --overlay-menu-max-height: 420px;
+  --overlay-menu-padding-y: var(--space-2);
 }
 
 .theme-dark {

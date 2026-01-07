@@ -4,9 +4,6 @@
       flex-direction: column;
       height: 100%;
       background: linear-gradient(180deg, color-mix(in srgb, var(--surface-1) 95%, transparent), color-mix(in srgb, var(--surface-1) 90%, transparent));
-      border: 1px solid var(--border-muted);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
       backdrop-filter: blur(12px);
     }
 
@@ -14,8 +11,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-muted);
       background: linear-gradient(135deg, color-mix(in srgb, var(--surface-2) 85%, transparent), color-mix(in srgb, var(--surface-2) 70%, transparent));
       flex-shrink: 0;
     }
@@ -42,7 +37,6 @@
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      padding: 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
@@ -282,8 +276,8 @@
     .list-actions {
       display: flex;
       gap: 8px;
-      padding: 12px 16px;
-      border-top: 1px solid var(--border-muted);
+      padding: var(--space-3) var(--panel-body-padding);
+      border-top: 1px solid var(--panel-border);
       background: linear-gradient(135deg, color-mix(in srgb, var(--surface-2) 85%, transparent), color-mix(in srgb, var(--surface-2) 70%, transparent));
       flex-shrink: 0;
     }

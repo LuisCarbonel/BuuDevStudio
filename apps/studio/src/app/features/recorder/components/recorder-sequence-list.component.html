@@ -1,11 +1,11 @@
-<div class="sequence-list-container">
-  <div class="list-header">
+<div class="sequence-list-container studio-panel">
+  <div class="list-header studio-panel__header">
     <h3 class="list-title">Sequence Steps</h3>
     <span class="item-count">{{ items.length }} items</span>
   </div>
 
   <div
-    class="sequence-list"
+    class="sequence-list studio-panel__body"
     cdkDropList
     [cdkDropListData]="items"
     (cdkDropListDropped)="onDrop($event)"

@@ -1,0 +1,33 @@
+.studio-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--panel-shadow);
+  overflow: hidden;
+  min-height: 0;
+}
+
+.studio-panel__header {
+  min-height: var(--panel-header-height);
+  padding: var(--space-3) var(--panel-header-padding-x);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--panel-header-gap);
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.studio-panel__title {
+  color: var(--text-strong);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.studio-panel__body {
+  padding: var(--panel-body-padding);
+  min-height: 0;
+}
+
+.studio-panel--dense .studio-panel__body {
+  padding: var(--space-3);
+}

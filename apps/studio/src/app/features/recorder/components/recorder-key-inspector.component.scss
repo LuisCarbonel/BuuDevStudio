@@ -19,8 +19,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-muted);
+      border-bottom: 1px solid var(--panel-border);
       background: linear-gradient(135deg, color-mix(in srgb, var(--accent-500) 12%, transparent), color-mix(in srgb, var(--accent-500) 6%, transparent));
       flex-shrink: 0;
     }
@@ -60,7 +59,6 @@
 
     .inspector-body {
       flex: 1;
-      padding: 20px;
       overflow-y: auto;
       min-height: 0;
     }

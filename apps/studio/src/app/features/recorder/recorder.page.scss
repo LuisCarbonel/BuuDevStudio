@@ -11,7 +11,7 @@
   flex: 1;
   min-height: 0;
   height: 100%;
-  gap: 14px;
+  gap: var(--workbench-gap);
   overflow: hidden;
 }
 
@@ -147,8 +147,8 @@
 // Body - 3 panel layout
 .recorder-body {
   display: grid;
-  grid-template-columns: var(--recorder-side-width) 1fr var(--recorder-side-width);
-  gap: 14px;
+  grid-template-columns: minmax(var(--recorder-side-min-width), var(--recorder-side-width)) minmax(0, 1fr) minmax(var(--recorder-side-min-width), var(--recorder-side-width));
+  gap: var(--workbench-gap);
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -159,6 +159,7 @@
   flex-direction: column;
   min-height: 0;
   height: 100%;
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -189,7 +190,7 @@ button[nz-button] {
 // Responsive adjustments
 @media (max-width: 1200px) {
   .recorder-body {
-    grid-template-columns: 280px 1fr 280px;
+    grid-template-columns: var(--recorder-side-min-width) 1fr var(--recorder-side-min-width);
   }
 }
 
