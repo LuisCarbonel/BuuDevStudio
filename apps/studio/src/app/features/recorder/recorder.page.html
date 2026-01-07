@@ -1,37 +1,124 @@
-<div class="feature">
-  <h1>Recorder</h1>
-  <p class="muted">Capture a quick macro, save it as a sequence, and optionally assign to a target.</p>
-
-  <section class="card">
-    <h3>Capture</h3>
-    <div class="controls">
-      <button class="btn primary" type="button" (click)="start()" [disabled]="recording()">Start</button>
-      <button class="btn ghost" type="button" (click)="stop()" [disabled]="!recording()">Stop</button>
+<div class="recorder-page studio-scope--recorder">
+  <!-- Header -->
+  <header class="recorder-header">
+    <div class="header-left">
+      <div class="sequence-name-group">
+        <input
+          class="sequence-name-input"
+          type="text"
+          [value]="sequenceName()"
+          (input)="onSequenceNameChange($event)"
+          placeholder="Sequence name..."
+          [disabled]="recording()"
+        />
+        @if (dirty()) {
+          <span class="header-badge">Unsaved</span>
+        }
+        @if (recording()) {
+          <span class="header-badge header-badge--recording">
+            <span class="recording-dot"></span>
+            Recording
+          </span>
+        }
+      </div>
+      <div class="header-hint">Click a key in the Library to append it to this sequence.</div>
     </div>
-    <div class="controls">
-      <input class="input" type="text" placeholder="Op (e.g., TAP)" #op />
-      <input class="input" type="text" placeholder="Arg (optional)" #arg />
-      <button class="btn" type="button" (click)="addStep(op.value, arg.value); op.value=''; arg.value=''" [disabled]="!recording()">Add Step</button>
-    </div>
-    <div class="muted">Steps recorded: {{ steps().length }}</div>
-    <ul class="steps">
-      <li *ngFor="let s of steps()">#{{ s.id }} &mdash; {{ s.op }} {{ s.arg || '' }}</li>
-    </ul>
-  </section>
 
-  <section class="card">
-    <h3>Save & Assign</h3>
-    <label class="field">
-      <span class="field-label">Name</span>
-      <input class="input" [ngModel]="name()" (ngModelChange)="name.set($event)" />
-    </label>
-    <label class="field">
-      <span class="field-label">Assign to target (optional)</span>
-      <select class="input" [ngModel]="selectedTargetId()" (ngModelChange)="selectedTargetId.set($event || null)">
-        <option value="">Do not assign</option>
-        <option *ngFor="let t of targets()" [value]="t">{{ t }}</option>
-      </select>
-    </label>
-    <button class="btn primary" type="button" (click)="saveAndAssign()" [disabled]="!steps().length">Save</button>
-  </section>
+    <div class="header-actions">
+      <!-- Recording controls -->
+      <div class="action-group">
+        <button
+          nz-button
+          nzType="primary"
+          [nzDanger]="recording()"
+          (click)="recording() ? stopRecording() : startRecording()"
+        >
+          @if (!recording()) {
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="8"/>
+              </svg>
+              Record
+            </span>
+          }
+          @if (recording()) {
+            <span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12" rx="2"/>
+              </svg>
+              Stop
+            </span>
+          }
+        </button>
+      </div>
+
+      <div class="action-divider"></div>
+
+      <!-- Save/Clear -->
+      <div class="action-group">
+        <button
+          nz-button
+          nzType="primary"
+          [disabled]="!canSave()"
+          (click)="saveToSequence()"
+        >
+          Save
+        </button>
+        <button
+          nz-button
+          [disabled]="!items().length"
+          (click)="clearAll()"
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main 3-panel layout -->
+  <div class="recorder-body">
+    <!-- Left: Library panel -->
+    <aside class="panel panel--library">
+      <app-editor-library
+        [profiles]="profiles()"
+        [selectedProfileId]="selectedProfileId()"
+        [sequencesForProfile]="sequencesForProfile()"
+        [selectedSequenceId]="selectedSequenceId()"
+        [libraryMode]="libraryMode()"
+        [librarySearch]="librarySearch()"
+        [enableBlockClick]="true"
+        [blockPreset]="'recorder'"
+        (selectProfile)="onSelectProfile($event)"
+        (selectSequence)="onSelectSequence($event)"
+        (modeChange)="onLibraryModeChange($event)"
+        (searchChange)="onLibrarySearchChange($event)"
+        (createSequence)="onCreateSequence()"
+        (blockClick)="onLibraryBlockClick($event)"
+      ></app-editor-library>
+    </aside>
+
+    <!-- Middle: Sequence list -->
+    <main class="panel panel--list">
+      <app-recorder-sequence-list
+        [items]="items()"
+        [selectedId]="selectedId()"
+        (select)="onSelectItem($event)"
+        (reorder)="onReorder($event)"
+        (addDelay)="onAddDelay()"
+        (itemAction)="onItemAction($event)"
+      ></app-recorder-sequence-list>
+    </main>
+
+    <!-- Right: Inspector -->
+    <aside class="panel panel--inspector">
+      <app-recorder-inspector
+        [selectedItem]="selectedItem()"
+        (strokeChange)="onStrokeChange($event)"
+        (holdMsChange)="onHoldMsChange($event)"
+        (delayMsChange)="onDelayMsChange($event)"
+        (resetItem)="onResetItem()"
+        (removeItem)="removeSelectedItem()"
+      ></app-recorder-inspector>
+    </aside>
+  </div>
 </div>

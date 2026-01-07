@@ -1,0 +1,26 @@
+
+    <div class="inspector-container">
+      @if (selectedItem) {
+        @if (isKey(selectedItem)) {
+          <app-recorder-key-inspector
+            [item]="asKey(selectedItem)"
+            (strokeChange)="onStrokeChange($event)"
+            (holdMsChange)="onHoldMsChange($event)"
+            (reset)="resetItem.emit()"
+            (remove)="removeItem.emit()"
+          ></app-recorder-key-inspector>
+        }
+
+        @if (isDelay(selectedItem)) {
+          <app-recorder-delay-inspector
+            [item]="asDelay(selectedItem)"
+            (msChange)="onDelayMsChange($event)"
+            (reset)="resetItem.emit()"
+            (remove)="removeItem.emit()"
+          ></app-recorder-delay-inspector>
+        }
+      } @else {
+        <app-recorder-empty-inspector></app-recorder-empty-inspector>
+      }
+    </div>
+  

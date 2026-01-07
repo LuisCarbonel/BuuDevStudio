@@ -1,10 +1,209 @@
-.feature {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+:host {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
-h1 {
-  margin: 0 0 10px;
+.recorder-page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  gap: 14px;
+  overflow: hidden;
+}
+
+// Header
+.recorder-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--accent-500-soft) 0%, color-mix(in srgb, var(--accent-500-soft) 70%, transparent) 100%);
+  border: 1px solid color-mix(in srgb, var(--accent-500) 30%, transparent);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.sequence-name-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sequence-name-input {
+  flex: 1;
+  min-width: 150px;
+  max-width: 300px;
+  padding: 8px 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-strong);
+  background: color-mix(in srgb, var(--surface-2) 75%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border-strong) 55%, transparent);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: var(--text-muted);
+  }
+
+  &:focus {
+    background: color-mix(in srgb, var(--surface-3) 85%, transparent);
+    border-color: color-mix(in srgb, var(--accent-500) 55%, transparent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus-ring) 40%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, var(--warning-soft), color-mix(in srgb, var(--warning-soft) 70%, transparent));
+  color: var(--warning-500);
+  border: 1px solid color-mix(in srgb, var(--warning-500) 35%, transparent);
+  border-radius: var(--radius-lg);
+  flex-shrink: 0;
+}
+
+.header-badge--recording {
+  background: linear-gradient(135deg, var(--danger-soft), color-mix(in srgb, var(--danger-soft) 70%, transparent));
+  color: var(--danger-500);
+  border-color: color-mix(in srgb, var(--danger-500) 45%, transparent);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+.recording-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--danger-500);
+  border-radius: 50%;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--danger-500) 70%, transparent);
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--danger-500) 25%, transparent);
+  }
+  50% { 
+    box-shadow: 0 0 12px 4px color-mix(in srgb, var(--danger-500) 18%, transparent);
+  }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.action-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-divider {
+  width: 1px;
+  height: 24px;
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--accent-500) 35%, transparent), transparent);
+}
+
+// Body - 3 panel layout
+.recorder-body {
+  display: grid;
+  grid-template-columns: var(--recorder-side-width) 1fr var(--recorder-side-width);
+  gap: 14px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.panel--library {
+  overflow: hidden;
+}
+
+.panel--list {
+  overflow: hidden;
+}
+
+.panel--inspector {
+  overflow: hidden;
+}
+
+// Button styles with icons
+button[nz-button] {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+
+// Responsive adjustments
+@media (max-width: 1200px) {
+  .recorder-body {
+    grid-template-columns: 280px 1fr 280px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .recorder-body {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+
+  .panel--library {
+    max-height: 200px;
+  }
+
+  .panel--inspector {
+    max-height: 300px;
+  }
 }

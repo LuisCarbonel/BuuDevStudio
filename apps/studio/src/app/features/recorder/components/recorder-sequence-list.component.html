@@ -1,0 +1,170 @@
+<div class="sequence-list-container">
+  <div class="list-header">
+    <h3 class="list-title">Sequence Steps</h3>
+    <span class="item-count">{{ items.length }} items</span>
+  </div>
+
+  <div
+    class="sequence-list"
+    cdkDropList
+    [cdkDropListData]="items"
+    (cdkDropListDropped)="onDrop($event)"
+    (click)="onListClick($event)"
+  >
+    @if (items.length) {
+      @for (item of items; track item.id) {
+        <div
+          class="list-item"
+          [class.list-item--key]="isKey(item)"
+          [class.list-item--delay]="isDelay(item)"
+          [class.list-item--selected]="item.id === selectedId"
+          cdkDrag
+          cdkDragPreviewContainer="global"
+        >
+          <div class="drag-placeholder studio-drag-placeholder" *cdkDragPlaceholder></div>
+
+          <!-- Preview while dragging -->
+          <div class="drag-preview studio-drag-preview" *cdkDragPreview>
+            @if (isKey(item)) {
+              <span class="preview-icon">{{ getStrokeIcon(asKey(item).stroke) }}</span>
+              <span class="preview-label">{{ asKey(item).displayLabel }}</span>
+            }
+            @if (isDelay(item)) {
+              <span class="preview-icon">???</span>
+              <span class="preview-label">{{ asDelay(item).ms }}ms</span>
+            }
+          </div>
+
+          <!-- Key Item -->
+          @if (isKey(item)) {
+            <div
+              class="key-row"
+              [class.key-row--selected]="item.id === selectedId"
+              [class.key-row--down]="asKey(item).stroke === 'down'"
+              [class.key-row--up]="asKey(item).stroke === 'up'"
+              (click)="onSelect(item.id, $event)"
+            >
+              <div class="drag-handle" cdkDragHandle>
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <circle cx="3" cy="3" r="1.5"/>
+                  <circle cx="9" cy="3" r="1.5"/>
+                  <circle cx="3" cy="9" r="1.5"/>
+                  <circle cx="9" cy="9" r="1.5"/>
+                </svg>
+              </div>
+
+              <div class="key-content">
+                <span class="key-icon" [class.key-icon--down]="asKey(item).stroke === 'down'" [class.key-icon--up]="asKey(item).stroke === 'up'">
+                  {{ getStrokeIcon(asKey(item).stroke) }}
+                </span>
+                <span class="key-pill">{{ asKey(item).displayLabel }}</span>
+                @if (asKey(item).stroke === 'full' && asKey(item).holdMs) {
+                  <span class="key-duration">
+                    {{ asKey(item).holdMs }}ms
+                  </span>
+                }
+              </div>
+
+              <button
+                class="context-btn"
+                type="button"
+                nz-dropdown
+                [nzDropdownMenu]="keyMenu"
+                [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
+                nzTrigger="click"
+                (click)="$event.stopPropagation()"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="8" cy="3" r="1.5"/>
+                  <circle cx="8" cy="8" r="1.5"/>
+                  <circle cx="8" cy="13" r="1.5"/>
+                </svg>
+              </button>
+              <nz-dropdown-menu #keyMenu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="onItemAction(item, 'duplicate')">Duplicate</li>
+                  <li nz-menu-item nzDanger (click)="onItemAction(item, 'remove')">Remove</li>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          }
+
+          <!-- Delay Item -->
+          @if (isDelay(item)) {
+            <div
+              class="delay-chip"
+              [class.delay-chip--selected]="item.id === selectedId"
+              (click)="onSelect(item.id, $event)"
+            >
+              <div class="drag-handle drag-handle--delay" cdkDragHandle>
+                <svg width="10" height="10" viewBox="0 0 12 12" fill="currentColor">
+                  <circle cx="3" cy="3" r="1.5"/>
+                  <circle cx="9" cy="3" r="1.5"/>
+                  <circle cx="3" cy="9" r="1.5"/>
+                  <circle cx="9" cy="9" r="1.5"/>
+                </svg>
+              </div>
+
+              <svg class="clock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12,6 12,12 16,14"/>
+              </svg>
+
+              <span class="delay-value">{{ asDelay(item).ms }}ms</span>
+
+              <button
+                class="context-btn context-btn--delay"
+                type="button"
+                nz-dropdown
+                [nzDropdownMenu]="delayMenu"
+                [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
+                nzTrigger="click"
+                (click)="$event.stopPropagation()"
+              >
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="8" cy="3" r="1.5"/>
+                  <circle cx="8" cy="8" r="1.5"/>
+                  <circle cx="8" cy="13" r="1.5"/>
+                </svg>
+              </button>
+              <nz-dropdown-menu #delayMenu="nzDropdownMenu">
+                <ul nz-menu>
+                  <li nz-menu-item (click)="onItemAction(item, 'duplicate')">Duplicate</li>
+                  <li nz-menu-item nzDanger (click)="onItemAction(item, 'remove')">Remove</li>
+                </ul>
+              </nz-dropdown-menu>
+            </div>
+          }
+        </div>
+      }
+    } @else {
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M12 8v8M8 12h8"/>
+          </svg>
+        </div>
+        <p class="empty-text">No steps yet</p>
+        <p class="empty-hint">Select a sequence from the library or click Record to start capturing</p>
+      </div>
+    }
+  </div>
+
+  @if (items.length) {
+    <div class="list-actions">
+      <button
+        class="action-btn"
+        type="button"
+        (click)="addDelay.emit()"
+        title="Add delay"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        Add Delay
+      </button>
+    </div>
+  }
+</div>

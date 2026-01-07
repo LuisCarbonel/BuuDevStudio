@@ -1,0 +1,20 @@
+
+    .inspector-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: linear-gradient(180deg, color-mix(in srgb, var(--surface-1) 95%, transparent), color-mix(in srgb, var(--surface-1) 90%, transparent));
+      border: 1px solid var(--border-muted);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    :host {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+  

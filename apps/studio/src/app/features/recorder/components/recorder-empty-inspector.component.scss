@@ -1,0 +1,104 @@
+
+    :host {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .empty-inspector {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 32px 24px;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .empty-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .empty-icon {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      opacity: 0.6;
+    }
+
+    .empty-title {
+      margin: 0 0 10px;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .empty-text {
+      margin: 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 200px;
+      line-height: 1.6;
+    }
+
+    .tips {
+      padding: 20px;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--surface-2) 85%, transparent), color-mix(in srgb, var(--surface-2) 70%, transparent));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-muted);
+      flex-shrink: 0;
+    }
+
+    .tips-title {
+      margin: 0 0 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .tips-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tips-list li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      font-size: 12px;
+      color: var(--text);
+      border-bottom: 1px solid color-mix(in srgb, var(--border-muted) 80%, transparent);
+    }
+
+    .tips-list li:last-child {
+      border-bottom: none;
+    }
+
+    .tip-icon {
+      font-size: 14px;
+      width: 24px;
+      text-align: center;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      background: color-mix(in srgb, var(--surface-3) 85%, transparent);
+      border: 1px solid color-mix(in srgb, var(--border-strong) 70%, transparent);
+      border-radius: var(--radius-sm);
+      color: var(--text-strong);
+      box-shadow: 0 2px 0 color-mix(in srgb, #000 20%, transparent);
+    }
+  

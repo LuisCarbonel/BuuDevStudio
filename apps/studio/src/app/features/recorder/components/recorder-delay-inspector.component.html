@@ -1,0 +1,75 @@
+<div class="inspector-panel">
+  <div class="inspector-header">
+    <div class="delay-badge">
+      <svg class="delay-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12,6 12,12 16,14"/>
+      </svg>
+      <span class="delay-label">{{ item.ms }}ms</span>
+    </div>
+    <span class="item-type">Delay</span>
+  </div>
+
+  <div class="inspector-body">
+    <div class="field">
+      <label class="field-label">Duration</label>
+      <div class="input-row">
+        <nz-input-number
+          [ngModel]="item.ms"
+          (ngModelChange)="onMsChange($event)"
+          [nzMin]="0"
+          [nzMax]="10000"
+          [nzStep]="10"
+          nzSize="default"
+        ></nz-input-number>
+        <span class="input-suffix">ms</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="field-label">Quick Adjust</label>
+      <nz-slider
+        [ngModel]="item.ms"
+        (ngModelChange)="onMsChange($event)"
+        [nzMin]="0"
+        [nzMax]="2000"
+        [nzStep]="10"
+        [nzMarks]="sliderMarks"
+      ></nz-slider>
+    </div>
+
+    <div class="presets">
+      <label class="field-label">Presets</label>
+      <div class="preset-buttons">
+        @for (preset of presets; track preset) {
+          <button
+            class="preset-btn"
+            [class.preset-btn--active]="item.ms === preset"
+            (click)="onMsChange(preset)"
+          >
+            {{ preset }}ms
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="field-actions">
+      <button
+        nz-button
+        nzSize="small"
+        (click)="reset.emit()"
+        [disabled]="!canReset"
+      >
+        Reset to Default
+      </button>
+      <button
+        nz-button
+        nzDanger
+        nzSize="small"
+        (click)="remove.emit()"
+      >
+        Remove
+      </button>
+    </div>
+  </div>
+</div>
