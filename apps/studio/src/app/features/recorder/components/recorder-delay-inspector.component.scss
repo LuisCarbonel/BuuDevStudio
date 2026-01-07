@@ -58,22 +58,21 @@
 
     .inspector-body {
       flex: 1;
-      overflow-y: auto;
       min-height: 0;
     }
 
     .field {
-      margin-bottom: 24px;
+      margin: 0;
     }
 
     .field-label {
       display: block;
-      font-size: 11px;
+      font-size: var(--ctrl-font-size);
       font-weight: 700;
       color: var(--text);
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      margin-bottom: 10px;
+      line-height: var(--ctrl-line-height);
     }
 
     .input-row {
@@ -83,14 +82,15 @@
     }
 
     .input-suffix {
-      font-size: 14px;
+      font-size: var(--ctrl-font-size);
       font-weight: 500;
       color: var(--text);
       font-family: 'JetBrains Mono', monospace;
+      line-height: var(--ctrl-line-height);
     }
 
     .presets {
-      margin-bottom: 24px;
+      margin: 0;
     }
 
     .preset-buttons {

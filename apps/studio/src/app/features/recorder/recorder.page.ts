@@ -215,7 +215,6 @@ export class RecorderPage implements OnDestroy {
     if (!this.recording()) return;
 
     const newItems = this.engine.stop();
-    newItems.forEach(item => this.store.appendItem(item));
     this.message.success(`Recording stopped. Captured ${newItems.length} items.`);
   }
 

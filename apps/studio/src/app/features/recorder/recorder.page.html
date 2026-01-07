@@ -12,10 +12,10 @@
           [disabled]="recording()"
         />
         @if (dirty()) {
-          <span class="header-badge">Unsaved</span>
+          <span class="header-badge studio-chip studio-chip--warning">Unsaved</span>
         }
         @if (recording()) {
-          <span class="header-badge header-badge--recording">
+          <span class="header-badge header-badge--recording studio-chip studio-chip--danger">
             <span class="recording-dot"></span>
             Recording
           </span>
@@ -34,7 +34,7 @@
           (click)="recording() ? stopRecording() : startRecording()"
         >
           @if (!recording()) {
-            <span>
+            <span class="record-btn__content">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <circle cx="12" cy="12" r="8"/>
               </svg>
@@ -42,7 +42,7 @@
             </span>
           }
           @if (recording()) {
-            <span>
+            <span class="record-btn__content">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <rect x="6" y="6" width="12" height="12" rx="2"/>
               </svg>
@@ -88,6 +88,7 @@
         [librarySearch]="librarySearch()"
         [enableBlockClick]="true"
         [blockPreset]="'recorder'"
+        [libraryVariant]="'recorder'"
         (selectProfile)="onSelectProfile($event)"
         (selectSequence)="onSelectSequence($event)"
         (modeChange)="onLibraryModeChange($event)"

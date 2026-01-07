@@ -3,6 +3,7 @@ import {
   encodeKeycodeToCode,
   getCatalogVersion,
   keycodeEntries,
+  resolveLegend,
   type KeycodeEntry,
 } from '@shared/utils/keycodes/catalog';
 
@@ -32,8 +33,8 @@ function fallbackLabel(keyId: string): string {
 }
 
 function formatLabelForEntry(entry: KeycodeEntry): string {
-  const shortLabel = (entry as any).short as string | undefined;
-  return shortLabel || entry.label;
+  const legend = resolveLegend(entry);
+  return legend.short || legend.label;
 }
 
 export function resolveKeycode(input: string): ResolvedRecorderKeycode {

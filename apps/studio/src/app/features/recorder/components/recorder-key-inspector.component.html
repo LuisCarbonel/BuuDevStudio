@@ -8,19 +8,19 @@
         <span class="item-type">Key Action</span>
       </div>
 
-      <div class="inspector-body studio-panel__body">
-        <div class="field">
+      <div class="inspector-body studio-panel__body studio-scroll--y">
+        <div class="field studio-field">
           <label class="field-label">Press Type</label>
           <nz-segmented
             [nzOptions]="strokeOptions"
             [ngModel]="item.stroke"
             (ngModelChange)="onStrokeChange($event)"
           ></nz-segmented>
-          <p class="field-hint">{{ strokeHint }}</p>
+          <p class="field-hint studio-help">{{ strokeHint }}</p>
         </div>
 
         @if (item.stroke === 'full') {
-          <div class="field">
+          <div class="field studio-field">
             <label class="field-label">Hold Duration</label>
             <div class="input-row">
               <nz-input-number
@@ -33,7 +33,7 @@
               ></nz-input-number>
               <span class="input-suffix">ms</span>
             </div>
-            <p class="field-hint">Time between key down and key up</p>
+            <p class="field-hint studio-help">Time between key down and key up</p>
           </div>
         }
 

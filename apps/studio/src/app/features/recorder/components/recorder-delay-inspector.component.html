@@ -10,8 +10,8 @@
     <span class="item-type">Delay</span>
   </div>
 
-  <div class="inspector-body studio-panel__body">
-    <div class="field">
+  <div class="inspector-body studio-panel__body studio-scroll--y">
+    <div class="field studio-field">
       <label class="field-label">Duration</label>
       <div class="input-row">
         <nz-input-number
@@ -26,7 +26,7 @@
       </div>
     </div>
 
-    <div class="field">
+    <div class="field studio-field">
       <label class="field-label">Quick Adjust</label>
       <nz-slider
         [ngModel]="item.ms"
@@ -38,7 +38,7 @@
       ></nz-slider>
     </div>
 
-    <div class="presets">
+    <div class="presets studio-field">
       <label class="field-label">Presets</label>
       <div class="preset-buttons">
         @for (preset of presets; track preset) {

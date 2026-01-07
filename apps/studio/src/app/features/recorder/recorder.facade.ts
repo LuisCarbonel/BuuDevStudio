@@ -32,6 +32,8 @@ export class RecorderFacade {
 
   readonly canSave: Signal<boolean>;
 
+  private lastEngineCount = 0;
+
   constructor(
     public readonly studio: StudioStateService,
     public readonly store: RecorderSequenceStore,
@@ -56,6 +58,19 @@ export class RecorderFacade {
     this.canSave = computed(() =>
       this.items().length > 0 && this.sequenceName().trim().length > 0
     );
+
+    effect(() => {
+      const recording = this.engine.recording();
+      const items = this.engine.items();
+      if (!recording) {
+        this.lastEngineCount = 0;
+        return;
+      }
+      if (items.length <= this.lastEngineCount) return;
+      const newItems = items.slice(this.lastEngineCount);
+      newItems.forEach(item => this.store.appendItem(item));
+      this.lastEngineCount = items.length;
+    });
 
     effect(() => {
       const id = this.selectedSequenceId();
