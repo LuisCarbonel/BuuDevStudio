@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DeviceService } from '../../services/device.service';
-import { StudioStateService } from '../../services/studio-state.service';
+import { DeviceService } from '@core/services/device.service';
+import { StudioStateService } from '@core/services/studio-state.service';
 
 @Component({
   selector: 'app-firmware-page',
@@ -13,12 +13,16 @@ import { StudioStateService } from '../../services/studio-state.service';
 export class FirmwarePage {
   constructor(public device: DeviceService, public studio: StudioStateService) {}
 
-  get inspector$() {
-    return this.device.inspector$;
+  get inspector() {
+    return this.device.inspector;
   }
 
-  get viaProbe$() {
-    return this.device.viaProbe$;
+  get viaProbe() {
+    return this.device.viaProbe;
+  }
+
+  get viaState() {
+    return this.device.viaState;
   }
 
   probeVia() {
@@ -30,7 +34,7 @@ export class FirmwarePage {
   }
 
   get deviceInfo() {
-    return this.studio.snapshot.device;
+    return this.studio.state().device;
   }
 
   get capabilities() {
@@ -38,7 +42,7 @@ export class FirmwarePage {
   }
 
   get activeProfile() {
-    return this.studio.selectedProfile;
+    return this.studio.selectedProfile();
   }
 
   get definitionFingerprint() {
@@ -46,11 +50,15 @@ export class FirmwarePage {
   }
 
   get definitionLinked(): boolean {
-    return !!this.deviceInfo.definitionFingerprint;
+    if (this.deviceInfo.connected) {
+      return !!(this.deviceInfo.definitionLinked ?? this.deviceInfo.definitionFingerprint);
+    }
+    const insp = this.device.inspectorSnapshot;
+    return !!(insp?.definitionLinked ?? insp?.definitionFingerprint);
   }
 
   get layoutMeta() {
-    const layout = this.studio.normalizedLayout;
+    const layout = this.studio.normalizedLayout();
     if (!layout) return null;
     const keys = layout.keys.length;
     const encoders = layout.controls.filter(c => (c.flags as any)?.encoder === true || c.kind === 'encoder-block').length;
