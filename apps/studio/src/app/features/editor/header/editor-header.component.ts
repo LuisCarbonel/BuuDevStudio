@@ -10,6 +10,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
@@ -19,6 +20,7 @@ import { NzSegmentedModule } from 'ng-zorro-antd/segmented';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 import { FormsModule } from '@angular/forms';
 import { NgStyleInterface } from 'ng-zorro-antd/core/types';
+import { DeviceModeBadgeComponent } from '@shared/ui/device-mode-badge/device-mode-badge.component';
 
 @Component({
   selector: 'app-editor-header',
@@ -32,9 +34,11 @@ import { NgStyleInterface } from 'ng-zorro-antd/core/types';
     NzMenuModule,
     NzSegmentedModule,
     NzToolTipModule,
+    DeviceModeBadgeComponent,
   ],
   templateUrl: './editor-header.component.html',
   styleUrl: './editor-header.component.scss',
+  encapsulation: ViewEncapsulation.None,
 })
 export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   @Input() connected = false;
@@ -52,6 +56,8 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   @Input() capabilityLevel: string | null = null;
   @Input() devices: { id: string; name: string; capabilityLevel?: string | null }[] = [];
   @Input() selectedDeviceId: string | null = null;
+  @Input() deviceMode: 'studio-hid' | 'via-direct' | 'read-only' = 'read-only';
+  @Input() importBusy = false;
 
   @Output() toggleLibrary = new EventEmitter<void>();
   @Output() selectLayer = new EventEmitter<number>();
@@ -63,6 +69,7 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
   @Output() commit = new EventEmitter<void>();
   @Output() run = new EventEmitter<void>();
   @Output() stopAll = new EventEmitter<void>();
+  @Output() importFile = new EventEmitter<Event>();
 
   viewOptions = [
     { label: 'Full', value: 'full' },
@@ -74,6 +81,11 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
 
   @ViewChild('layerBtn') layerBtn?: ElementRef<HTMLElement>;
   @ViewChild('actionsBtn') actionsBtn?: ElementRef<HTMLElement>;
+  @ViewChild('importInput') importInput?: ElementRef<HTMLInputElement>;
+  
+  triggerImport() {
+    this.importInput?.nativeElement.click();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['libraryOpen']) {
@@ -112,5 +124,10 @@ export class EditorHeaderComponent implements OnChanges, AfterViewInit {
     if (lvl.includes('studio')) return 'badge--studio';
     if (lvl.includes('qmk')) return 'badge--qmk';
     return 'badge--generic';
+  }
+  
+  getDeviceName(deviceId: string): string | null {
+    const device = this.devices.find(d => d.id === deviceId);
+    return device ? (device.name || device.id) : null;
   }
 }

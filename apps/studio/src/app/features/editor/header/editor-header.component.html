@@ -1,174 +1,203 @@
 <div class="wb-header">
   <div class="header-row">
-    <div class="left">
-      <div class="status-line toolbar">
-        <div class="toolbar__section">
-          <span class="dot" [class.off]="!connected"></span>
-          <span class="status-label">{{ connected ? 'Connected' : 'Disconnected' }}</span>
-          <span class="status-strong" *ngIf="deviceName">{{ deviceName }}</span>
-          <span
-            class="capability-badge"
-            *ngIf="capabilityLevel"
-            [ngClass]="capabilityBadgeClass()"
-            nz-tooltip
-            [nzTooltipTitle]="capabilityLevel"
-            >{{ capabilityLevel }}</span
-          >
-        </div>
+    <!-- Left: Connection Status -->
+    <div class="status-section">
+      <span class="connection-indicator" [class.connected]="connected" [class.busy]="busy">
+        <span class="dot"></span>
+        <span class="status-text">{{ connected ? 'Connected' : 'Disconnected' }}</span>
+      </span>
 
-        <div class="toolbar__section toolbar__section--grow toolbar__meta">
-          <span class="divider" *ngIf="sessionId">&middot;</span>
-          <span
-            class="status-meta session toolbar__meta-item"
-            *ngIf="sessionId"
-            nz-tooltip
-            [nzTooltipTitle]="sessionId"
-          >
-            Session ID: {{ sessionId }}
-          </span>
-          <span class="divider">&middot;</span>
-          <span
-            class="status-meta toolbar__meta-item"
-            nz-tooltip
-            [nzTooltipTitle]="'Revision ' + (revision ?? 'n/a')"
-          >
-            Revision {{ revision ?? 'n/a' }}
-          </span>
-          <span class="divider">&middot;</span>
-          <span
-            class="status-meta toolbar__meta-item"
-            nz-tooltip
-            [nzTooltipTitle]="dirty ? 'Changes staged' : 'No changes staged'"
-          >
-            {{ dirty ? 'Changes staged' : 'No changes staged' }}
-          </span>
-        </div>
-      </div>
+      @if (connected && deviceName) {
+        <span class="divider">???</span>
+        <span class="device-name">{{ deviceName }}</span>
+        <app-device-mode-badge [mode]="deviceMode"></app-device-mode-badge>
+      }
 
-      <div class="toolbar device-picker">
-        <label class="picker-label">Device</label>
-        <select
-          class="picker"
-          [disabled]="busy"
-          [ngModel]="selectedDeviceId || ''"
-          (ngModelChange)="connectDevice.emit($event)"
+      <!-- Compact metadata - Only show if important -->
+      @if (connected && dirty) {
+        <span class="status-badge status-badge--warning" nz-tooltip nzTooltipTitle="You have unsaved changes" nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip">
+          <span nz-icon nzType="edit" nzTheme="outline"></span>
+          Changes pending
+        </span>
+      }
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="actions-section">
+      <!-- Disconnected State -->
+      @if (!connected) {
+        <!-- Device Selector -->
+        <button
+          nz-button
+          nzType="default"
+          nzSize="default"
+          [nzDropdownMenu]="deviceMenu"
+          nz-dropdown
+          [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
+          [disabled]="busy || !devices.length"
+          class="device-selector-btn"
         >
-          <option value="" disabled>Select device</option>
-          <option *ngFor="let d of devices" [value]="d.id">
-            {{ d.name || d.id }}{{ d.capabilityLevel ? ' — ' + d.capabilityLevel : '' }}
-          </option>
-        </select>
+          <span nz-icon nzType="laptop" nzTheme="outline"></span>
+          {{ selectedDeviceId ? (getDeviceName(selectedDeviceId) || 'Select Device') : 'Select Device' }}
+          <span nz-icon nzType="down"></span>
+        </button>
+        <nz-dropdown-menu #deviceMenu="nzDropdownMenu">
+          <ul nz-menu>
+            @for (d of devices; track d.id) {
+              <li nz-menu-item (click)="connectDevice.emit(d.id)">
+                <strong>{{ d.name || d.id }}</strong>
+                @if (d.capabilityLevel) {
+                  <span class="device-capability">{{ d.capabilityLevel }}</span>
+                }
+              </li>
+            }
+            @if (devices.length) {
+              <li nz-menu-divider></li>
+            }
+            @if (!devices.length) {
+              <li nz-menu-item [nzDisabled]="true">
+                <span style="color: var(--text-muted); font-size: 0.9em;">No devices detected</span>
+              </li>
+            }
+          </ul>
+        </nz-dropdown-menu>
+
+        <!-- Import Button -->
+        <button
+          nz-button
+          nzType="default"
+          nzSize="default"
+          (click)="triggerImport()"
+          [nzLoading]="importBusy"
+          [disabled]="importBusy"
+          class="icon-btn"
+          nz-tooltip
+          nzTooltipTitle="Import Configuration"
+          nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
+        >
+          <span nz-icon nzType="import" nzTheme="outline"></span>
+        </button>
+
+        <!-- Primary Connect Button -->
         <button
           nz-button
           nzType="primary"
-          nzSize="small"
-          class="ctrl ctrl--wide"
-          (click)="connectDevice.emit(selectedDeviceId || '')"
-          [disabled]="busy || !devices.length"
+          nzSize="default"
+          (click)="connect.emit()"
           [nzLoading]="busy"
+          [disabled]="busy || !devices.length"
+          class="primary-action"
         >
-          {{ connected ? 'Reconnect' : 'Connect' }}
+          <span nz-icon nzType="link" nzTheme="outline"></span>
+          Connect
         </button>
-      </div>
+      }
 
-      <div class="layer-row toolbar toolbar--wrap">
-        <div class="toolbar__section">
-          <button
+      <!-- Connected State -->
+      @if (connected) {
+        <!-- Switch Device -->
+        <button
           nz-button
-          nzSize="small"
           nzType="default"
-          class="pill-btn ctrl ctrl--pill ctrl--wide"
-          [nzDropdownMenu]="layerMenu"
-          [nzOverlayStyle]="layerOverlayStyle"
-          [nzOverlayClassName]="'overlay-match-trigger'"
+          nzSize="default"
+          [nzDropdownMenu]="switchDeviceMenu"
           nz-dropdown
-          [disabled]="!layerOptions.length"
-          (nzVisibleChange)="syncOverlayWidths()"
-          #layerBtn
+          [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
+          [disabled]="busy"
+          class="icon-btn"
+          nz-tooltip
+          nzTooltipTitle="Switch Device"
+          nzTooltipOverlayClassName="studio-overlay studio-overlay--tooltip"
         >
-          <span class="pill-btn__label">Layer {{ activeLayer }} · Revision {{ revision ?? 'n/a' }}</span>
-          <span nz-icon nzType="down"></span>
+          <span nz-icon nzType="swap" nzTheme="outline"></span>
         </button>
-        <nz-dropdown-menu #layerMenu="nzDropdownMenu">
-            <ul nz-menu>
-              <li
-                nz-menu-item
-                *ngFor="let layer of layerOptions"
-                [nzSelected]="layer === activeLayer"
-                (click)="selectLayer.emit(layer)"
-              >
-                Layer {{ layer }}
+        <nz-dropdown-menu #switchDeviceMenu="nzDropdownMenu">
+          <ul nz-menu>
+            @for (d of devices; track d.id) {
+              <li nz-menu-item (click)="connectDevice.emit(d.id)" [nzDisabled]="d.id === selectedDeviceId">
+                @if (d.id === selectedDeviceId) {
+                  <span nz-icon nzType="check-circle" nzTheme="fill" style="color: var(--accent-success);"></span>
+                }
+                <strong>{{ d.name || d.id }}</strong>
+                @if (d.capabilityLevel) {
+                  <span class="device-capability">{{ d.capabilityLevel }}</span>
+                }
               </li>
-              <li nz-menu-item *ngIf="!layerOptions?.length" nzDisabled>No layers provided</li>
-            </ul>
-          </nz-dropdown-menu>
-        </div>
+            }
+          </ul>
+        </nz-dropdown-menu>
 
-        <div class="layer-meta toolbar__section toolbar__meta toolbar__section--grow">
-          <span class="meta" [class.muted]="!dirty">{{ dirty ? 'Dirty' : 'Clean' }}</span>
-          <span class="divider">&middot;</span>
-          <span class="meta" nz-tooltip [nzTooltipTitle]="'Revision ' + (revision ?? 'n/a')">
-            Revision {{ revision ?? 'n/a' }}
-          </span>
-          <span class="divider">&middot;</span>
-          <span class="meta" nz-tooltip [nzTooltipTitle]="dirty ? 'Changes staged' : '0 changes staged'">
-            {{ dirty ? 'Changes staged' : '0 changes staged' }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="header-actions">
-      <nz-segmented
-        class="view-toggle ctrl ctrl--pill"
-        [nzOptions]="viewOptions"
-        nzSize="default"
-        [(ngModel)]="segmentValue"
-        (ngModelChange)="onViewChange($event)"
-      ></nz-segmented>
-
-      <ng-container *ngIf="connected; else connectBtn">
+        <!-- Actions Dropdown -->
         <button
           nz-button
           nzType="primary"
           nzSize="default"
           [nzDropdownMenu]="actionsMenu"
-          [nzOverlayStyle]="actionsOverlayStyle"
-          [nzOverlayClassName]="'overlay-match-trigger'"
           nz-dropdown
+          [nzOverlayClassName]="'studio-overlay studio-overlay--menu'"
           [nzLoading]="busy"
-          (nzVisibleChange)="syncOverlayWidths()"
-          #actionsBtn
-          class="ctrl ctrl--wide"
+          class="primary-action"
         >
           Actions
           <span nz-icon nzType="down"></span>
         </button>
         <nz-dropdown-menu #actionsMenu="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="upload.emit()" [nzDisabled]="busy || !dirty">Upload to RAM</li>
-            <li nz-menu-item (click)="revert.emit()" [nzDisabled]="busy || !ramLoaded">Revert</li>
-            <li nz-menu-item (click)="commit.emit()" [nzDisabled]="busy || !ramLoaded">Commit</li>
-            <li nz-menu-item (click)="run.emit()" *ngIf="!running" [nzDisabled]="busy">Run</li>
-            <li nz-menu-item (click)="stopAll.emit()" *ngIf="running" [nzDisabled]="busy">Stop All</li>
+            <!-- Studio HID Mode Actions -->
+            @if (deviceMode === 'studio-hid') {
+              <li nz-menu-item (click)="upload.emit()" [nzDisabled]="busy || !dirty">
+                <span nz-icon nzType="upload" nzTheme="outline"></span>
+                Upload to RAM
+              </li>
+              <li nz-menu-item (click)="revert.emit()" [nzDisabled]="busy || !ramLoaded">
+                <span nz-icon nzType="reload" nzTheme="outline"></span>
+                Revert
+              </li>
+              <li nz-menu-item (click)="commit.emit()" [nzDisabled]="busy || !ramLoaded">
+                <span nz-icon nzType="save" nzTheme="outline"></span>
+                Commit to Flash
+              </li>
+              <li nz-menu-divider></li>
+              @if (!running) {
+                <li nz-menu-item (click)="run.emit()" [nzDisabled]="busy">
+                  <span nz-icon nzType="play-circle" nzTheme="outline"></span>
+                  Run
+                </li>
+              }
+              @if (running) {
+                <li nz-menu-item (click)="stopAll.emit()" [nzDisabled]="busy">
+                  <span nz-icon nzType="stop" nzTheme="outline"></span>
+                  Stop All
+                </li>
+              }
+            }
+
+            <!-- Import (available in all states) -->
+            @if (deviceMode === 'studio-hid') {
+              <li nz-menu-divider></li>
+            }
+            <li nz-menu-item (click)="triggerImport()" [nzDisabled]="importBusy">
+              <span nz-icon nzType="import" nzTheme="outline"></span>
+              Import Configuration
+            </li>
+
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="disconnect.emit()" [nzDisabled]="busy">Disconnect</li>
+            <li nz-menu-item (click)="disconnect.emit()" [nzDisabled]="busy">
+              <span nz-icon nzType="disconnect" nzTheme="outline"></span>
+              Disconnect
+            </li>
           </ul>
         </nz-dropdown-menu>
-      </ng-container>
+      }
 
-      <ng-template #connectBtn>
-        <button
-          nz-button
-          nzType="primary"
-          nzSize="default"
-          class="ctrl ctrl--wide"
-          (click)="connect.emit()"
-          [nzLoading]="busy"
-        >
-          Connect
-        </button>
-      </ng-template>
+      <!-- Hidden file input -->
+      <input
+        #importInput
+        type="file"
+        accept=".json"
+        (change)="importFile.emit($event)"
+        hidden
+      />
     </div>
   </div>
 </div>
